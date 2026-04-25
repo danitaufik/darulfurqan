@@ -34,12 +34,29 @@ button{cursor:pointer;font-family:'Inter',sans-serif}
 ::-webkit-scrollbar{width:6px}
 ::-webkit-scrollbar-track{background:#f1f1f1}
 ::-webkit-scrollbar-thumb{background:#ccc;border-radius:3px}
+@media(max-width:768px){
+  #root{overflow-x:hidden}
+  input,select,textarea{font-size:16px !important}
+}
 </style>
 </head>
 <body>
 <div id="root"></div>
 <script type="text/babel">
 const { useState, useEffect, useCallback } = React;
+
+let _lang = 'id';
+const tG = (key) => (TR[_lang] && TR[_lang][key]) || (TR.id && TR.id[key]) || key;
+
+function useWindowWidth() {
+  const [width, setWidth] = useState(window.innerWidth);
+  useEffect(() => {
+    const handler = () => setWidth(window.innerWidth);
+    window.addEventListener('resize', handler);
+    return () => window.removeEventListener('resize', handler);
+  }, []);
+  return width;
+}
 
 // ─── TRANSLATIONS ─────────────────────────────────────────────────
 const TR = {
@@ -113,6 +130,150 @@ const TR = {
     fDesc:'Yayasan Darul Furqan Pariaman — Lembaga pendidikan Islam terpadu sejak 1981 yang berkomitmen mencetak generasi unggul berakhlak mulia.',
     fCopy:'© 2026 Yayasan Darul Furqan Pariaman. Hak cipta dilindungi.',
     fSys:'Sistem Informasi PPDB v1.0',
+    fContactAddr:'Jl. M. Yamin No.12, Pariaman',
+    fContactTelp:'(0751) 93456',
+    fContactEmail:'ppdb@darulfurqan.sch.id',
+    fContactHours:'Senin–Jumat 08.00–15.00',
+    // Navbar auth
+    navDashboard:'Dashboard', navPendaftar:'Pendaftar', navKeluar:'Keluar',
+    // Badge
+    badgeDraft:'Draft', badgeSubmitted:'Submitted', badgeVerified:'Diverifikasi', badgeAccepted:'Diterima', badgeRejected:'Ditolak',
+    // PPDBInfo
+    ppdbInfoTitle:'Informasi PPDB 2026/2027',
+    ppdbInfoSub:'Panduan lengkap Penerimaan Peserta Didik Baru — Yayasan Darul Furqan Pariaman',
+    ppdbAlurTitle:'Alur Pendaftaran', ppdbDocsTitle:'Dokumen yang Dibutuhkan',
+    ppdbStep1t:'Registrasi Akun', ppdbStep1d:'Buat akun dengan email aktif dan verifikasi email Anda.',
+    ppdbStep2t:'Isi Formulir', ppdbStep2d:'Lengkapi data diri, data orang tua, dan data akademik.',
+    ppdbStep3t:'Upload Dokumen', ppdbStep3d:'Upload dokumen persyaratan (KK, rapor, foto, dll).',
+    ppdbStep4t:'Submit Pendaftaran', ppdbStep4d:'Kirimkan pendaftaran untuk diproses admin.',
+    ppdbStep5t:'Verifikasi Admin', ppdbStep5d:'Tim admin memverifikasi berkas Anda.',
+    ppdbStep6t:'Pengumuman Hasil', ppdbStep6d:'Cek status penerimaan melalui dashboard.',
+    ppdbDoc1:'Kartu Keluarga (scan)', ppdbDoc2:'Akta Kelahiran (scan)',
+    ppdbDoc3:'Raport Semester 1–5 (scan)', ppdbDoc4:'Foto 3×4 terbaru (JPEG/PNG)',
+    ppdbDoc5:'Ijazah/SKL (jika tersedia)', ppdbDoc6:'Sertifikat Prestasi (jika ada)',
+    ppdbJadwalTitle:'Jadwal PPDB',
+    ppdbJ1k:'Pendaftaran Online', ppdbJ1v:'1 Apr – 30 Jun 2026',
+    ppdbJ2k:'Seleksi Berkas', ppdbJ2v:'1 – 15 Jul 2026',
+    ppdbJ3k:'Pengumuman', ppdbJ3v:'20 Jul 2026',
+    ppdbJ4k:'Daftar Ulang', ppdbJ4v:'21 – 31 Jul 2026',
+    ppdbBiayaTitle:'Biaya Pendaftaran', ppdbBiayaVal:'Gratis', ppdbBiayaDesc:'Tidak dipungut biaya pendaftaran',
+    ppdbCta:'Daftar Sekarang →',
+    // Register
+    regTitle:'Buat Akun Pendaftar', regSub:'Daftarkan diri untuk mengikuti PPDB 2026/2027',
+    regNama:'Nama Lengkap', regNamaP:'Nama sesuai akta kelahiran',
+    regEmail:'Email', regEmailP:'emailanda@gmail.com',
+    regTelp:'No. Telepon / WhatsApp', regTelpP:'08xxxxxxxxxx',
+    regPass:'Password', regPassP:'Min. 8 karakter',
+    regConfirm:'Konfirmasi Password', regConfirmP:'Ulangi password',
+    regLoading:'Mendaftar...', regBtn:'Buat Akun',
+    regHaveAcc:'Sudah punya akun?', regLoginLink:'Masuk di sini',
+    // VerifyEmail
+    verTitle:'Verifikasi Email', verSub:'Kami mengirim kode 6-digit ke emailanda@gmail.com',
+    verHintBold:'Cek inbox email Anda',
+    verHintTail:' — kode verifikasi dikirim secara otomatis. Periksa folder spam jika tidak ada di inbox.',
+    verCodeLabel:'Kode Verifikasi', verCodeP:'Masukkan 6 digit kode',
+    verBtn:'Verifikasi Email',
+    verNoEmail:'Tidak menerima email?', verResend:'Kirim ulang', verSent:'Terkirim!',
+    // Login
+    loginTitle:'Masuk ke Akun', loginSub:'Gunakan email & password yang terdaftar',
+    loginEmailP:'emailanda@gmail.com', loginPassP:'Password Anda',
+    loginLoading:'Masuk...', loginBtn:'Masuk sebagai Calon Siswa',
+    loginAdminBtn:'Masuk sebagai Admin (Demo)',
+    loginNoAcc:'Belum punya akun?', loginRegLink:'Daftar di sini',
+    // Dashboard
+    dashTitle:'Dashboard Pendaftar', dashSub:'Selamat datang, Ahmad Fauzi · PPDB 2026/2027',
+    dashStatusLabel:'Status Pendaftaran',
+    dashDraft:'Formulir belum selesai — segera lengkapi data Anda',
+    dashSubmitted:'Berkas Anda sedang diverifikasi oleh admin',
+    dashVerified:'Berkas diverifikasi — menunggu keputusan akhir',
+    dashAccepted:'Selamat! Anda diterima di Yayasan Darul Furqan',
+    dashRejected:'Mohon maaf, pendaftaran Anda tidak memenuhi syarat',
+    dashContinue:'Lanjutkan Pengisian →', dashViewResult:'Lihat Surat Penerimaan',
+    dashProgress:'Tahapan Pendaftaran',
+    dashStep1:'Registrasi', dashStep2:'Verifikasi Email', dashStep3:'Isi Formulir',
+    dashStep4:'Upload Dokumen', dashStep5:'Submit', dashStep6:'Hasil',
+    dashActions:'Aksi Cepat',
+    dashAct1:'Isi Formulir PPDB', dashAct2:'Upload Dokumen',
+    dashAct3:'Submit Pendaftaran', dashAct4:'Lihat Notifikasi',
+    dashNotif:'Notifikasi Terbaru',
+    dashN1:'Pendaftaran PPDB 2026/2027 telah dibuka. Segera lengkapi formulir Anda.',
+    dashN2:'Email Anda telah berhasil diverifikasi.',
+    dashN1t:'2 jam lalu', dashN2t:'1 hari lalu',
+    dashDemo:'🎮 DEMO: Simulasi Status',
+    // PPDBForm
+    formTitle:'Formulir PPDB 2026/2027', formBack:'← Kembali',
+    formStep1:'Data Diri', formStep2:'Data Orang Tua', formStep3:'Data Akademik',
+    formSection:'Bagian',
+    formNama:'Nama Lengkap *', formNamaP:'Sesuai akta kelahiran',
+    formNIK:'NIK *', formNIKP:'16 digit NIK',
+    formTempat:'Tempat Lahir *', formTempatP:'Kota/kabupaten',
+    formTglLahir:'Tanggal Lahir *',
+    formGender:'Jenis Kelamin *', formGenderOpt1:'— Pilih —', formGenderOpt2:'Laki-laki', formGenderOpt3:'Perempuan',
+    formAgama:'Agama *', formAgamaOpt:'— Pilih —',
+    formAlamat:'Alamat Lengkap *', formAlamatP:'Jalan, nomor, RT/RW, kelurahan, kecamatan, kota',
+    formAyah:'Nama Ayah *', formAyahP:'Nama lengkap ayah',
+    formIbu:'Nama Ibu *', formIbuP:'Nama lengkap ibu',
+    formPekerjaan:'Pekerjaan Orang Tua *', formPekerjaanOpt:'— Pilih —',
+    formTelp:'No. Telepon/WA *', formTelpP:'08xxxxxxxxxx',
+    formAsalSekolah:'Asal Sekolah *', formAsalP:'Nama SD/MI asal',
+    formNilai:'Nilai Rata-rata Rapor *', formNilaiP:'Contoh: 85.50',
+    formPrestasi:'Prestasi (opsional)', formPrestasiP:'Tuliskan prestasi akademik/non-akademik jika ada',
+    formPrev:'← Sebelumnya', formNext:'Selanjutnya →', formSaveUpload:'Simpan & Upload Dokumen →',
+    // Upload
+    uploadTitle:'Upload Dokumen', uploadBack:'← Kembali',
+    uploadOf:'dari', uploadDocs:'dokumen diunggah',
+    uploadAllDone:'✓ Semua wajib terpenuhi', uploadMissing:'dokumen wajib belum diupload',
+    uploadRequired:'Wajib', uploadDone:'✓ Terupload',
+    uploadKK:'Kartu Keluarga', uploadKKdesc:'Scan/foto KK (maks 2MB)',
+    uploadAkta:'Akta Kelahiran', uploadAktadesc:'Scan/foto akta (maks 2MB)',
+    uploadRapor:'Raport Semester 1–5', uploadRapordesc:'Semua halaman nilai (PDF/JPG)',
+    uploadFoto:'Foto 3×4', uploadFotodesc:'Foto terbaru dengan latar biru/merah (JPG)',
+    uploadIjazah:'Ijazah / SKL', uploadIjazahdesc:'Jika sudah tersedia (PDF/JPG)',
+    uploadSertif:'Sertifikat Prestasi', uploadSertifdesc:'Jika ada (PDF/JPG)',
+    uploadDelete:'Hapus', uploadAdd:'+ Upload',
+    uploadSaveDraft:'Simpan Draft', uploadSubmit:'Submit Pendaftaran →',
+    // SubmitConfirm
+    submitTitle:'Konfirmasi Pengiriman',
+    submitSummTitle:'Ringkasan Pendaftaran',
+    submitK1:'Nama Lengkap', submitK2:'NIK', submitK3:'Asal Sekolah', submitK4:'Dokumen Terupload', submitK5:'Tahun Ajaran',
+    submitV3:'SDN 01 Pariaman', submitV4:'4 dari 6 dokumen', submitV5:'2026/2027',
+    submitWarning:'⚠️ Setelah submit, data tidak dapat diubah. Pastikan semua informasi sudah benar sebelum melanjutkan.',
+    submitBack:'← Kembali', submitLoading:'Mengirim...', submitBtn:'Ya, Submit Pendaftaran',
+    submitDoneTitle:'Pendaftaran Berhasil Dikirim!',
+    submitDoneMsg:'Pendaftaran Anda telah berhasil disubmit. Tim admin akan memverifikasi berkas Anda dalam 3–7 hari kerja. Anda akan menerima notifikasi melalui email.',
+    submitDoneNo:'No. Pendaftaran:', submitDashBtn:'Ke Dashboard',
+    // Result
+    resultAccepted:'Selamat! Anda Diterima',
+    resultRejected:'Mohon Maaf, Tidak Diterima',
+    resultAcceptedMsg:'Anda dinyatakan DITERIMA sebagai peserta didik baru Yayasan Darul Furqan Pariaman Tahun Ajaran 2026/2027.',
+    resultRejectedMsg:'Berdasarkan hasil seleksi, Anda belum dapat diterima pada tahun ajaran ini. Terima kasih telah mendaftar.',
+    resultDetailTitle:'Detail Penerimaan',
+    resultK1:'No. Peserta', resultK2:'Nama', resultK3:'Kelas yang Dituju', resultK4:'Daftar Ulang',
+    resultV3:'Kelas VII (SMP)', resultV4:'21 – 31 Juli 2026',
+    resultBackBtn:'← Kembali ke Dashboard',
+    // AdminDashboard
+    adminTitle:'Dashboard Admin PPDB',
+    adminSub:'Kelola pendaftaran PPDB 2026/2027 · Yayasan Darul Furqan Pariaman',
+    adminStat1:'Total Pendaftar', adminStat2:'Menunggu Verifikasi', adminStat3:'Diterima', adminStat4:'Ditolak',
+    adminRecentTitle:'Pendaftar Terbaru', adminViewAll:'Lihat Semua →',
+    adminActionsTitle:'Aksi Cepat',
+    adminAct1:'Verifikasi Berkas', adminAct2:'Export Data CSV', adminAct3:'Kelola Periode PPDB',
+    adminPeriodeTitle:'Periode PPDB', adminPeriodeStatus:'Status:',
+    adminPeriodeActive:'Aktif', adminPeriodeClosed:'Ditutup:', adminPeriodeClose:'30 Juni 2026',
+    adminPeriodeDays:'68 hari berlalu dari 100 hari',
+    // AdminList
+    adminListTitle:'Daftar Pendaftar', adminListBack:'← Dashboard',
+    adminExport:'⬇ Export CSV', adminSearch:'Cari nama / sekolah...',
+    adminFilterAll:'Semua',
+    adminTh1:'No', adminTh2:'Nama Pendaftar', adminTh3:'Asal Sekolah',
+    adminTh4:'Tgl Daftar', adminTh5:'Nilai', adminTh6:'Status', adminTh7:'Aksi',
+    adminVerifyBtn:'Verifikasi', adminAcceptBtn:'Terima', adminRejectBtn:'Tolak', adminDetailBtn:'Detail',
+    adminModalTitle:'Verifikasi Berkas', adminModalSub:'Pendaftar:',
+    adminModalDoc1:'Kartu Keluarga', adminModalDoc2:'Akta Kelahiran',
+    adminModalDoc3:'Raport Semester 1–5', adminModalDoc4:'Foto 3×4', adminModalDoc5:'Ijazah / SKL',
+    adminModalComplete:'✓ Lengkap', adminModalMissing:'⚠ Belum ada',
+    adminModalNoteLabel:'Catatan Admin', adminModalNoteP:'Tambahkan catatan jika perlu...',
+    adminModalCancel:'Batal', adminModalRejectBtn:'Tolak Berkas', adminModalVerifyBtn:'Verifikasi ✓',
   },
   en: {
     // Navbar
@@ -184,6 +345,150 @@ const TR = {
     fDesc:'Yayasan Darul Furqan Pariaman — Integrated Islamic educational institution since 1981 committed to producing outstanding graduates of noble character.',
     fCopy:'© 2026 Yayasan Darul Furqan Pariaman. All rights reserved.',
     fSys:'PPDB Information System v1.0',
+    fContactAddr:'Jl. M. Yamin No.12, Pariaman',
+    fContactTelp:'(0751) 93456',
+    fContactEmail:'ppdb@darulfurqan.sch.id',
+    fContactHours:'Mon–Fri 08:00–15:00',
+    // Navbar auth
+    navDashboard:'Dashboard', navPendaftar:'Applicants', navKeluar:'Sign Out',
+    // Badge
+    badgeDraft:'Draft', badgeSubmitted:'Submitted', badgeVerified:'Verified', badgeAccepted:'Accepted', badgeRejected:'Rejected',
+    // PPDBInfo
+    ppdbInfoTitle:'Admission Information 2026/2027',
+    ppdbInfoSub:'Complete guide to New Student Admission — Yayasan Darul Furqan Pariaman',
+    ppdbAlurTitle:'Registration Flow', ppdbDocsTitle:'Required Documents',
+    ppdbStep1t:'Account Registration', ppdbStep1d:'Create an account with an active email and verify your email.',
+    ppdbStep2t:'Fill Form', ppdbStep2d:'Complete personal, parent, and academic information.',
+    ppdbStep3t:'Upload Documents', ppdbStep3d:'Upload required documents (family card, report card, photo, etc.).',
+    ppdbStep4t:'Submit Application', ppdbStep4d:'Submit your application for admin processing.',
+    ppdbStep5t:'Admin Verification', ppdbStep5d:'The admin team verifies your documents.',
+    ppdbStep6t:'Result Announcement', ppdbStep6d:'Check admission status via dashboard.',
+    ppdbDoc1:'Family Card (scan)', ppdbDoc2:'Birth Certificate (scan)',
+    ppdbDoc3:'Report Cards Semester 1–5 (scan)', ppdbDoc4:'Recent 3×4 Photo (JPEG/PNG)',
+    ppdbDoc5:'Diploma/Certificate (if available)', ppdbDoc6:'Achievement Certificate (if any)',
+    ppdbJadwalTitle:'PPDB Schedule',
+    ppdbJ1k:'Online Registration', ppdbJ1v:'Apr 1 – Jun 30, 2026',
+    ppdbJ2k:'Document Selection', ppdbJ2v:'Jul 1 – 15, 2026',
+    ppdbJ3k:'Announcement', ppdbJ3v:'Jul 20, 2026',
+    ppdbJ4k:'Re-registration', ppdbJ4v:'Jul 21 – 31, 2026',
+    ppdbBiayaTitle:'Registration Fee', ppdbBiayaVal:'Free', ppdbBiayaDesc:'No registration fee charged',
+    ppdbCta:'Register Now →',
+    // Register
+    regTitle:'Create Applicant Account', regSub:'Register to participate in PPDB 2026/2027',
+    regNama:'Full Name', regNamaP:'Name as on birth certificate',
+    regEmail:'Email', regEmailP:'yourname@gmail.com',
+    regTelp:'Phone Number / WhatsApp', regTelpP:'08xxxxxxxxxx',
+    regPass:'Password', regPassP:'Min. 8 characters',
+    regConfirm:'Confirm Password', regConfirmP:'Repeat password',
+    regLoading:'Registering...', regBtn:'Create Account',
+    regHaveAcc:'Already have an account?', regLoginLink:'Login here',
+    // VerifyEmail
+    verTitle:'Email Verification', verSub:'We sent a 6-digit code to yourname@gmail.com',
+    verHintBold:'Check your email inbox',
+    verHintTail:' — the verification code was sent automatically. Check spam folder if not in inbox.',
+    verCodeLabel:'Verification Code', verCodeP:'Enter 6-digit code',
+    verBtn:'Verify Email',
+    verNoEmail:"Didn't receive the email?", verResend:'Resend', verSent:'Sent!',
+    // Login
+    loginTitle:'Login to Account', loginSub:'Use your registered email & password',
+    loginEmailP:'yourname@gmail.com', loginPassP:'Your Password',
+    loginLoading:'Logging in...', loginBtn:'Login as Student Applicant',
+    loginAdminBtn:'Login as Admin (Demo)',
+    loginNoAcc:"Don't have an account?", loginRegLink:'Register here',
+    // Dashboard
+    dashTitle:'Applicant Dashboard', dashSub:'Welcome, Ahmad Fauzi · PPDB 2026/2027',
+    dashStatusLabel:'Application Status',
+    dashDraft:'Form not yet complete — please fill in your data',
+    dashSubmitted:'Your documents are being verified by admin',
+    dashVerified:'Documents verified — awaiting final decision',
+    dashAccepted:'Congratulations! You are accepted at Yayasan Darul Furqan',
+    dashRejected:"We're sorry, your application did not meet requirements",
+    dashContinue:'Continue Filling →', dashViewResult:'View Acceptance Letter',
+    dashProgress:'Registration Steps',
+    dashStep1:'Registration', dashStep2:'Email Verification', dashStep3:'Fill Form',
+    dashStep4:'Upload Documents', dashStep5:'Submit', dashStep6:'Result',
+    dashActions:'Quick Actions',
+    dashAct1:'Fill PPDB Form', dashAct2:'Upload Documents',
+    dashAct3:'Submit Application', dashAct4:'View Notifications',
+    dashNotif:'Latest Notifications',
+    dashN1:'PPDB 2026/2027 registration is open. Please complete your form.',
+    dashN2:'Your email has been successfully verified.',
+    dashN1t:'2 hours ago', dashN2t:'1 day ago',
+    dashDemo:'🎮 DEMO: Status Simulation',
+    // PPDBForm
+    formTitle:'PPDB Form 2026/2027', formBack:'← Back',
+    formStep1:'Personal Data', formStep2:'Parent Data', formStep3:'Academic Data',
+    formSection:'Section',
+    formNama:'Full Name *', formNamaP:'As on birth certificate',
+    formNIK:'NIK *', formNIKP:'16-digit NIK',
+    formTempat:'Place of Birth *', formTempatP:'City/district',
+    formTglLahir:'Date of Birth *',
+    formGender:'Gender *', formGenderOpt1:'— Select —', formGenderOpt2:'Male', formGenderOpt3:'Female',
+    formAgama:'Religion *', formAgamaOpt:'— Select —',
+    formAlamat:'Full Address *', formAlamatP:'Street, number, RT/RW, village, district, city',
+    formAyah:"Father's Name *", formAyahP:"Father's full name",
+    formIbu:"Mother's Name *", formIbuP:"Mother's full name",
+    formPekerjaan:"Parent's Occupation *", formPekerjaanOpt:'— Select —',
+    formTelp:'Phone/WhatsApp *', formTelpP:'08xxxxxxxxxx',
+    formAsalSekolah:'Previous School *', formAsalP:'Name of elementary school',
+    formNilai:'Average Report Card Score *', formNilaiP:'Example: 85.50',
+    formPrestasi:'Achievements (optional)', formPrestasiP:'List academic/non-academic achievements if any',
+    formPrev:'← Previous', formNext:'Next →', formSaveUpload:'Save & Upload Documents →',
+    // Upload
+    uploadTitle:'Upload Documents', uploadBack:'← Back',
+    uploadOf:'of', uploadDocs:'documents uploaded',
+    uploadAllDone:'✓ All required documents complete', uploadMissing:'required documents not yet uploaded',
+    uploadRequired:'Required', uploadDone:'✓ Uploaded',
+    uploadKK:'Family Card', uploadKKdesc:'Scan/photo of family card (max 2MB)',
+    uploadAkta:'Birth Certificate', uploadAktadesc:'Scan/photo of certificate (max 2MB)',
+    uploadRapor:'Report Cards Semester 1–5', uploadRapordesc:'All grade pages (PDF/JPG)',
+    uploadFoto:'3×4 Photo', uploadFotodesc:'Recent photo with blue/red background (JPG)',
+    uploadIjazah:'Diploma / Certificate', uploadIjazahdesc:'If already available (PDF/JPG)',
+    uploadSertif:'Achievement Certificate', uploadSertifdesc:'If any (PDF/JPG)',
+    uploadDelete:'Remove', uploadAdd:'+ Upload',
+    uploadSaveDraft:'Save Draft', uploadSubmit:'Submit Application →',
+    // SubmitConfirm
+    submitTitle:'Submission Confirmation',
+    submitSummTitle:'Application Summary',
+    submitK1:'Full Name', submitK2:'NIK', submitK3:'Previous School', submitK4:'Documents Uploaded', submitK5:'Academic Year',
+    submitV3:'SDN 01 Pariaman', submitV4:'4 of 6 documents', submitV5:'2026/2027',
+    submitWarning:'⚠️ After submission, data cannot be changed. Make sure all information is correct before proceeding.',
+    submitBack:'← Back', submitLoading:'Submitting...', submitBtn:'Yes, Submit Application',
+    submitDoneTitle:'Application Successfully Submitted!',
+    submitDoneMsg:'Your application has been successfully submitted. The admin team will verify your documents within 3–7 working days. You will receive a notification via email.',
+    submitDoneNo:'Application No.:', submitDashBtn:'Go to Dashboard',
+    // Result
+    resultAccepted:'Congratulations! You Are Accepted',
+    resultRejected:"We're Sorry, Not Accepted",
+    resultAcceptedMsg:'You are declared ACCEPTED as a new student at Yayasan Darul Furqan Pariaman for Academic Year 2026/2027.',
+    resultRejectedMsg:'Based on the selection results, you were not accepted for this academic year. Thank you for applying.',
+    resultDetailTitle:'Acceptance Details',
+    resultK1:'Participant No.', resultK2:'Name', resultK3:'Target Class', resultK4:'Re-registration',
+    resultV3:'Grade VII (SMP)', resultV4:'July 21 – 31, 2026',
+    resultBackBtn:'← Back to Dashboard',
+    // AdminDashboard
+    adminTitle:'Admin PPDB Dashboard',
+    adminSub:'Manage PPDB registration 2026/2027 · Yayasan Darul Furqan Pariaman',
+    adminStat1:'Total Applicants', adminStat2:'Awaiting Verification', adminStat3:'Accepted', adminStat4:'Rejected',
+    adminRecentTitle:'Recent Applicants', adminViewAll:'View All →',
+    adminActionsTitle:'Quick Actions',
+    adminAct1:'Verify Documents', adminAct2:'Export CSV Data', adminAct3:'Manage PPDB Period',
+    adminPeriodeTitle:'PPDB Period', adminPeriodeStatus:'Status:',
+    adminPeriodeActive:'Active', adminPeriodeClosed:'Closed:', adminPeriodeClose:'June 30, 2026',
+    adminPeriodeDays:'68 days elapsed of 100 days',
+    // AdminList
+    adminListTitle:'Applicant List', adminListBack:'← Dashboard',
+    adminExport:'⬇ Export CSV', adminSearch:'Search name / school...',
+    adminFilterAll:'All',
+    adminTh1:'No', adminTh2:'Applicant Name', adminTh3:'School',
+    adminTh4:'Registration Date', adminTh5:'Score', adminTh6:'Status', adminTh7:'Action',
+    adminVerifyBtn:'Verify', adminAcceptBtn:'Accept', adminRejectBtn:'Reject', adminDetailBtn:'Detail',
+    adminModalTitle:'Verify Documents', adminModalSub:'Applicant:',
+    adminModalDoc1:'Family Card', adminModalDoc2:'Birth Certificate',
+    adminModalDoc3:'Report Cards Semester 1–5', adminModalDoc4:'3×4 Photo', adminModalDoc5:'Diploma / Certificate',
+    adminModalComplete:'✓ Complete', adminModalMissing:'⚠ Not provided',
+    adminModalNoteLabel:'Admin Notes', adminModalNoteP:'Add notes if needed...',
+    adminModalCancel:'Cancel', adminModalRejectBtn:'Reject Documents', adminModalVerifyBtn:'Verify ✓',
   }
 };
 
@@ -202,20 +507,21 @@ const C = {
 
 // ─── BADGE ────────────────────────────────────────────────────────
 const statusColors = {
-  DRAFT:     { bg: C.grayBg,   color: C.gray,   label: 'Draft' },
-  SUBMITTED: { bg: C.blueLight, color: C.blue,   label: 'Submitted' },
-  VERIFIED:  { bg: C.orangeBg, color: C.orange,  label: 'Diverifikasi' },
-  ACCEPTED:  { bg: C.greenBg,  color: C.green,   label: 'Diterima' },
-  REJECTED:  { bg: C.redBg,    color: C.red,     label: 'Ditolak' },
+  DRAFT:     { bg: C.grayBg,   color: C.gray },
+  SUBMITTED: { bg: C.blueLight, color: C.blue },
+  VERIFIED:  { bg: C.orangeBg, color: C.orange },
+  ACCEPTED:  { bg: C.greenBg,  color: C.green },
+  REJECTED:  { bg: C.redBg,    color: C.red },
 };
 function Badge({ status }) {
   const s = statusColors[status] || statusColors.DRAFT;
+  const label = tG('badge' + status.charAt(0).toUpperCase() + status.slice(1).toLowerCase());
   return (
     <span style={{
       display:'inline-block', padding:'3px 10px', borderRadius:20,
       background: s.bg, color: s.color, fontSize:11, fontWeight:600,
       letterSpacing:'0.02em', border:`1px solid ${s.color}22`
-    }}>{s.label}</span>
+    }}>{label}</span>
   );
 }
 
@@ -224,16 +530,19 @@ function Navbar({ screen, setScreen, user, setUser, lang, setLang, darkMode, set
   const isAuth = !!user;
   const isAdmin = user?.role === 'admin';
   const tFn = t || (k => k);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const isMobile = useWindowWidth() <= 768;
 
   const scrollTo = (id) => {
+    setMenuOpen(false);
     if (screen !== 'landing') { setScreen('landing'); setTimeout(() => { const el = document.getElementById(id); if(el) el.scrollIntoView({behavior:'smooth', block:'start'}); }, 150); }
     else { const el = document.getElementById(id); if(el) el.scrollIntoView({behavior:'smooth', block:'start'}); }
   };
 
   const publicNav = [
-    { label: tFn('beranda'), action: () => { setScreen('landing'); window.scrollTo({top:0, behavior:'smooth'}); } },
+    { label: tFn('beranda'), action: () => { setScreen('landing'); setMenuOpen(false); window.scrollTo({top:0, behavior:'smooth'}); } },
     { label: tFn('profil'), action: () => scrollTo('section-profil') },
-    { label: tFn('infoGPPDB'), action: () => setScreen('ppdb-info') },
+    { label: tFn('infoGPPDB'), action: () => { setScreen('ppdb-info'); setMenuOpen(false); } },
     { label: tFn('berita'), action: () => scrollTo('section-berita') },
     { label: tFn('kegiatan'), action: () => scrollTo('section-kegiatan') },
     { label: tFn('kontak'), action: () => scrollTo('section-kontak') },
@@ -241,7 +550,6 @@ function Navbar({ screen, setScreen, user, setUser, lang, setLang, darkMode, set
 
   const LangDarkControls = () => (
     <div style={{display:'flex', alignItems:'center', gap:6}}>
-      {/* Language toggle */}
       <div style={{display:'flex', alignItems:'center', background:'rgba(255,255,255,0.08)', borderRadius:6, border:'1px solid rgba(255,255,255,0.15)', overflow:'hidden'}}>
         {['id','en'].map(l => (
           <button key={l} onClick={() => setLang && setLang(l)} style={{
@@ -252,7 +560,6 @@ function Navbar({ screen, setScreen, user, setUser, lang, setLang, darkMode, set
           }}>{l}</button>
         ))}
       </div>
-      {/* Dark mode toggle */}
       <button onClick={() => setDarkMode && setDarkMode(d => !d)}
         title={darkMode ? 'Light Mode' : 'Dark Mode'}
         style={{
@@ -268,58 +575,105 @@ function Navbar({ screen, setScreen, user, setUser, lang, setLang, darkMode, set
   );
 
   return (
-    <nav style={{
-      background: C.navy, height:64, display:'flex', alignItems:'center',
-      padding:'0 40px', gap:0,
-      position:'sticky', top:0, zIndex:100, boxShadow:'0 2px 8px rgba(0,0,0,0.15)'
-    }}>
-      {/* LOGO */}
-      <div style={{display:'flex', alignItems:'center', gap:10, cursor:'pointer', flexShrink:0}}
-        onClick={() => { setScreen('landing'); window.scrollTo({top:0,behavior:'smooth'}); }}>
-        <img src="./assets/logo.png" alt="Darul Furqan" style={{height:40, width:40, objectFit:'contain', background:'rgba(255,255,255,0.9)', borderRadius:6, padding:2}}/>
-        <div>
-          <div style={{color:'#fff', fontSize:13, fontWeight:600, lineHeight:1.2}}>Darul Furqan</div>
-          <div style={{color:'rgba(255,255,255,0.6)', fontSize:10, lineHeight:1.2}}>Pariaman</div>
-        </div>
-      </div>
-
-      {!isAuth && (
-        <div style={{display:'flex', flex:1, alignItems:'center'}}>
-          {/* Nav links left */}
-          <div style={{display:'flex', gap:2, marginLeft:24}}>
-            {publicNav.map(n => (
-              <button key={n.label} onClick={n.action} style={{background:'none',border:'none',color:'rgba(255,255,255,0.75)',fontSize:13,padding:'6px 12px',borderRadius:6,cursor:'pointer'}}
-                onMouseEnter={e=>e.target.style.color='#fff'}
-                onMouseLeave={e=>e.target.style.color='rgba(255,255,255,0.75)'}
-              >{n.label}</button>
-            ))}
+    <div style={{position:'sticky', top:0, zIndex:100}}>
+      <nav style={{
+        background: C.navy, height:64, display:'flex', alignItems:'center',
+        padding: isMobile ? '0 16px' : '0 40px',
+        boxShadow:'0 2px 8px rgba(0,0,0,0.15)'
+      }}>
+        {/* LOGO */}
+        <div style={{display:'flex', alignItems:'center', gap:10, cursor:'pointer', flexShrink:0}}
+          onClick={() => { setScreen('landing'); setMenuOpen(false); window.scrollTo({top:0,behavior:'smooth'}); }}>
+          <img src="./assets/logo.png" alt="Darul Furqan" style={{height:36, width:36, objectFit:'contain', background:'rgba(255,255,255,0.9)', borderRadius:6, padding:2}}/>
+          <div>
+            <div style={{color:'#fff', fontSize:13, fontWeight:600, lineHeight:1.2}}>Darul Furqan</div>
+            <div style={{color:'rgba(255,255,255,0.6)', fontSize:10, lineHeight:1.2}}>Pariaman</div>
           </div>
-          {/* Right: lang + dark + auth */}
+        </div>
+
+        {/* DESKTOP NAV */}
+        {!isMobile && !isAuth && (
+          <div style={{display:'flex', flex:1, alignItems:'center'}}>
+            <div style={{display:'flex', gap:2, marginLeft:24}}>
+              {publicNav.map(n => (
+                <button key={n.label} onClick={n.action} style={{background:'none',border:'none',color:'rgba(255,255,255,0.75)',fontSize:13,padding:'6px 12px',borderRadius:6,cursor:'pointer'}}
+                  onMouseEnter={e=>e.target.style.color='#fff'}
+                  onMouseLeave={e=>e.target.style.color='rgba(255,255,255,0.75)'}
+                >{n.label}</button>
+              ))}
+            </div>
+            <div style={{display:'flex', gap:8, alignItems:'center', marginLeft:'auto'}}>
+              <LangDarkControls/>
+              <div style={{width:1, height:20, background:'rgba(255,255,255,0.2)'}}/>
+              <button onClick={() => setScreen('login')} style={{background:'none',border:'1px solid rgba(255,255,255,0.4)',color:'rgba(255,255,255,0.85)',borderRadius:6,padding:'7px 18px',fontSize:13,cursor:'pointer'}}>{tFn('masuk')}</button>
+              <button onClick={() => setScreen('register')} style={{background:C.blue,border:'none',color:'#fff',borderRadius:6,padding:'7px 18px',fontSize:13,fontWeight:600,cursor:'pointer'}}>{tFn('daftar')}</button>
+            </div>
+          </div>
+        )}
+
+        {!isMobile && isAuth && (
+          <div style={{display:'flex', gap:6, alignItems:'center', marginLeft:'auto'}}>
+            {!isAdmin && <button onClick={() => setScreen('dashboard')} style={{background:'none',border:'none',color:'rgba(255,255,255,0.8)',fontSize:13,padding:'4px 12px',borderRadius:6,cursor:'pointer'}}>{tFn('navDashboard')}</button>}
+            {isAdmin && <>
+              <button onClick={() => setScreen('admin-dashboard')} style={{background:'none',border:'none',color:'rgba(255,255,255,0.8)',fontSize:13,padding:'4px 12px',borderRadius:6,cursor:'pointer'}}>{tFn('navDashboard')}</button>
+              <button onClick={() => setScreen('admin-list')} style={{background:'none',border:'none',color:'rgba(255,255,255,0.8)',fontSize:13,padding:'4px 12px',borderRadius:6,cursor:'pointer'}}>{tFn('navPendaftar')}</button>
+            </>}
+            <LangDarkControls/>
+            <div style={{display:'flex',alignItems:'center',gap:10,marginLeft:4,background:'rgba(255,255,255,0.08)',borderRadius:8,padding:'6px 12px'}}>
+              <div style={{width:28,height:28,borderRadius:'50%',background:C.blue,display:'flex',alignItems:'center',justifyContent:'center',fontSize:12,fontWeight:700,color:'#fff'}}>{user.name[0]}</div>
+              <span style={{color:'rgba(255,255,255,0.85)',fontSize:13}}>{user.name}</span>
+            </div>
+            <button onClick={() => { setUser(null); setScreen('landing'); }} style={{background:'none',border:'1px solid rgba(255,255,255,0.25)',color:'rgba(255,255,255,0.6)',borderRadius:6,padding:'6px 12px',fontSize:12,cursor:'pointer'}}>{tFn('navKeluar')}</button>
+          </div>
+        )}
+
+        {/* MOBILE: lang/dark + hamburger */}
+        {isMobile && (
           <div style={{display:'flex', gap:8, alignItems:'center', marginLeft:'auto'}}>
             <LangDarkControls/>
-            <div style={{width:1, height:20, background:'rgba(255,255,255,0.2)'}}/>
-            <button onClick={() => setScreen('login')} style={{background:'none',border:'1px solid rgba(255,255,255,0.4)',color:'rgba(255,255,255,0.85)',borderRadius:6,padding:'7px 18px',fontSize:13,cursor:'pointer'}}>{tFn('masuk')}</button>
-            <button onClick={() => setScreen('register')} style={{background:C.blue,border:'none',color:'#fff',borderRadius:6,padding:'7px 18px',fontSize:13,fontWeight:600,cursor:'pointer'}}>{tFn('daftar')}</button>
+            <button onClick={() => setMenuOpen(o => !o)} style={{
+              background:'none', border:'1px solid rgba(255,255,255,0.3)',
+              borderRadius:6, width:36, height:36, cursor:'pointer',
+              display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', gap:5
+            }}>
+              {[0,1,2].map(i => <div key={i} style={{width:18, height:2, background:'#fff', borderRadius:2}}/>)}
+            </button>
           </div>
-        </div>
-      )}
+        )}
+      </nav>
 
-      {isAuth && (
-        <div style={{display:'flex', gap:6, alignItems:'center', marginLeft:'auto'}}>
-          {!isAdmin && <button onClick={() => setScreen('dashboard')} style={{background:'none',border:'none',color:'rgba(255,255,255,0.8)',fontSize:13,padding:'4px 12px',borderRadius:6,cursor:'pointer'}}>Dashboard</button>}
-          {isAdmin && <>
-            <button onClick={() => setScreen('admin-dashboard')} style={{background:'none',border:'none',color:'rgba(255,255,255,0.8)',fontSize:13,padding:'4px 12px',borderRadius:6,cursor:'pointer'}}>Dashboard</button>
-            <button onClick={() => setScreen('admin-list')} style={{background:'none',border:'none',color:'rgba(255,255,255,0.8)',fontSize:13,padding:'4px 12px',borderRadius:6,cursor:'pointer'}}>Pendaftar</button>
-          </>}
-          <LangDarkControls/>
-          <div style={{display:'flex',alignItems:'center',gap:10,marginLeft:4,background:'rgba(255,255,255,0.08)',borderRadius:8,padding:'6px 12px'}}>
-            <div style={{width:28,height:28,borderRadius:'50%',background:C.blue,display:'flex',alignItems:'center',justifyContent:'center',fontSize:12,fontWeight:700,color:'#fff'}}>{user.name[0]}</div>
-            <span style={{color:'rgba(255,255,255,0.85)',fontSize:13}}>{user.name}</span>
-          </div>
-          <button onClick={() => { setUser(null); setScreen('landing'); }} style={{background:'none',border:'1px solid rgba(255,255,255,0.25)',color:'rgba(255,255,255,0.6)',borderRadius:6,padding:'6px 12px',fontSize:12,cursor:'pointer'}}>Keluar</button>
+      {/* MOBILE DROPDOWN MENU */}
+      {isMobile && menuOpen && (
+        <div style={{
+          background:C.navy, borderTop:'1px solid rgba(255,255,255,0.1)',
+          padding:'8px 0 16px', boxShadow:'0 4px 12px rgba(0,0,0,0.2)'
+        }}>
+          {!isAuth && publicNav.map(n => (
+            <button key={n.label} onClick={n.action} style={{
+              display:'block', width:'100%', textAlign:'left',
+              background:'none', border:'none', color:'rgba(255,255,255,0.85)',
+              fontSize:15, padding:'12px 20px', cursor:'pointer'
+            }}>{n.label}</button>
+          ))}
+          {!isAuth && (
+            <div style={{padding:'12px 16px 0', display:'flex', gap:10}}>
+              <button onClick={() => { setScreen('login'); setMenuOpen(false); }} style={{flex:1,background:'none',border:'1px solid rgba(255,255,255,0.4)',color:'#fff',borderRadius:6,padding:'10px',fontSize:13,cursor:'pointer'}}>{tFn('masuk')}</button>
+              <button onClick={() => { setScreen('register'); setMenuOpen(false); }} style={{flex:1,background:C.blue,border:'none',color:'#fff',borderRadius:6,padding:'10px',fontSize:13,fontWeight:600,cursor:'pointer'}}>{tFn('daftar')}</button>
+            </div>
+          )}
+          {isAuth && (
+            <div style={{padding:'8px 16px'}}>
+              {!isAdmin && <button onClick={() => { setScreen('dashboard'); setMenuOpen(false); }} style={{display:'block',width:'100%',textAlign:'left',background:'none',border:'none',color:'rgba(255,255,255,0.85)',fontSize:15,padding:'10px 4px',cursor:'pointer'}}>{tFn('navDashboard')}</button>}
+              {isAdmin && <>
+                <button onClick={() => { setScreen('admin-dashboard'); setMenuOpen(false); }} style={{display:'block',width:'100%',textAlign:'left',background:'none',border:'none',color:'rgba(255,255,255,0.85)',fontSize:15,padding:'10px 4px',cursor:'pointer'}}>{tFn('navDashboard')}</button>
+                <button onClick={() => { setScreen('admin-list'); setMenuOpen(false); }} style={{display:'block',width:'100%',textAlign:'left',background:'none',border:'none',color:'rgba(255,255,255,0.85)',fontSize:15,padding:'10px 4px',cursor:'pointer'}}>{tFn('navPendaftar')}</button>
+              </>}
+              <button onClick={() => { setUser(null); setScreen('landing'); setMenuOpen(false); }} style={{marginTop:8,background:'none',border:'1px solid rgba(255,255,255,0.25)',color:'rgba(255,255,255,0.6)',borderRadius:6,padding:'8px 16px',fontSize:13,cursor:'pointer'}}>{tFn('navKeluar')}</button>
+            </div>
+          )}
         </div>
       )}
-    </nav>
+    </div>
   );
 }
 
@@ -352,44 +706,45 @@ function Landing({ setScreen, lang, t }) {
   const tFn = t || (k => k);
   const [hoveredNews, setHoveredNews] = React.useState(null);
   const [hoveredGallery, setHoveredGallery] = React.useState(null);
+  const isMobile = useWindowWidth() <= 768;
 
   const news = [
-    { title:'Pembukaan PPDB 2026/2027 Resmi Dimulai', date:'1 April 2026', cat:'Pengumuman', catColor:C.blue, img:'./assets/news-ppdb.png' },
-    { title:'Prestasi Siswa di Olimpiade Sains Nasional', date:'20 Maret 2026', cat:'Prestasi', catColor:C.green, img:'./assets/news-olimpiade.png' },
-    { title:'Jadwal Ujian Masuk Tahap Seleksi Berkas', date:'15 Maret 2026', cat:'Akademik', catColor:C.orange, img:'./assets/news-ujian.png' },
+    { title:tFn('n1t'), date:tFn('n1d'), cat:tFn('n1c'), catColor:C.blue, img:'./assets/news-ppdb.png' },
+    { title:tFn('n2t'), date:tFn('n2d'), cat:tFn('n2c'), catColor:C.green, img:'./assets/news-olimpiade.png' },
+    { title:tFn('n3t'), date:tFn('n3d'), cat:tFn('n3c'), catColor:C.orange, img:'./assets/news-ujian.png' },
   ];
 
   const gallery = [
-    { label:'Kegiatan Belajar Mengajar', img:'./assets/gallery-1.png' },
-    { label:'Upacara & Kegiatan Sekolah', img:'./assets/gallery-2.png' },
-    { label:'Ekstrakurikuler Pramuka', img:'./assets/gallery-3.png' },
-    { label:'Olimpiade Sains Siswa', img:'./assets/gallery-4.png' },
-    { label:'Kegiatan Pesantren', img:'./assets/gallery-5.png' },
-    { label:'Wisuda & Perpisahan', img:'./assets/gallery-6.png' },
+    { label:tFn('g1'), img:'./assets/gallery-1.png' },
+    { label:tFn('g2'), img:'./assets/gallery-2.png' },
+    { label:tFn('g3'), img:'./assets/gallery-3.png' },
+    { label:tFn('g4'), img:'./assets/gallery-4.png' },
+    { label:tFn('g5'), img:'./assets/gallery-5.png' },
+    { label:tFn('g6'), img:'./assets/gallery-6.png' },
   ];
 
   const misi = [
-    { icon:'📖', text:'Menyelenggarakan pendidikan berbasis Al-Quran dan Sunnah' },
-    { icon:'🏆', text:'Mengembangkan prestasi akademik dan non-akademik siswa' },
-    { icon:'🤝', text:'Membangun karakter Islami, disiplin, dan berakhlak mulia' },
-    { icon:'🔬', text:'Menerapkan kurikulum modern yang relevan dengan kebutuhan zaman' },
-    { icon:'🌱', text:'Menciptakan lingkungan belajar yang nyaman, aman, dan kondusif' },
+    { icon:'📖', text:tFn('misi1') },
+    { icon:'🏆', text:tFn('misi2') },
+    { icon:'🤝', text:tFn('misi3') },
+    { icon:'🔬', text:tFn('misi4') },
+    { icon:'🌱', text:tFn('misi5') },
   ];
 
   const keunggulan = [
-    { icon:'👨‍🏫', title:'Guru Profesional', desc:'Tenaga pendidik bersertifikat dan berpengalaman di bidangnya' },
-    { icon:'🏫', title:'Fasilitas Lengkap', desc:'Ruang kelas modern, laboratorium, perpustakaan, dan lapangan olahraga' },
-    { icon:'🕌', title:'Lingkungan Islami', desc:'Pesantren terpadu dengan pembiasaan ibadah harian yang terstruktur' },
-    { icon:'📚', title:'Kurikulum Modern', desc:'Memadukan Kurikulum Merdeka dengan pendidikan agama Islam terpadu' },
+    { icon:'👨‍🏫', title:tFn('k1t'), desc:tFn('k1d') },
+    { icon:'🏫', title:tFn('k2t'), desc:tFn('k2d') },
+    { icon:'🕌', title:tFn('k3t'), desc:tFn('k3d') },
+    { icon:'📚', title:tFn('k4t'), desc:tFn('k4d') },
   ];
 
   const alurSteps = [
-    { icon:'📝', label:'Daftar Akun', desc:'Buat akun & verifikasi email' },
-    { icon:'📋', label:'Isi Formulir', desc:'Data diri & keluarga' },
-    { icon:'📎', label:'Upload Berkas', desc:'Dokumen persyaratan' },
-    { icon:'✉️', label:'Submit', desc:'Kirim pendaftaran' },
-    { icon:'🔍', label:'Verifikasi', desc:'Admin memeriksa berkas' },
-    { icon:'📣', label:'Pengumuman', desc:'Cek hasil penerimaan' },
+    { icon:'📝', label:tFn('a1l'), desc:tFn('a1d') },
+    { icon:'📋', label:tFn('a2l'), desc:tFn('a2d') },
+    { icon:'📎', label:tFn('a3l'), desc:tFn('a3d') },
+    { icon:'✉️', label:tFn('a4l'), desc:tFn('a4d') },
+    { icon:'🔍', label:tFn('a5l'), desc:tFn('a5d') },
+    { icon:'📣', label:tFn('a6l'), desc:tFn('a6d') },
   ];
 
   const SectionLabel = ({ children }) => (
@@ -404,50 +759,55 @@ function Landing({ setScreen, lang, t }) {
     <div style={{overflowX:'hidden'}}>
 
       {/* ══ 1. HERO ══ */}
-      <div style={{position:'relative', minHeight:580, display:'flex', alignItems:'center', overflow:'hidden'}}>
+      <div style={{position:'relative', minHeight: isMobile ? 480 : 580, display:'flex', alignItems:'center', overflow:'hidden'}}>
         <div style={{position:'absolute', inset:0, backgroundImage:"url('./assets/hero-school.png')", backgroundSize:'cover', backgroundPosition:'center 35%'}}/>
-        <div style={{position:'absolute', inset:0, background:`linear-gradient(90deg, rgba(21,45,74,0.93) 0%, rgba(21,45,74,0.70) 55%, rgba(21,45,74,0.20) 100%)`}}/>
-        <div style={{position:'relative', maxWidth:1200, margin:'0 auto', padding:'60px 60px', width:'100%'}}>
-          <div style={{maxWidth:600}}>
+        <div style={{position:'absolute', inset:0, background: isMobile
+          ? 'linear-gradient(180deg, rgba(21,45,74,0.92) 0%, rgba(21,45,74,0.85) 100%)'
+          : 'linear-gradient(90deg, rgba(21,45,74,0.93) 0%, rgba(21,45,74,0.70) 55%, rgba(21,45,74,0.20) 100%)'
+        }}/>
+        <div style={{position:'relative', maxWidth:1200, margin:'0 auto', padding: isMobile ? '40px 20px' : '60px 60px', width:'100%'}}>
+          <div style={{maxWidth: isMobile ? '100%' : 600}}>
             <div style={{
               display:'inline-block', background:'rgba(59,130,246,0.25)',
               border:'1px solid rgba(59,130,246,0.5)', borderRadius:20,
-              padding:'4px 16px', fontSize:11, color:'#93C5FD', fontWeight:600,
-              letterSpacing:'0.08em', textTransform:'uppercase', marginBottom:20
+              padding:'4px 16px', fontSize:10, color:'#93C5FD', fontWeight:600,
+              letterSpacing:'0.06em', textTransform:'uppercase', marginBottom:16
             }}>{tFn('heroTag')}</div>
             <h1 style={{
-              fontFamily:'Playfair Display, serif', fontSize:52, fontWeight:700,
-              color:'#fff', lineHeight:1.2, marginBottom:16
+              fontFamily:'Playfair Display, serif', fontSize: isMobile ? 32 : 52, fontWeight:700,
+              color:'#fff', lineHeight:1.2, marginBottom:14
             }}>{tFn('heroTitle').split('\n').map((l,i)=><React.Fragment key={i}>{l}{i<2&&<br/>}</React.Fragment>)}</h1>
             <p style={{
-              fontSize:16, color:'rgba(255,255,255,0.78)', lineHeight:1.75,
-              marginBottom:32, maxWidth:480
+              fontSize: isMobile ? 14 : 16, color:'rgba(255,255,255,0.78)', lineHeight:1.75,
+              marginBottom:24, maxWidth: isMobile ? '100%' : 480
             }}>{tFn('heroSub')}</p>
-            <div style={{display:'flex', gap:12, flexWrap:'wrap', marginBottom:36}}>
+            <div style={{display:'flex', gap:10, flexWrap:'wrap', marginBottom:28}}>
               <button onClick={() => setScreen('register')} style={{
                 background:C.blue, border:'none', color:'#fff',
-                padding:'14px 32px', borderRadius:8, fontSize:15, fontWeight:600,
-                boxShadow:'0 4px 20px rgba(59,130,246,0.45)'
+                padding: isMobile ? '12px 24px' : '14px 32px', borderRadius:8,
+                fontSize: isMobile ? 14 : 15, fontWeight:600,
+                boxShadow:'0 4px 20px rgba(59,130,246,0.45)', flex: isMobile ? 1 : 'none'
               }}>{tFn('heroCta1')}</button>
               <button onClick={() => { const el = document.getElementById('section-profil'); if(el) el.scrollIntoView({behavior:'smooth', block:'start'}); }} style={{
                 background:'rgba(255,255,255,0.10)', border:'1px solid rgba(255,255,255,0.35)',
-                color:'#fff', padding:'14px 32px', borderRadius:8, fontSize:15
+                color:'#fff', padding: isMobile ? '12px 16px' : '14px 32px', borderRadius:8,
+                fontSize: isMobile ? 14 : 15, flex: isMobile ? 1 : 'none'
               }}>{tFn('heroCta2')}</button>
             </div>
-            {/* Stats inline below buttons */}
-            <div style={{display:'flex', gap:12}}>
+            <div style={{display:'flex', gap: isMobile ? 8 : 12}}>
               {[
-                { n:'1.200+', label:'Alumni' },
-                { n:'98%', label:'Kelulusan' },
-                { n:'45+', label:'Tahun' },
+                { n:'1.200+', label:tFn('statAlumni') },
+                { n:'98%', label:tFn('statLulus') },
+                { n:'45+', label:tFn('statTahun') },
               ].map((s,i) => (
                 <div key={i} style={{
                   background:'rgba(255,255,255,0.12)', backdropFilter:'blur(8px)',
                   border:'1px solid rgba(255,255,255,0.2)',
-                  borderRadius:10, padding:'14px 22px', textAlign:'center', minWidth:90
+                  borderRadius:10, padding: isMobile ? '10px 14px' : '14px 22px',
+                  textAlign:'center', flex: isMobile ? 1 : 'none', minWidth: isMobile ? 0 : 90
                 }}>
-                  <div style={{fontSize:22, fontWeight:700, color:'#fff', fontFamily:'Playfair Display, serif'}}>{s.n}</div>
-                  <div style={{fontSize:11, color:'rgba(255,255,255,0.7)', marginTop:2}}>{s.label}</div>
+                  <div style={{fontSize: isMobile ? 18 : 22, fontWeight:700, color:'#fff', fontFamily:'Playfair Display, serif'}}>{s.n}</div>
+                  <div style={{fontSize:10, color:'rgba(255,255,255,0.7)', marginTop:2}}>{s.label}</div>
                 </div>
               ))}
             </div>
@@ -458,23 +818,19 @@ function Landing({ setScreen, lang, t }) {
       {/* Stats spacer removed — stats now inside hero */}
 
       {/* ══ 2. PROFIL SEKOLAH ══ */}
-      <div id="section-profil" style={{background:C.white, padding:'72px 0 64px'}}>
-        <div style={{maxWidth:1200, margin:'0 auto', padding:'0 60px', display:'grid', gridTemplateColumns:'1fr 1fr', gap:64, alignItems:'center'}}>
+      <div id="section-profil" style={{background:C.white, padding: isMobile ? '48px 0 40px' : '72px 0 64px'}}>
+        <div style={{maxWidth:1200, margin:'0 auto', padding: isMobile ? '0 20px' : '0 60px', display:'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: isMobile ? 32 : 64, alignItems:'center'}}>
           <div>
             <SectionLabel>{tFn('tentangLabel')}</SectionLabel>
-            <h2 style={{fontSize:34, color:C.navy, lineHeight:1.25, marginBottom:20}}>{tFn('tentangTitle').split('\n').map((l,i)=><React.Fragment key={i}>{l}{i<1&&<br/>}</React.Fragment>)}</h2>
-            <p style={{fontSize:14, color:C.muted, lineHeight:1.85, marginBottom:14}}>
-              Yayasan Darul Furqan Pariaman berdiri sejak tahun 1981 sebagai lembaga pendidikan Islam terpadu yang berkomitmen mencetak generasi unggul berakhlak mulia. Berlokasi di jantung kota Pariaman, Sumatera Barat, kami telah mendidik lebih dari 1.200 alumni yang tersebar di seluruh Indonesia.
-            </p>
-            <p style={{fontSize:14, color:C.muted, lineHeight:1.85, marginBottom:28}}>
-              Dengan memadukan kurikulum nasional Kemendikbud dan kurikulum pesantren, kami menjamin setiap siswa mendapatkan pendidikan yang seimbang antara ilmu pengetahuan umum dan agama Islam.
-            </p>
+            <h2 style={{fontSize: isMobile ? 26 : 34, color:C.navy, lineHeight:1.25, marginBottom:20}}>{tFn('tentangTitle').split('\n').map((l,i)=><React.Fragment key={i}>{l}{i<1&&<br/>}</React.Fragment>)}</h2>
+            <p style={{fontSize:14, color:C.muted, lineHeight:1.85, marginBottom:14}}>{tFn('tentangP1')}</p>
+            <p style={{fontSize:14, color:C.muted, lineHeight:1.85, marginBottom:28}}>{tFn('tentangP2')}</p>
             <div style={{display:'grid', gridTemplateColumns:'1fr 1fr', gap:12}}>
               {[
-                { n:'120', label:'Kuota PPDB 2026' },
-                { n:'35+', label:'Tenaga Pendidik' },
-                { n:'3', label:'Jenjang Pendidikan' },
-                { n:'A', label:'Akreditasi BAN-S/M' },
+                { n:'120', label:tFn('statKuota') },
+                { n:'35+', label:tFn('statGuru') },
+                { n:'3', label:tFn('statJenjang') },
+                { n:'A', label:tFn('statAkred') },
               ].map((s,i) => (
                 <div key={i} style={{
                   background:C.bg, borderRadius:8, padding:'14px 18px',
@@ -487,29 +843,29 @@ function Landing({ setScreen, lang, t }) {
             </div>
           </div>
           <div style={{borderRadius:14, overflow:'hidden', boxShadow:'0 12px 40px rgba(0,0,0,0.12)'}}>
-            <img src="./assets/school-building.png" alt="Gedung Yayasan Darul Furqan Pariaman" style={{width:'100%', height:380, objectFit:'cover', display:'block'}}/>
+            <img src="./assets/school-building.png" alt="Gedung Yayasan Darul Furqan Pariaman" style={{width:'100%', height: isMobile ? 220 : 380, objectFit:'cover', display:'block'}}/>
           </div>
         </div>
       </div>
 
       {/* ══ 3. VISI & MISI ══ */}
-      <div style={{background:C.bg, padding:'72px 0'}}>
-        <div style={{maxWidth:1200, margin:'0 auto', padding:'0 60px'}}>
-          <div style={{textAlign:'center', marginBottom:40}}>
+      <div style={{background:C.bg, padding: isMobile ? '48px 0' : '72px 0'}}>
+        <div style={{maxWidth:1200, margin:'0 auto', padding: isMobile ? '0 20px' : '0 60px'}}>
+          <div style={{textAlign:'center', marginBottom:32}}>
             <SectionLabel>{tFn('visiLabel')}</SectionLabel>
-            <h2 style={{fontSize:30, color:C.navy}}>{tFn('visiTitle')}</h2>
+            <h2 style={{fontSize: isMobile ? 22 : 30, color:C.navy}}>{tFn('visiTitle')}</h2>
           </div>
           {/* VISI highlight */}
           <div style={{
             background:`linear-gradient(135deg, ${C.navy} 0%, ${C.navyLight} 100%)`,
-            borderRadius:14, padding:'32px 40px', marginBottom:20, textAlign:'center',
+            borderRadius:14, padding: isMobile ? '24px 20px' : '32px 40px', marginBottom:16, textAlign:'center',
             boxShadow:'0 8px 32px rgba(30,58,95,0.2)'
           }}>
-            <div style={{fontSize:13, color:'rgba(255,255,255,0.6)', fontWeight:600, letterSpacing:'0.1em', textTransform:'uppercase', marginBottom:10}}>Visi</div>
-            <div style={{fontSize:20, color:'#fff', fontFamily:'Playfair Display, serif', fontWeight:600, lineHeight:1.5, maxWidth:720, margin:'0 auto'}}>{tFn('visi')}</div>
+            <div style={{fontSize:11, color:'rgba(255,255,255,0.6)', fontWeight:600, letterSpacing:'0.1em', textTransform:'uppercase', marginBottom:10}}>{tFn('visiSub')}</div>
+            <div style={{fontSize: isMobile ? 15 : 20, color:'#fff', fontFamily:'Playfair Display, serif', fontWeight:600, lineHeight:1.5, maxWidth:720, margin:'0 auto'}}>{tFn('visi')}</div>
           </div>
           {/* MISI cards */}
-          <div style={{display:'grid', gridTemplateColumns:'repeat(5,1fr)', gap:12}}>
+          <div style={{display:'grid', gridTemplateColumns: isMobile ? 'repeat(2,1fr)' : 'repeat(5,1fr)', gap:10}}>
             {misi.map((m,i) => (
               <div key={i} style={{
                 background:C.white, borderRadius:10, padding:'20px 16px', textAlign:'center',
@@ -524,27 +880,27 @@ function Landing({ setScreen, lang, t }) {
       </div>
 
       {/* ══ 4. AKREDITASI & KEUNGGULAN ══ */}
-      <div style={{background:C.white, padding:'72px 0'}}>
-        <div style={{maxWidth:1200, margin:'0 auto', padding:'0 60px'}}>
-          <div style={{display:'grid', gridTemplateColumns:'280px 1fr', gap:32, alignItems:'start'}}>
+      <div style={{background:C.white, padding: isMobile ? '48px 0' : '72px 0'}}>
+        <div style={{maxWidth:1200, margin:'0 auto', padding: isMobile ? '0 20px' : '0 60px'}}>
+          <div style={{display:'grid', gridTemplateColumns: isMobile ? '1fr' : '280px 1fr', gap: isMobile ? 24 : 32, alignItems:'start'}}>
             {/* Akreditasi highlight */}
             <div style={{
               background:`linear-gradient(160deg, ${C.navy} 0%, #2A4F80 100%)`,
               borderRadius:14, padding:'36px 28px', textAlign:'center', color:'#fff',
               boxShadow:'0 8px 32px rgba(30,58,95,0.25)', position:'sticky', top:80
             }}>
-              <div style={{fontSize:11, color:'rgba(255,255,255,0.6)', letterSpacing:'0.1em', textTransform:'uppercase', marginBottom:16}}>BAN-S/M</div>
+              <div style={{fontSize:11, color:'rgba(255,255,255,0.6)', letterSpacing:'0.1em', textTransform:'uppercase', marginBottom:16}}>{tFn('akredSub')}</div>
               <div style={{fontSize:80, fontWeight:700, color:'#fff', fontFamily:'Playfair Display, serif', lineHeight:1}}>A</div>
-              <div style={{fontSize:14, color:'rgba(255,255,255,0.8)', marginTop:8, marginBottom:20}}>Akreditasi</div>
+              <div style={{fontSize:14, color:'rgba(255,255,255,0.8)', marginTop:8, marginBottom:20}}>{tFn('akredLabel')}</div>
               <div style={{background:'rgba(255,255,255,0.12)', borderRadius:8, padding:'12px', fontSize:11, color:'rgba(255,255,255,0.7)', lineHeight:1.6}}>
-                Terakreditasi A oleh Badan Akreditasi Nasional Sekolah/Madrasah
+                {tFn('akredDesc')}
               </div>
             </div>
             {/* Feature cards */}
             <div>
               <SectionLabel>{tFn('keunggulanLabel')}</SectionLabel>
-              <h2 style={{fontSize:28, color:C.navy, marginBottom:24}}>{tFn('keunggulanTitle')}</h2>
-              <div style={{display:'grid', gridTemplateColumns:'1fr 1fr', gap:16}}>
+              <h2 style={{fontSize: isMobile ? 22 : 28, color:C.navy, marginBottom:20}}>{tFn('keunggulanTitle')}</h2>
+              <div style={{display:'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap:12}}>
                 {keunggulan.map((k,i) => (
                   <div key={i} style={{
                     background:C.bg, borderRadius:10, padding:'22px 24px',
@@ -568,12 +924,32 @@ function Landing({ setScreen, lang, t }) {
       </div>
 
       {/* ══ 5. ALUR PENDAFTARAN ══ */}
-      <div style={{background:C.bg, padding:'72px 0'}}>
-        <div style={{maxWidth:1200, margin:'0 auto', padding:'0 60px'}}>
-          <div style={{textAlign:'center', marginBottom:48}}>
+      <div style={{background:C.bg, padding: isMobile ? '48px 0' : '72px 0'}}>
+        <div style={{maxWidth:1200, margin:'0 auto', padding: isMobile ? '0 20px' : '0 60px'}}>
+          <div style={{textAlign:'center', marginBottom: isMobile ? 32 : 48}}>
             <SectionLabel>{tFn('alurLabel')}</SectionLabel>
-            <h2 style={{fontSize:30, color:C.navy}}>{tFn('alurTitle')}</h2>
+            <h2 style={{fontSize: isMobile ? 22 : 30, color:C.navy}}>{tFn('alurTitle')}</h2>
           </div>
+          {isMobile ? (
+            <div style={{display:'grid', gridTemplateColumns:'1fr 1fr', gap:16}}>
+              {alurSteps.map((s,i) => (
+                <div key={i} style={{
+                  background:C.white, borderRadius:10, padding:'16px 12px', textAlign:'center',
+                  border:`1px solid ${i===0||i===5 ? C.navy : C.border}`,
+                  boxShadow:'0 2px 8px rgba(0,0,0,0.04)'
+                }}>
+                  <div style={{
+                    width:44, height:44, borderRadius:'50%', margin:'0 auto 10px',
+                    background: i===0||i===5 ? C.navy : C.bg,
+                    border:`2px solid ${i===0||i===5 ? C.navy : C.border}`,
+                    display:'flex', alignItems:'center', justifyContent:'center', fontSize:20
+                  }}>{s.icon}</div>
+                  <div style={{fontWeight:600, fontSize:12, color:C.navy, marginBottom:4}}>{s.label}</div>
+                  <div style={{fontSize:11, color:C.muted, lineHeight:1.4}}>{s.desc}</div>
+                </div>
+              ))}
+            </div>
+          ) : (
           <div style={{display:'flex', alignItems:'flex-start', gap:0, position:'relative'}}>
             {alurSteps.map((s,i) => (
               <React.Fragment key={i}>
@@ -597,7 +973,8 @@ function Landing({ setScreen, lang, t }) {
               </React.Fragment>
             ))}
           </div>
-          <div style={{textAlign:'center', marginTop:36}}>
+          )}
+          <div style={{textAlign:'center', marginTop:32}}>
             <button onClick={() => setScreen('register')} style={{
               background:C.navy, border:'none', color:'#fff',
               padding:'13px 32px', borderRadius:8, fontSize:14, fontWeight:600
@@ -607,16 +984,16 @@ function Landing({ setScreen, lang, t }) {
       </div>
 
       {/* ══ 6. BERITA & PENGUMUMAN ══ */}
-      <div id="section-berita" style={{background:C.white, padding:'72px 0'}}>
-        <div style={{maxWidth:1200, margin:'0 auto', padding:'0 60px'}}>
-          <div style={{display:'flex', justifyContent:'space-between', alignItems:'flex-end', marginBottom:32}}>
+      <div id="section-berita" style={{background:C.white, padding: isMobile ? '48px 0' : '72px 0'}}>
+        <div style={{maxWidth:1200, margin:'0 auto', padding: isMobile ? '0 20px' : '0 60px'}}>
+          <div style={{display:'flex', justifyContent:'space-between', alignItems: isMobile ? 'flex-start' : 'flex-end', flexDirection: isMobile ? 'column' : 'row', gap: isMobile ? 8 : 0, marginBottom:24}}>
             <div>
               <SectionLabel>{tFn('beritaLabel')}</SectionLabel>
-              <h2 style={{fontSize:30, color:C.navy}}>{tFn('beritaTitle')}</h2>
+              <h2 style={{fontSize: isMobile ? 22 : 30, color:C.navy}}>{tFn('beritaTitle')}</h2>
             </div>
             <button style={{background:'none', border:`1px solid ${C.border}`, color:C.muted, padding:'8px 18px', borderRadius:6, fontSize:13, cursor:'pointer'}}>{tFn('lihatSemua')}</button>
           </div>
-          <div style={{display:'grid', gridTemplateColumns:'repeat(3,1fr)', gap:20}}>
+          <div style={{display:'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(3,1fr)', gap: isMobile ? 16 : 20}}>
             {news.map((n,i) => (
               <div key={i}
                 onMouseEnter={() => setHoveredNews(i)}
@@ -650,13 +1027,13 @@ function Landing({ setScreen, lang, t }) {
       </div>
 
       {/* ══ 7. GALERI KEGIATAN ══ */}
-      <div id="section-kegiatan" style={{background:C.bg, padding:'72px 0'}}>
-        <div style={{maxWidth:1200, margin:'0 auto', padding:'0 60px'}}>
-          <div style={{textAlign:'center', marginBottom:36}}>
+      <div id="section-kegiatan" style={{background:C.bg, padding: isMobile ? '48px 0' : '72px 0'}}>
+        <div style={{maxWidth:1200, margin:'0 auto', padding: isMobile ? '0 20px' : '0 60px'}}>
+          <div style={{textAlign:'center', marginBottom:28}}>
             <SectionLabel>{tFn('galeriLabel')}</SectionLabel>
-            <h2 style={{fontSize:30, color:C.navy}}>{tFn('galeriTitle')}</h2>
+            <h2 style={{fontSize: isMobile ? 22 : 30, color:C.navy}}>{tFn('galeriTitle')}</h2>
           </div>
-          <div style={{display:'grid', gridTemplateColumns:'repeat(3,1fr)', gap:12}}>
+          <div style={{display:'grid', gridTemplateColumns: isMobile ? 'repeat(2,1fr)' : 'repeat(3,1fr)', gap: isMobile ? 8 : 12}}>
             {gallery.map((g,i) => (
               <div key={i}
                 onMouseEnter={() => setHoveredGallery(i)}
@@ -692,12 +1069,12 @@ function Landing({ setScreen, lang, t }) {
       {/* ══ 8. CTA BANNER ══ */}
       <div style={{
         background:`linear-gradient(135deg, ${C.navy} 0%, ${C.navyLight} 100%)`,
-        padding:'64px 60px', textAlign:'center', position:'relative', overflow:'hidden'
+        padding: isMobile ? '48px 20px' : '64px 60px', textAlign:'center', position:'relative', overflow:'hidden'
       }}>
         <div style={{position:'absolute', inset:0, opacity:0.05, backgroundImage:'radial-gradient(circle at 20% 50%, #fff 1px, transparent 1px), radial-gradient(circle at 80% 50%, #fff 1px, transparent 1px)', backgroundSize:'32px 32px'}}/>
         <div style={{position:'relative', maxWidth:640, margin:'0 auto'}}>
           <div style={{fontSize:12, color:'rgba(255,255,255,0.6)', letterSpacing:'0.1em', textTransform:'uppercase', marginBottom:12}}>{tFn('ctaTag')}</div>
-          <h2 style={{fontSize:36, color:'#fff', fontFamily:'Playfair Display, serif', marginBottom:16, lineHeight:1.3}}>
+          <h2 style={{fontSize: isMobile ? 26 : 36, color:'#fff', fontFamily:'Playfair Display, serif', marginBottom:16, lineHeight:1.3}}>
             {tFn('ctaTitle').split('\n').map((l,i)=><React.Fragment key={i}>{l}{i<1&&<br/>}</React.Fragment>)}
           </h2>
           <p style={{fontSize:14, color:'rgba(255,255,255,0.70)', lineHeight:1.7, marginBottom:28}}>{tFn('ctaSub')}</p>
@@ -709,21 +1086,21 @@ function Landing({ setScreen, lang, t }) {
       </div>
 
       {/* ══ 9. KONTAK & LOKASI ══ */}
-      <div id="section-kontak" style={{background:C.white, padding:'72px 0'}}>
-        <div style={{maxWidth:1200, margin:'0 auto', padding:'0 60px'}}>
-          <div style={{textAlign:'center', marginBottom:40}}>
+      <div id="section-kontak" style={{background:C.white, padding: isMobile ? '48px 0' : '72px 0'}}>
+        <div style={{maxWidth:1200, margin:'0 auto', padding: isMobile ? '0 20px' : '0 60px'}}>
+          <div style={{textAlign:'center', marginBottom:32}}>
             <SectionLabel>{tFn('kontakLabel')}</SectionLabel>
-            <h2 style={{fontSize:30, color:C.navy}}>{tFn('kontakTitle')}</h2>
+            <h2 style={{fontSize: isMobile ? 22 : 30, color:C.navy}}>{tFn('kontakTitle')}</h2>
           </div>
-          <div style={{display:'grid', gridTemplateColumns:'1fr 1.4fr', gap:32}}>
+          <div style={{display:'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1.4fr', gap: isMobile ? 20 : 32}}>
             <div>
               <div style={{background:C.bg, borderRadius:12, padding:'28px 32px', border:`1px solid ${C.border}`, marginBottom:16}}>
-                <h3 style={{fontSize:15, color:C.navy, marginBottom:20}}>Informasi Kontak</h3>
+                <h3 style={{fontSize:15, color:C.navy, marginBottom:20}}>{tFn('kInfoTitle')}</h3>
                 {[
-                  { icon:'📍', label:'Alamat', val:'Jl. M. Yamin No. 12, Pariaman Tengah, Kota Pariaman, Sumatera Barat 25511' },
-                  { icon:'📞', label:'Telepon', val:'(0751) 93456 / 081234567890' },
-                  { icon:'✉️', label:'Email', val:'ppdb@darulfurqan.sch.id' },
-                  { icon:'🕐', label:'Jam Layanan', val:'Senin – Jumat: 08.00 – 15.00 WIB' },
+                  { icon:'📍', label:tFn('kAlamatL'), val:tFn('kAlamatV') },
+                  { icon:'📞', label:tFn('kTelpL'), val:tFn('kTelpV') },
+                  { icon:'✉️', label:tFn('kEmailL'), val:tFn('kEmailV') },
+                  { icon:'🕐', label:tFn('kJamL'), val:tFn('kJamV') },
                 ].map((c,i) => (
                   <div key={i} style={{display:'flex', gap:14, marginBottom:16}}>
                     <div style={{
@@ -757,25 +1134,27 @@ function Landing({ setScreen, lang, t }) {
 }
 
 // ─── PPDB INFO ─────────────────────────────────────────────────────
-function PPDBInfo({ setScreen }) {
+function PPDBInfo({ setScreen, t }) {
+  const tFn = t || tG;
+  const isMobile = useWindowWidth() <= 768;
   const steps = [
-    { n:1, title:'Registrasi Akun', desc:'Buat akun dengan email aktif dan verifikasi email Anda.' },
-    { n:2, title:'Isi Formulir', desc:'Lengkapi data diri, data orang tua, dan data akademik.' },
-    { n:3, title:'Upload Dokumen', desc:'Upload dokumen persyaratan (KK, rapor, foto, dll).' },
-    { n:4, title:'Submit Pendaftaran', desc:'Kirimkan pendaftaran untuk diproses admin.' },
-    { n:5, title:'Verifikasi Admin', desc:'Tim admin memverifikasi berkas Anda.' },
-    { n:6, title:'Pengumuman Hasil', desc:'Cek status penerimaan melalui dashboard.' },
+    { n:1, title:tFn('ppdbStep1t'), desc:tFn('ppdbStep1d') },
+    { n:2, title:tFn('ppdbStep2t'), desc:tFn('ppdbStep2d') },
+    { n:3, title:tFn('ppdbStep3t'), desc:tFn('ppdbStep3d') },
+    { n:4, title:tFn('ppdbStep4t'), desc:tFn('ppdbStep4d') },
+    { n:5, title:tFn('ppdbStep5t'), desc:tFn('ppdbStep5d') },
+    { n:6, title:tFn('ppdbStep6t'), desc:tFn('ppdbStep6d') },
   ];
-  const docs = ['Kartu Keluarga (scan)', 'Akta Kelahiran (scan)', 'Raport Semester 1–5 (scan)', 'Foto 3×4 terbaru (JPEG/PNG)', 'Ijazah/SKL (jika tersedia)', 'Sertifikat Prestasi (jika ada)'];
+  const docs = [tFn('ppdbDoc1'),tFn('ppdbDoc2'),tFn('ppdbDoc3'),tFn('ppdbDoc4'),tFn('ppdbDoc5'),tFn('ppdbDoc6')];
   return (
-    <div style={{maxWidth:1100, margin:'0 auto', padding:'48px 40px'}}>
-      <h1 style={{fontSize:30, color:C.navy, marginBottom:6}}>Informasi PPDB 2026/2027</h1>
-      <p style={{color:C.muted, marginBottom:36, fontSize:14}}>Panduan lengkap Penerimaan Peserta Didik Baru — Yayasan Darul Furqan Pariaman</p>
-      
-      <div style={{display:'grid', gridTemplateColumns:'2fr 1fr', gap:24}}>
+    <div style={{maxWidth:1100, margin:'0 auto', padding: isMobile ? '32px 16px' : '48px 40px'}}>
+      <h1 style={{fontSize: isMobile ? 22 : 30, color:C.navy, marginBottom:6}}>{tFn('ppdbInfoTitle')}</h1>
+      <p style={{color:C.muted, marginBottom:28, fontSize:14}}>{tFn('ppdbInfoSub')}</p>
+
+      <div style={{display:'grid', gridTemplateColumns: isMobile ? '1fr' : '2fr 1fr', gap: isMobile ? 20 : 24}}>
         <div>
           <div style={{background:C.white, borderRadius:10, padding:'28px 32px', border:`1px solid ${C.border}`, marginBottom:20}}>
-            <h2 style={{fontSize:18, color:C.navy, marginBottom:20}}>Alur Pendaftaran</h2>
+            <h2 style={{fontSize:18, color:C.navy, marginBottom:20}}>{tFn('ppdbAlurTitle')}</h2>
             <div style={{display:'flex', flexDirection:'column', gap:16}}>
               {steps.map((s) => (
                 <div key={s.n} style={{display:'flex', gap:16, alignItems:'flex-start'}}>
@@ -793,8 +1172,8 @@ function PPDBInfo({ setScreen }) {
             </div>
           </div>
           <div style={{background:C.white, borderRadius:10, padding:'28px 32px', border:`1px solid ${C.border}`}}>
-            <h2 style={{fontSize:18, color:C.navy, marginBottom:16}}>Dokumen yang Dibutuhkan</h2>
-            <ul style={{listStyle:'none', display:'grid', gridTemplateColumns:'1fr 1fr', gap:'8px 24px'}}>
+            <h2 style={{fontSize:18, color:C.navy, marginBottom:16}}>{tFn('ppdbDocsTitle')}</h2>
+            <ul style={{listStyle:'none', display:'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap:'8px 24px'}}>
               {docs.map((d,i) => (
                 <li key={i} style={{fontSize:13, color:C.text, display:'flex', gap:8, alignItems:'center'}}>
                   <span style={{color:C.green, fontWeight:700}}>✓</span> {d}
@@ -805,12 +1184,12 @@ function PPDBInfo({ setScreen }) {
         </div>
         <div style={{display:'flex', flexDirection:'column', gap:16}}>
           <div style={{background:C.navy, borderRadius:10, padding:'24px', color:'#fff'}}>
-            <h3 style={{fontSize:16, marginBottom:16, fontFamily:'Playfair Display, serif'}}>Jadwal PPDB</h3>
+            <h3 style={{fontSize:16, marginBottom:16, fontFamily:'Playfair Display, serif'}}>{tFn('ppdbJadwalTitle')}</h3>
             {[
-              ['Pendaftaran Online', '1 Apr – 30 Jun 2026'],
-              ['Seleksi Berkas', '1 – 15 Jul 2026'],
-              ['Pengumuman', '20 Jul 2026'],
-              ['Daftar Ulang', '21 – 31 Jul 2026'],
+              [tFn('ppdbJ1k'), tFn('ppdbJ1v')],
+              [tFn('ppdbJ2k'), tFn('ppdbJ2v')],
+              [tFn('ppdbJ3k'), tFn('ppdbJ3v')],
+              [tFn('ppdbJ4k'), tFn('ppdbJ4v')],
             ].map(([k,v]) => (
               <div key={k} style={{display:'flex', justifyContent:'space-between', padding:'8px 0', borderBottom:'1px solid rgba(255,255,255,0.1)', fontSize:13}}>
                 <span style={{color:'rgba(255,255,255,0.7)'}}>{k}</span>
@@ -819,14 +1198,14 @@ function PPDBInfo({ setScreen }) {
             ))}
           </div>
           <div style={{background:C.white, borderRadius:10, padding:'24px', border:`1px solid ${C.border}`}}>
-            <h3 style={{fontSize:15, color:C.navy, marginBottom:12}}>Biaya Pendaftaran</h3>
-            <div style={{fontSize:28, fontWeight:700, color:C.navy, fontFamily:'Playfair Display, serif'}}>Gratis</div>
-            <div style={{fontSize:12, color:C.muted, marginTop:4}}>Tidak dipungut biaya pendaftaran</div>
+            <h3 style={{fontSize:15, color:C.navy, marginBottom:12}}>{tFn('ppdbBiayaTitle')}</h3>
+            <div style={{fontSize:28, fontWeight:700, color:C.navy, fontFamily:'Playfair Display, serif'}}>{tFn('ppdbBiayaVal')}</div>
+            <div style={{fontSize:12, color:C.muted, marginTop:4}}>{tFn('ppdbBiayaDesc')}</div>
           </div>
           <button onClick={() => setScreen('register')} style={{
             background:C.blue, border:'none', color:'#fff', borderRadius:8,
             padding:'14px', fontSize:15, fontWeight:600
-          }}>Daftar Sekarang →</button>
+          }}>{tFn('ppdbCta')}</button>
         </div>
       </div>
     </div>
@@ -873,7 +1252,8 @@ function Field({ label, type='text', value, onChange, placeholder, hint }) {
   );
 }
 
-function Register({ setScreen }) {
+function Register({ setScreen, t }) {
+  const tFn = t || tG;
   const [form, setForm] = useState({ name:'', email:'', phone:'', password:'', confirm:'' });
   const [loading, setLoading] = useState(false);
   const set = k => v => setForm(f=>({...f,[k]:v}));
@@ -882,53 +1262,54 @@ function Register({ setScreen }) {
     setTimeout(() => { setLoading(false); setScreen('verify-email'); }, 1200);
   };
   return (
-    <AuthCard title="Buat Akun Pendaftar" subtitle="Daftarkan diri untuk mengikuti PPDB 2026/2027">
-      <Field label="Nama Lengkap" value={form.name} onChange={set('name')} placeholder="Nama sesuai akta kelahiran"/>
-      <Field label="Email" type="email" value={form.email} onChange={set('email')} placeholder="emailanda@gmail.com"/>
-      <Field label="No. Telepon / WhatsApp" value={form.phone} onChange={set('phone')} placeholder="08xxxxxxxxxx"/>
-      <Field label="Password" type="password" value={form.password} onChange={set('password')} placeholder="Min. 8 karakter"/>
-      <Field label="Konfirmasi Password" type="password" value={form.confirm} onChange={set('confirm')} placeholder="Ulangi password"/>
+    <AuthCard title={tFn('regTitle')} subtitle={tFn('regSub')}>
+      <Field label={tFn('regNama')} value={form.name} onChange={set('name')} placeholder={tFn('regNamaP')}/>
+      <Field label={tFn('regEmail')} type="email" value={form.email} onChange={set('email')} placeholder={tFn('regEmailP')}/>
+      <Field label={tFn('regTelp')} value={form.phone} onChange={set('phone')} placeholder={tFn('regTelpP')}/>
+      <Field label={tFn('regPass')} type="password" value={form.password} onChange={set('password')} placeholder={tFn('regPassP')}/>
+      <Field label={tFn('regConfirm')} type="password" value={form.confirm} onChange={set('confirm')} placeholder={tFn('regConfirmP')}/>
       <button onClick={submit} disabled={loading} style={{
         width:'100%', background: loading ? C.muted : C.navy,
         border:'none', color:'#fff', padding:'12px', borderRadius:8,
         fontSize:14, fontWeight:600, marginTop:8
-      }}>{loading ? 'Mendaftar...' : 'Buat Akun'}</button>
+      }}>{loading ? tFn('regLoading') : tFn('regBtn')}</button>
       <div style={{textAlign:'center', marginTop:16, fontSize:13, color:C.muted}}>
-        Sudah punya akun?{' '}
-        <span onClick={() => setScreen('login')} style={{color:C.blue, cursor:'pointer', fontWeight:500}}>Masuk di sini</span>
+        {tFn('regHaveAcc')}{' '}
+        <span onClick={() => setScreen('login')} style={{color:C.blue, cursor:'pointer', fontWeight:500}}>{tFn('regLoginLink')}</span>
       </div>
     </AuthCard>
   );
 }
 
-function VerifyEmail({ setScreen }) {
+function VerifyEmail({ setScreen, t }) {
+  const tFn = t || tG;
   const [code, setCode] = useState('');
   const [sent, setSent] = useState(false);
   return (
-    <AuthCard title="Verifikasi Email" subtitle="Kami mengirim kode 6-digit ke emailanda@gmail.com">
+    <AuthCard title={tFn('verTitle')} subtitle={tFn('verSub')}>
       <div style={{
         background:C.blueLight, border:`1px solid ${C.blue}33`,
         borderRadius:8, padding:'14px 16px', marginBottom:20, fontSize:13, color:C.navy
       }}>
-        <strong>Cek inbox email Anda</strong> — kode verifikasi dikirim secara otomatis. 
-        Periksa folder spam jika tidak ada di inbox.
+        <strong>{tFn('verHintBold')}</strong>{tFn('verHintTail')}
       </div>
-      <Field label="Kode Verifikasi" value={code} onChange={setCode} placeholder="Masukkan 6 digit kode"/>
+      <Field label={tFn('verCodeLabel')} value={code} onChange={setCode} placeholder={tFn('verCodeP')}/>
       <button onClick={() => setScreen('login')} style={{
         width:'100%', background:C.navy, border:'none', color:'#fff',
         padding:'12px', borderRadius:8, fontSize:14, fontWeight:600
-      }}>Verifikasi Email</button>
+      }}>{tFn('verBtn')}</button>
       <div style={{textAlign:'center', marginTop:14, fontSize:13, color:C.muted}}>
-        Tidak menerima email?{' '}
+        {tFn('verNoEmail')}{' '}
         <span onClick={() => setSent(true)} style={{color:C.blue, cursor:'pointer', fontWeight:500}}>
-          {sent ? 'Terkirim!' : 'Kirim ulang'}
+          {sent ? tFn('verSent') : tFn('verResend')}
         </span>
       </div>
     </AuthCard>
   );
 }
 
-function Login({ setScreen, setUser }) {
+function Login({ setScreen, setUser, t }) {
+  const tFn = t || tG;
   const [email, setEmail] = useState('');
   const [pass, setPass] = useState('');
   const [loading, setLoading] = useState(false);
@@ -946,46 +1327,47 @@ function Login({ setScreen, setUser }) {
     }, 900);
   };
   return (
-    <AuthCard title="Masuk ke Akun" subtitle="Gunakan email & password yang terdaftar">
-      <Field label="Email" type="email" value={email} onChange={setEmail} placeholder="emailanda@gmail.com"/>
-      <Field label="Password" type="password" value={pass} onChange={setPass} placeholder="Password Anda"/>
+    <AuthCard title={tFn('loginTitle')} subtitle={tFn('loginSub')}>
+      <Field label={tFn('regEmail')} type="email" value={email} onChange={setEmail} placeholder={tFn('loginEmailP')}/>
+      <Field label={tFn('regPass')} type="password" value={pass} onChange={setPass} placeholder={tFn('loginPassP')}/>
       <button onClick={() => doLogin('student')} disabled={loading} style={{
         width:'100%', background: loading ? C.muted : C.navy,
         border:'none', color:'#fff', padding:'12px', borderRadius:8,
         fontSize:14, fontWeight:600, marginBottom:10
-      }}>{loading ? 'Masuk...' : 'Masuk sebagai Calon Siswa'}</button>
+      }}>{loading ? tFn('loginLoading') : tFn('loginBtn')}</button>
       <button onClick={() => doLogin('admin')} style={{
         width:'100%', background:'none', border:`1px solid ${C.borderDark}`,
         color:C.text, padding:'11px', borderRadius:8, fontSize:13
-      }}>Masuk sebagai Admin (Demo)</button>
+      }}>{tFn('loginAdminBtn')}</button>
       <div style={{textAlign:'center', marginTop:16, fontSize:13, color:C.muted}}>
-        Belum punya akun?{' '}
-        <span onClick={() => setScreen('register')} style={{color:C.blue, cursor:'pointer', fontWeight:500}}>Daftar di sini</span>
+        {tFn('loginNoAcc')}{' '}
+        <span onClick={() => setScreen('register')} style={{color:C.blue, cursor:'pointer', fontWeight:500}}>{tFn('loginRegLink')}</span>
       </div>
     </AuthCard>
   );
 }
 
 // ─── STUDENT DASHBOARD ─────────────────────────────────────────────
-function Dashboard({ setScreen, appStatus, setAppStatus }) {
+function Dashboard({ setScreen, appStatus, setAppStatus, t }) {
+  const tFn = t || tG;
   const notifications = [
-    { msg:'Pendaftaran PPDB 2026/2027 telah dibuka. Segera lengkapi formulir Anda.', time:'2 jam lalu', unread:true },
-    { msg:'Email Anda telah berhasil diverifikasi.', time:'1 hari lalu', unread:false },
+    { msg:tFn('dashN1'), time:tFn('dashN1t'), unread:true },
+    { msg:tFn('dashN2'), time:tFn('dashN2t'), unread:false },
   ];
   const steps = [
-    { key:'register', label:'Registrasi', done:true },
-    { key:'verify', label:'Verifikasi Email', done:true },
-    { key:'form', label:'Isi Formulir', done:appStatus !== 'DRAFT' || false, active: appStatus === 'DRAFT' },
-    { key:'upload', label:'Upload Dokumen', done:['SUBMITTED','VERIFIED','ACCEPTED','REJECTED'].includes(appStatus) },
-    { key:'submit', label:'Submit', done:['SUBMITTED','VERIFIED','ACCEPTED','REJECTED'].includes(appStatus) },
-    { key:'result', label:'Hasil', done:['ACCEPTED','REJECTED'].includes(appStatus) },
+    { key:'register', label:tFn('dashStep1'), done:true },
+    { key:'verify', label:tFn('dashStep2'), done:true },
+    { key:'form', label:tFn('dashStep3'), done:appStatus !== 'DRAFT' || false, active: appStatus === 'DRAFT' },
+    { key:'upload', label:tFn('dashStep4'), done:['SUBMITTED','VERIFIED','ACCEPTED','REJECTED'].includes(appStatus) },
+    { key:'submit', label:tFn('dashStep5'), done:['SUBMITTED','VERIFIED','ACCEPTED','REJECTED'].includes(appStatus) },
+    { key:'result', label:tFn('dashStep6'), done:['ACCEPTED','REJECTED'].includes(appStatus) },
   ];
 
   return (
     <div style={{maxWidth:1200, margin:'0 auto', padding:'40px 40px'}}>
       <div style={{marginBottom:32}}>
-        <h1 style={{fontSize:26, color:C.navy}}>Dashboard Pendaftar</h1>
-        <p style={{color:C.muted, fontSize:14, marginTop:4}}>Selamat datang, Ahmad Fauzi · PPDB 2026/2027</p>
+        <h1 style={{fontSize:26, color:C.navy}}>{tFn('dashTitle')}</h1>
+        <p style={{color:C.muted, fontSize:14, marginTop:4}}>{tFn('dashSub')}</p>
       </div>
 
       {/* STATUS CARD */}
@@ -1003,15 +1385,15 @@ function Dashboard({ setScreen, appStatus, setAppStatus }) {
         display:'flex', alignItems:'center', justifyContent:'space-between'
       }}>
         <div>
-          <div style={{fontSize:12, color:C.muted, fontWeight:500, textTransform:'uppercase', letterSpacing:'0.06em', marginBottom:6}}>Status Pendaftaran</div>
+          <div style={{fontSize:12, color:C.muted, fontWeight:500, textTransform:'uppercase', letterSpacing:'0.06em', marginBottom:6}}>{tFn('dashStatusLabel')}</div>
           <div style={{display:'flex', alignItems:'center', gap:12}}>
             <Badge status={appStatus}/>
             <span style={{fontSize:14, color:C.text}}>
-              {appStatus === 'DRAFT' && 'Formulir belum selesai — segera lengkapi data Anda'}
-              {appStatus === 'SUBMITTED' && 'Berkas Anda sedang diverifikasi oleh admin'}
-              {appStatus === 'VERIFIED' && 'Berkas diverifikasi — menunggu keputusan akhir'}
-              {appStatus === 'ACCEPTED' && 'Selamat! Anda diterima di Yayasan Darul Furqan'}
-              {appStatus === 'REJECTED' && 'Mohon maaf, pendaftaran Anda tidak memenuhi syarat'}
+              {appStatus === 'DRAFT' && tFn('dashDraft')}
+              {appStatus === 'SUBMITTED' && tFn('dashSubmitted')}
+              {appStatus === 'VERIFIED' && tFn('dashVerified')}
+              {appStatus === 'ACCEPTED' && tFn('dashAccepted')}
+              {appStatus === 'REJECTED' && tFn('dashRejected')}
             </span>
           </div>
         </div>
@@ -1019,19 +1401,19 @@ function Dashboard({ setScreen, appStatus, setAppStatus }) {
           <button onClick={() => setScreen('form')} style={{
             background:C.navy, border:'none', color:'#fff',
             padding:'10px 20px', borderRadius:7, fontSize:13, fontWeight:600, flexShrink:0
-          }}>Lanjutkan Pengisian →</button>
+          }}>{tFn('dashContinue')}</button>
         )}
         {appStatus === 'ACCEPTED' && (
           <button onClick={() => setScreen('result')} style={{
             background:C.green, border:'none', color:'#fff',
             padding:'10px 20px', borderRadius:7, fontSize:13, fontWeight:600, flexShrink:0
-          }}>Lihat Surat Penerimaan</button>
+          }}>{tFn('dashViewResult')}</button>
         )}
       </div>
 
       {/* PROGRESS */}
       <div style={{background:C.white, borderRadius:12, padding:'24px 28px', border:`1px solid ${C.border}`, marginBottom:24}}>
-        <div style={{fontSize:13, fontWeight:600, color:C.text, marginBottom:20}}>Tahapan Pendaftaran</div>
+        <div style={{fontSize:13, fontWeight:600, color:C.text, marginBottom:20}}>{tFn('dashProgress')}</div>
         <div style={{display:'flex', alignItems:'center', gap:0}}>
           {steps.map((s,i) => (
             <React.Fragment key={s.key}>
@@ -1059,13 +1441,13 @@ function Dashboard({ setScreen, appStatus, setAppStatus }) {
       <div style={{display:'grid', gridTemplateColumns:'2fr 1fr', gap:20}}>
         {/* QUICK ACTIONS */}
         <div style={{background:C.white, borderRadius:12, padding:'24px 28px', border:`1px solid ${C.border}`}}>
-          <div style={{fontSize:13, fontWeight:600, color:C.text, marginBottom:16}}>Aksi Cepat</div>
+          <div style={{fontSize:13, fontWeight:600, color:C.text, marginBottom:16}}>{tFn('dashActions')}</div>
           <div style={{display:'grid', gridTemplateColumns:'1fr 1fr', gap:10}}>
             {[
-              { label:'Isi Formulir PPDB', icon:'📝', action:'form', color:C.navy },
-              { label:'Upload Dokumen', icon:'📎', action:'upload', color:C.blue },
-              { label:'Submit Pendaftaran', icon:'✉️', action:'submit-confirm', color:C.green },
-              { label:'Lihat Notifikasi', icon:'🔔', action:'notifications', color:C.orange },
+              { label:tFn('dashAct1'), icon:'📝', action:'form', color:C.navy },
+              { label:tFn('dashAct2'), icon:'📎', action:'upload', color:C.blue },
+              { label:tFn('dashAct3'), icon:'✉️', action:'submit-confirm', color:C.green },
+              { label:tFn('dashAct4'), icon:'🔔', action:'notifications', color:C.orange },
             ].map(a => (
               <button key={a.action} onClick={() => setScreen(a.action)} style={{
                 background:C.bg, border:`1px solid ${C.border}`, borderRadius:8,
@@ -1081,7 +1463,7 @@ function Dashboard({ setScreen, appStatus, setAppStatus }) {
 
         {/* NOTIFICATIONS */}
         <div style={{background:C.white, borderRadius:12, padding:'24px 28px', border:`1px solid ${C.border}`}}>
-          <div style={{fontSize:13, fontWeight:600, color:C.text, marginBottom:16}}>Notifikasi Terbaru</div>
+          <div style={{fontSize:13, fontWeight:600, color:C.text, marginBottom:16}}>{tFn('dashNotif')}</div>
           {notifications.map((n,i) => (
             <div key={i} style={{
               padding:'12px 0', borderBottom: i<notifications.length-1 ? `1px solid ${C.border}` : 'none'
@@ -1096,7 +1478,7 @@ function Dashboard({ setScreen, appStatus, setAppStatus }) {
 
       {/* DEMO CONTROLS */}
       <div style={{marginTop:20, background:C.grayBg, borderRadius:8, padding:'16px 20px', border:`1px dashed ${C.borderDark}`}}>
-        <div style={{fontSize:12, fontWeight:600, color:C.muted, marginBottom:8}}>🎮 DEMO: Simulasi Status</div>
+        <div style={{fontSize:12, fontWeight:600, color:C.muted, marginBottom:8}}>{tFn('dashDemo')}</div>
         <div style={{display:'flex', gap:8}}>
           {['DRAFT','SUBMITTED','VERIFIED','ACCEPTED','REJECTED'].map(s => (
             <button key={s} onClick={() => setAppStatus(s)} style={{
@@ -1113,7 +1495,8 @@ function Dashboard({ setScreen, appStatus, setAppStatus }) {
 }
 
 // ─── PPDB FORM ─────────────────────────────────────────────────────
-function PPDBForm({ setScreen, setAppStatus }) {
+function PPDBForm({ setScreen, setAppStatus, t }) {
+  const tFn = t || tG;
   const [step, setStep] = useState(0);
   const [form, setForm] = useState({
     nama:'', nik:'', tempatLahir:'', tglLahir:'', jenisKelamin:'', agama:'', alamat:'',
@@ -1122,68 +1505,68 @@ function PPDBForm({ setScreen, setAppStatus }) {
   });
   const set = k => v => setForm(f=>({...f,[k]:v}));
 
-  const steps = ['Data Diri', 'Data Orang Tua', 'Data Akademik'];
+  const steps = [tFn('formStep1'), tFn('formStep2'), tFn('formStep3')];
 
   const renderStep = () => {
     if (step === 0) return (
       <div style={{display:'grid', gridTemplateColumns:'1fr 1fr', gap:'0 20px'}}>
-        <div style={{gridColumn:'1/-1'}}><Field label="Nama Lengkap *" value={form.nama} onChange={set('nama')} placeholder="Sesuai akta kelahiran"/></div>
-        <Field label="NIK *" value={form.nik} onChange={set('nik')} placeholder="16 digit NIK"/>
-        <Field label="Tempat Lahir *" value={form.tempatLahir} onChange={set('tempatLahir')} placeholder="Kota/kabupaten"/>
-        <Field label="Tanggal Lahir *" type="date" value={form.tglLahir} onChange={set('tglLahir')}/>
+        <div style={{gridColumn:'1/-1'}}><Field label={tFn('formNama')} value={form.nama} onChange={set('nama')} placeholder={tFn('formNamaP')}/></div>
+        <Field label={tFn('formNIK')} value={form.nik} onChange={set('nik')} placeholder={tFn('formNIKP')}/>
+        <Field label={tFn('formTempat')} value={form.tempatLahir} onChange={set('tempatLahir')} placeholder={tFn('formTempatP')}/>
+        <Field label={tFn('formTglLahir')} type="date" value={form.tglLahir} onChange={set('tglLahir')}/>
         <div>
-          <label style={{display:'block', fontSize:13, fontWeight:500, marginBottom:6}}>Jenis Kelamin *</label>
+          <label style={{display:'block', fontSize:13, fontWeight:500, marginBottom:6}}>{tFn('formGender')}</label>
           <select value={form.jenisKelamin} onChange={e=>set('jenisKelamin')(e.target.value)} style={{
             width:'100%', padding:'10px 12px', borderRadius:7, border:`1px solid ${C.borderDark}`, fontSize:13
           }}>
-            <option value="">— Pilih —</option>
-            <option>Laki-laki</option>
-            <option>Perempuan</option>
+            <option value="">{tFn('formGenderOpt1')}</option>
+            <option>{tFn('formGenderOpt2')}</option>
+            <option>{tFn('formGenderOpt3')}</option>
           </select>
         </div>
         <div>
-          <label style={{display:'block', fontSize:13, fontWeight:500, marginBottom:6}}>Agama *</label>
+          <label style={{display:'block', fontSize:13, fontWeight:500, marginBottom:6}}>{tFn('formAgama')}</label>
           <select value={form.agama} onChange={e=>set('agama')(e.target.value)} style={{
             width:'100%', padding:'10px 12px', borderRadius:7, border:`1px solid ${C.borderDark}`, fontSize:13
           }}>
-            <option value="">— Pilih —</option>
+            <option value="">{tFn('formAgamaOpt')}</option>
             <option>Islam</option><option>Kristen</option><option>Katolik</option>
             <option>Hindu</option><option>Buddha</option>
           </select>
         </div>
         <div style={{gridColumn:'1/-1'}}>
-          <label style={{display:'block', fontSize:13, fontWeight:500, marginBottom:6}}>Alamat Lengkap *</label>
+          <label style={{display:'block', fontSize:13, fontWeight:500, marginBottom:6}}>{tFn('formAlamat')}</label>
           <textarea value={form.alamat} onChange={e=>set('alamat')(e.target.value)} rows={3}
-            placeholder="Jalan, nomor, RT/RW, kelurahan, kecamatan, kota"
+            placeholder={tFn('formAlamatP')}
             style={{width:'100%', padding:'10px 12px', borderRadius:7, border:`1px solid ${C.borderDark}`, fontSize:13, resize:'vertical'}}/>
         </div>
       </div>
     );
     if (step === 1) return (
       <div style={{display:'grid', gridTemplateColumns:'1fr 1fr', gap:'0 20px'}}>
-        <Field label="Nama Ayah *" value={form.namaAyah} onChange={set('namaAyah')} placeholder="Nama lengkap ayah"/>
-        <Field label="Nama Ibu *" value={form.namaIbu} onChange={set('namaIbu')} placeholder="Nama lengkap ibu"/>
+        <Field label={tFn('formAyah')} value={form.namaAyah} onChange={set('namaAyah')} placeholder={tFn('formAyahP')}/>
+        <Field label={tFn('formIbu')} value={form.namaIbu} onChange={set('namaIbu')} placeholder={tFn('formIbuP')}/>
         <div>
-          <label style={{display:'block', fontSize:13, fontWeight:500, marginBottom:6}}>Pekerjaan Orang Tua *</label>
+          <label style={{display:'block', fontSize:13, fontWeight:500, marginBottom:6}}>{tFn('formPekerjaan')}</label>
           <select value={form.pekerjaan} onChange={e=>set('pekerjaan')(e.target.value)} style={{
             width:'100%', padding:'10px 12px', borderRadius:7, border:`1px solid ${C.borderDark}`, fontSize:13
           }}>
-            <option value="">— Pilih —</option>
+            <option value="">{tFn('formPekerjaanOpt')}</option>
             <option>PNS/ASN</option><option>Wiraswasta</option><option>Karyawan Swasta</option>
             <option>Petani</option><option>Nelayan</option><option>TNI/Polri</option><option>Lainnya</option>
           </select>
         </div>
-        <Field label="No. Telepon/WA *" value={form.telp} onChange={set('telp')} placeholder="08xxxxxxxxxx"/>
+        <Field label={tFn('formTelp')} value={form.telp} onChange={set('telp')} placeholder={tFn('formTelpP')}/>
       </div>
     );
     if (step === 2) return (
       <div style={{display:'grid', gridTemplateColumns:'1fr 1fr', gap:'0 20px'}}>
-        <div style={{gridColumn:'1/-1'}}><Field label="Asal Sekolah *" value={form.asalSekolah} onChange={set('asalSekolah')} placeholder="Nama SD/MI asal"/></div>
-        <Field label="Nilai Rata-rata Rapor *" value={form.nilaiUN} onChange={set('nilaiUN')} placeholder="Contoh: 85.50"/>
+        <div style={{gridColumn:'1/-1'}}><Field label={tFn('formAsalSekolah')} value={form.asalSekolah} onChange={set('asalSekolah')} placeholder={tFn('formAsalP')}/></div>
+        <Field label={tFn('formNilai')} value={form.nilaiUN} onChange={set('nilaiUN')} placeholder={tFn('formNilaiP')}/>
         <div style={{gridColumn:'1/-1'}}>
-          <label style={{display:'block', fontSize:13, fontWeight:500, marginBottom:6}}>Prestasi (opsional)</label>
+          <label style={{display:'block', fontSize:13, fontWeight:500, marginBottom:6}}>{tFn('formPrestasi')}</label>
           <textarea value={form.prestasi} onChange={e=>set('prestasi')(e.target.value)} rows={3}
-            placeholder="Tuliskan prestasi akademik/non-akademik jika ada"
+            placeholder={tFn('formPrestasiP')}
             style={{width:'100%', padding:'10px 12px', borderRadius:7, border:`1px solid ${C.borderDark}`, fontSize:13, resize:'vertical'}}/>
         </div>
       </div>
@@ -1193,8 +1576,8 @@ function PPDBForm({ setScreen, setAppStatus }) {
   return (
     <div style={{maxWidth:860, margin:'0 auto', padding:'40px'}}>
       <div style={{marginBottom:24, display:'flex', alignItems:'center', gap:12}}>
-        <button onClick={() => setScreen('dashboard')} style={{background:'none', border:'none', color:C.muted, fontSize:13, cursor:'pointer'}}>← Kembali</button>
-        <h1 style={{fontSize:22, color:C.navy}}>Formulir PPDB 2026/2027</h1>
+        <button onClick={() => setScreen('dashboard')} style={{background:'none', border:'none', color:C.muted, fontSize:13, cursor:'pointer'}}>{tFn('formBack')}</button>
+        <h1 style={{fontSize:22, color:C.navy}}>{tFn('formTitle')}</h1>
       </div>
 
       {/* STEP TABS */}
@@ -1213,23 +1596,23 @@ function PPDBForm({ setScreen, setAppStatus }) {
       </div>
 
       <div style={{background:C.white, borderRadius:12, padding:'32px', border:`1px solid ${C.border}`}}>
-        <h2 style={{fontSize:16, color:C.navy, marginBottom:20}}>Bagian {step+1}: {steps[step]}</h2>
+        <h2 style={{fontSize:16, color:C.navy, marginBottom:20}}>{tFn('formSection')} {step+1}: {steps[step]}</h2>
         {renderStep()}
         <div style={{display:'flex', justifyContent:'space-between', marginTop:24, paddingTop:20, borderTop:`1px solid ${C.border}`}}>
           <button onClick={() => step > 0 && setStep(step-1)} disabled={step===0} style={{
             background:'none', border:`1px solid ${C.border}`, color:C.text,
             padding:'10px 20px', borderRadius:7, fontSize:13, opacity: step===0 ? 0.4 : 1
-          }}>← Sebelumnya</button>
+          }}>{tFn('formPrev')}</button>
           {step < steps.length-1 ? (
             <button onClick={() => setStep(step+1)} style={{
               background:C.navy, border:'none', color:'#fff',
               padding:'10px 24px', borderRadius:7, fontSize:13, fontWeight:600
-            }}>Selanjutnya →</button>
+            }}>{tFn('formNext')}</button>
           ) : (
             <button onClick={() => { setAppStatus('DRAFT'); setScreen('upload'); }} style={{
               background:C.blue, border:'none', color:'#fff',
               padding:'10px 24px', borderRadius:7, fontSize:13, fontWeight:600
-            }}>Simpan & Upload Dokumen →</button>
+            }}>{tFn('formSaveUpload')}</button>
           )}
         </div>
       </div>
@@ -1238,14 +1621,15 @@ function PPDBForm({ setScreen, setAppStatus }) {
 }
 
 // ─── UPLOAD DOKUMEN ─────────────────────────────────────────────────
-function Upload({ setScreen }) {
+function Upload({ setScreen, t }) {
+  const tFn = t || tG;
   const docs = [
-    { key:'kk', label:'Kartu Keluarga', desc:'Scan/foto KK (maks 2MB)', req:true },
-    { key:'akta', label:'Akta Kelahiran', desc:'Scan/foto akta (maks 2MB)', req:true },
-    { key:'rapor', label:'Raport Semester 1–5', desc:'Semua halaman nilai (PDF/JPG)', req:true },
-    { key:'foto', label:'Foto 3×4', desc:'Foto terbaru dengan latar biru/merah (JPG)', req:true },
-    { key:'ijazah', label:'Ijazah / SKL', desc:'Jika sudah tersedia (PDF/JPG)', req:false },
-    { key:'prestasi', label:'Sertifikat Prestasi', desc:'Jika ada (PDF/JPG)', req:false },
+    { key:'kk', label:tFn('uploadKK'), desc:tFn('uploadKKdesc'), req:true },
+    { key:'akta', label:tFn('uploadAkta'), desc:tFn('uploadAktadesc'), req:true },
+    { key:'rapor', label:tFn('uploadRapor'), desc:tFn('uploadRapordesc'), req:true },
+    { key:'foto', label:tFn('uploadFoto'), desc:tFn('uploadFotodesc'), req:true },
+    { key:'ijazah', label:tFn('uploadIjazah'), desc:tFn('uploadIjazahdesc'), req:false },
+    { key:'prestasi', label:tFn('uploadSertif'), desc:tFn('uploadSertifdesc'), req:false },
   ];
   const [uploaded, setUploaded] = useState({});
   const toggle = key => setUploaded(u => u[key] ? (({[key]:_,...r})=>r)(u) : {...u, [key]:'uploaded'});
@@ -1255,15 +1639,15 @@ function Upload({ setScreen }) {
   return (
     <div style={{maxWidth:780, margin:'0 auto', padding:'40px'}}>
       <div style={{marginBottom:24, display:'flex', alignItems:'center', gap:12}}>
-        <button onClick={() => setScreen('form')} style={{background:'none', border:'none', color:C.muted, fontSize:13, cursor:'pointer'}}>← Kembali</button>
-        <h1 style={{fontSize:22, color:C.navy}}>Upload Dokumen</h1>
+        <button onClick={() => setScreen('form')} style={{background:'none', border:'none', color:C.muted, fontSize:13, cursor:'pointer'}}>{tFn('uploadBack')}</button>
+        <h1 style={{fontSize:22, color:C.navy}}>{tFn('uploadTitle')}</h1>
       </div>
       <div style={{background:C.white, borderRadius:12, border:`1px solid ${C.border}`, overflow:'hidden'}}>
         <div style={{padding:'20px 28px', borderBottom:`1px solid ${C.border}`, background:C.bg}}>
           <div style={{fontSize:13, color:C.muted}}>
-            {Object.keys(uploaded).length} dari {docs.length} dokumen diunggah ·{' '}
+            {Object.keys(uploaded).length} {tFn('uploadOf')} {docs.length} {tFn('uploadDocs')} ·{' '}
             <span style={{color: reqDone ? C.green : C.orange}}>
-              {reqDone ? '✓ Semua wajib terpenuhi' : `${required.filter(d=>!uploaded[d.key]).length} dokumen wajib belum diupload`}
+              {reqDone ? tFn('uploadAllDone') : `${required.filter(d=>!uploaded[d.key]).length} ${tFn('uploadMissing')}`}
             </span>
           </div>
         </div>
@@ -1276,8 +1660,8 @@ function Upload({ setScreen }) {
             <div style={{flex:1}}>
               <div style={{display:'flex', alignItems:'center', gap:8}}>
                 <span style={{fontSize:13, fontWeight:600, color:C.text}}>{d.label}</span>
-                {d.req && <span style={{fontSize:10, background:C.redBg, color:C.red, padding:'1px 6px', borderRadius:4, fontWeight:600}}>Wajib</span>}
-                {uploaded[d.key] && <span style={{fontSize:11, color:C.green, fontWeight:600}}>✓ Terupload</span>}
+                {d.req && <span style={{fontSize:10, background:C.redBg, color:C.red, padding:'1px 6px', borderRadius:4, fontWeight:600}}>{tFn('uploadRequired')}</span>}
+                {uploaded[d.key] && <span style={{fontSize:11, color:C.green, fontWeight:600}}>{tFn('uploadDone')}</span>}
               </div>
               <div style={{fontSize:12, color:C.muted, marginTop:2}}>{d.desc}</div>
               {uploaded[d.key] && <div style={{fontSize:11, color:C.muted, marginTop:2}}>dokumen_{d.key}.pdf · 1.2 MB</div>}
@@ -1288,7 +1672,7 @@ function Upload({ setScreen }) {
               color: uploaded[d.key] ? C.red : '#fff',
               padding:'8px 16px', borderRadius:6, fontSize:12, fontWeight:500
             }}>
-              {uploaded[d.key] ? 'Hapus' : '+ Upload'}
+              {uploaded[d.key] ? tFn('uploadDelete') : tFn('uploadAdd')}
             </button>
           </div>
         ))}
@@ -1297,18 +1681,19 @@ function Upload({ setScreen }) {
         <button onClick={() => setScreen('dashboard')} style={{
           background:'none', border:`1px solid ${C.border}`, color:C.text,
           padding:'10px 20px', borderRadius:7, fontSize:13
-        }}>Simpan Draft</button>
+        }}>{tFn('uploadSaveDraft')}</button>
         <button onClick={() => setScreen('submit-confirm')} disabled={!reqDone} style={{
           background: reqDone ? C.blue : C.muted,
           border:'none', color:'#fff', padding:'10px 24px', borderRadius:7, fontSize:13, fontWeight:600
-        }}>Submit Pendaftaran →</button>
+        }}>{tFn('uploadSubmit')}</button>
       </div>
     </div>
   );
 }
 
 // ─── SUBMIT CONFIRM ─────────────────────────────────────────────────
-function SubmitConfirm({ setScreen, setAppStatus }) {
+function SubmitConfirm({ setScreen, setAppStatus, t }) {
+  const tFn = t || tG;
   const [submitting, setSubmitting] = useState(false);
   const [done, setDone] = useState(false);
   const doSubmit = () => {
@@ -1325,32 +1710,29 @@ function SubmitConfirm({ setScreen, setAppStatus }) {
         border:`1px solid ${C.border}`, maxWidth:480, boxShadow:'0 8px 32px rgba(0,0,0,0.08)'
       }}>
         <div style={{fontSize:48, marginBottom:16}}>✅</div>
-        <h2 style={{fontSize:22, color:C.navy, marginBottom:12}}>Pendaftaran Berhasil Dikirim!</h2>
-        <p style={{fontSize:13, color:C.muted, lineHeight:1.6, marginBottom:24}}>
-          Pendaftaran Anda telah berhasil disubmit. Tim admin akan memverifikasi berkas Anda dalam 3–7 hari kerja. 
-          Anda akan menerima notifikasi melalui email.
-        </p>
+        <h2 style={{fontSize:22, color:C.navy, marginBottom:12}}>{tFn('submitDoneTitle')}</h2>
+        <p style={{fontSize:13, color:C.muted, lineHeight:1.6, marginBottom:24}}>{tFn('submitDoneMsg')}</p>
         <div style={{background:C.blueLight, borderRadius:8, padding:'12px 16px', marginBottom:24, fontSize:12, color:C.navy}}>
-          No. Pendaftaran: <strong>PPDB-2026-001247</strong>
+          {tFn('submitDoneNo')} <strong>PPDB-2026-001247</strong>
         </div>
         <button onClick={() => setScreen('dashboard')} style={{
           background:C.navy, border:'none', color:'#fff',
           padding:'12px 28px', borderRadius:8, fontSize:14, fontWeight:600
-        }}>Ke Dashboard</button>
+        }}>{tFn('submitDashBtn')}</button>
       </div>
     </div>
   );
   return (
     <div style={{maxWidth:640, margin:'0 auto', padding:'40px'}}>
-      <h1 style={{fontSize:22, color:C.navy, marginBottom:24}}>Konfirmasi Pengiriman</h1>
+      <h1 style={{fontSize:22, color:C.navy, marginBottom:24}}>{tFn('submitTitle')}</h1>
       <div style={{background:C.white, borderRadius:12, border:`1px solid ${C.border}`, padding:'28px 32px', marginBottom:20}}>
-        <h3 style={{fontSize:15, color:C.navy, marginBottom:16}}>Ringkasan Pendaftaran</h3>
+        <h3 style={{fontSize:15, color:C.navy, marginBottom:16}}>{tFn('submitSummTitle')}</h3>
         {[
-          ['Nama Lengkap', 'Ahmad Fauzi'],
-          ['NIK', '1304xxxxxxxx0001'],
-          ['Asal Sekolah', 'SDN 01 Pariaman'],
-          ['Dokumen Terupload', '4 dari 6 dokumen'],
-          ['Tahun Ajaran', '2026/2027'],
+          [tFn('submitK1'), 'Ahmad Fauzi'],
+          [tFn('submitK2'), '1304xxxxxxxx0001'],
+          [tFn('submitK3'), tFn('submitV3')],
+          [tFn('submitK4'), tFn('submitV4')],
+          [tFn('submitK5'), tFn('submitV5')],
         ].map(([k,v]) => (
           <div key={k} style={{display:'flex', justifyContent:'space-between', padding:'8px 0', borderBottom:`1px solid ${C.border}`, fontSize:13}}>
             <span style={{color:C.muted}}>{k}</span>
@@ -1359,24 +1741,25 @@ function SubmitConfirm({ setScreen, setAppStatus }) {
         ))}
       </div>
       <div style={{background:C.orangeBg, border:`1px solid ${C.orange}33`, borderRadius:8, padding:'14px 16px', marginBottom:24, fontSize:13, color:'#92400E'}}>
-        ⚠️ Setelah submit, data tidak dapat diubah. Pastikan semua informasi sudah benar sebelum melanjutkan.
+        {tFn('submitWarning')}
       </div>
       <div style={{display:'flex', gap:12, justifyContent:'flex-end'}}>
         <button onClick={() => setScreen('upload')} style={{
           background:'none', border:`1px solid ${C.border}`, color:C.text,
           padding:'11px 20px', borderRadius:7, fontSize:13
-        }}>← Kembali</button>
+        }}>{tFn('submitBack')}</button>
         <button onClick={doSubmit} disabled={submitting} style={{
           background: submitting ? C.muted : C.blue,
           border:'none', color:'#fff', padding:'11px 24px', borderRadius:7, fontSize:13, fontWeight:600
-        }}>{submitting ? 'Mengirim...' : 'Ya, Submit Pendaftaran'}</button>
+        }}>{submitting ? tFn('submitLoading') : tFn('submitBtn')}</button>
       </div>
     </div>
   );
 }
 
 // ─── RESULT ────────────────────────────────────────────────────────
-function Result({ setScreen, appStatus }) {
+function Result({ setScreen, appStatus, t }) {
+  const tFn = t || tG;
   const accepted = appStatus === 'ACCEPTED';
   return (
     <div style={{maxWidth:700, margin:'0 auto', padding:'40px'}}>
@@ -1387,21 +1770,19 @@ function Result({ setScreen, appStatus }) {
       }}>
         <div style={{fontSize:48, marginBottom:16}}>{accepted ? '🎉' : '😔'}</div>
         <h1 style={{fontSize:26, color: accepted ? C.green : C.red, fontFamily:'Playfair Display, serif', marginBottom:12}}>
-          {accepted ? 'Selamat! Anda Diterima' : 'Mohon Maaf, Tidak Diterima'}
+          {accepted ? tFn('resultAccepted') : tFn('resultRejected')}
         </h1>
         <p style={{fontSize:14, color:C.muted, lineHeight:1.6}}>
-          {accepted
-            ? 'Anda dinyatakan DITERIMA sebagai peserta didik baru Yayasan Darul Furqan Pariaman Tahun Ajaran 2026/2027.'
-            : 'Berdasarkan hasil seleksi, Anda belum dapat diterima pada tahun ajaran ini. Terima kasih telah mendaftar.'}
+          {accepted ? tFn('resultAcceptedMsg') : tFn('resultRejectedMsg')}
         </p>
         {accepted && (
           <div style={{background:C.white, borderRadius:10, padding:'20px 28px', marginTop:24, textAlign:'left'}}>
-            <div style={{fontSize:13, fontWeight:600, color:C.navy, marginBottom:12}}>Detail Penerimaan</div>
+            <div style={{fontSize:13, fontWeight:600, color:C.navy, marginBottom:12}}>{tFn('resultDetailTitle')}</div>
             {[
-              ['No. Peserta', 'PPDB-2026-001247'],
-              ['Nama', 'Ahmad Fauzi'],
-              ['Kelas yang Dituju', 'Kelas VII (SMP)'],
-              ['Daftar Ulang', '21 – 31 Juli 2026'],
+              [tFn('resultK1'), 'PPDB-2026-001247'],
+              [tFn('resultK2'), 'Ahmad Fauzi'],
+              [tFn('resultK3'), tFn('resultV3')],
+              [tFn('resultK4'), tFn('resultV4')],
             ].map(([k,v]) => (
               <div key={k} style={{display:'flex', justifyContent:'space-between', padding:'6px 0', borderBottom:`1px solid ${C.border}`, fontSize:13}}>
                 <span style={{color:C.muted}}>{k}</span>
@@ -1414,24 +1795,25 @@ function Result({ setScreen, appStatus }) {
       <button onClick={() => setScreen('dashboard')} style={{
         background:C.navy, border:'none', color:'#fff',
         padding:'12px 24px', borderRadius:8, fontSize:14, fontWeight:600
-      }}>← Kembali ke Dashboard</button>
+      }}>{tFn('resultBackBtn')}</button>
     </div>
   );
 }
 
 // ─── ADMIN DASHBOARD ────────────────────────────────────────────────
-function AdminDashboard({ setScreen }) {
+function AdminDashboard({ setScreen, t }) {
+  const tFn = t || tG;
   const stats = [
-    { label:'Total Pendaftar', value:247, color:C.navy, icon:'👥' },
-    { label:'Menunggu Verifikasi', value:38, color:C.orange, icon:'⏳' },
-    { label:'Diterima', value:120, color:C.green, icon:'✅' },
-    { label:'Ditolak', value:89, color:C.red, icon:'❌' },
+    { label:tFn('adminStat1'), value:247, color:C.navy, icon:'👥' },
+    { label:tFn('adminStat2'), value:38, color:C.orange, icon:'⏳' },
+    { label:tFn('adminStat3'), value:120, color:C.green, icon:'✅' },
+    { label:tFn('adminStat4'), value:89, color:C.red, icon:'❌' },
   ];
   return (
     <div style={{maxWidth:1200, margin:'0 auto', padding:'40px'}}>
       <div style={{marginBottom:32}}>
-        <h1 style={{fontSize:26, color:C.navy}}>Dashboard Admin PPDB</h1>
-        <p style={{color:C.muted, fontSize:14, marginTop:4}}>Kelola pendaftaran PPDB 2026/2027 · Yayasan Darul Furqan Pariaman</p>
+        <h1 style={{fontSize:26, color:C.navy}}>{tFn('adminTitle')}</h1>
+        <p style={{color:C.muted, fontSize:14, marginTop:4}}>{tFn('adminSub')}</p>
       </div>
 
       <div style={{display:'grid', gridTemplateColumns:'repeat(4,1fr)', gap:16, marginBottom:24}}>
@@ -1452,17 +1834,17 @@ function AdminDashboard({ setScreen }) {
       <div style={{display:'grid', gridTemplateColumns:'2fr 1fr', gap:20}}>
         <div style={{background:C.white, borderRadius:12, border:`1px solid ${C.border}`, padding:'24px 28px'}}>
           <div style={{display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:16}}>
-            <div style={{fontSize:14, fontWeight:600, color:C.text}}>Pendaftar Terbaru</div>
+            <div style={{fontSize:14, fontWeight:600, color:C.text}}>{tFn('adminRecentTitle')}</div>
             <button onClick={() => setScreen('admin-list')} style={{
               background:'none', border:'none', color:C.blue, fontSize:12, cursor:'pointer', fontWeight:500
-            }}>Lihat Semua →</button>
+            }}>{tFn('adminViewAll')}</button>
           </div>
           {[
-            { name:'Ahmad Fauzi', school:'SDN 01 Pariaman', status:'SUBMITTED', time:'2 jam lalu' },
-            { name:'Siti Rahma', school:'SDN 05 Pariaman', status:'DRAFT', time:'5 jam lalu' },
-            { name:'Budi Santoso', school:'MIN 1 Pariaman', status:'VERIFIED', time:'1 hari lalu' },
-            { name:'Nur Hidayah', school:'SDN 02 Pariaman', status:'ACCEPTED', time:'2 hari lalu' },
-            { name:'Rizky Pratama', school:'SDN 08 Pariaman', status:'REJECTED', time:'3 hari lalu' },
+            { name:'Ahmad Fauzi', school:'SDN 01 Pariaman', status:'SUBMITTED', time:tFn('dashN1t') },
+            { name:'Siti Rahma', school:'SDN 05 Pariaman', status:'DRAFT', time:'5 ' + (tFn('dashN1t').split(' ')[1] || 'jam lalu') },
+            { name:'Budi Santoso', school:'MIN 1 Pariaman', status:'VERIFIED', time:tFn('dashN2t') },
+            { name:'Nur Hidayah', school:'SDN 02 Pariaman', status:'ACCEPTED', time:'2 ' + (tFn('dashN2t').split(' ').slice(1).join(' ') || 'hari lalu') },
+            { name:'Rizky Pratama', school:'SDN 08 Pariaman', status:'REJECTED', time:'3 ' + (tFn('dashN2t').split(' ').slice(1).join(' ') || 'hari lalu') },
           ].map((a,i) => (
             <div key={i} style={{
               display:'flex', alignItems:'center', justifyContent:'space-between',
@@ -1486,11 +1868,11 @@ function AdminDashboard({ setScreen }) {
 
         <div style={{display:'flex', flexDirection:'column', gap:16}}>
           <div style={{background:C.white, borderRadius:12, border:`1px solid ${C.border}`, padding:'24px'}}>
-            <div style={{fontSize:14, fontWeight:600, color:C.text, marginBottom:14}}>Aksi Cepat</div>
+            <div style={{fontSize:14, fontWeight:600, color:C.text, marginBottom:14}}>{tFn('adminActionsTitle')}</div>
             {[
-              { label:'Verifikasi Berkas', badge:38, action:'admin-list' },
-              { label:'Export Data CSV', badge:null, action:'admin-list' },
-              { label:'Kelola Periode PPDB', badge:null, action:'admin-list' },
+              { label:tFn('adminAct1'), badge:38, action:'admin-list' },
+              { label:tFn('adminAct2'), badge:null, action:'admin-list' },
+              { label:tFn('adminAct3'), badge:null, action:'admin-list' },
             ].map((a,i) => (
               <button key={i} onClick={() => setScreen(a.action)} style={{
                 width:'100%', background:C.bg, border:`1px solid ${C.border}`,
@@ -1506,16 +1888,16 @@ function AdminDashboard({ setScreen }) {
             ))}
           </div>
           <div style={{background:C.navy, borderRadius:12, padding:'20px 24px', color:'#fff'}}>
-            <div style={{fontSize:13, fontWeight:600, marginBottom:10}}>Periode PPDB</div>
-            <div style={{fontSize:12, color:'rgba(255,255,255,0.7)', marginBottom:4}}>Status: <span style={{color:C.green, fontWeight:600}}>Aktif</span></div>
-            <div style={{fontSize:12, color:'rgba(255,255,255,0.7)'}}>Ditutup: 30 Juni 2026</div>
+            <div style={{fontSize:13, fontWeight:600, marginBottom:10}}>{tFn('adminPeriodeTitle')}</div>
+            <div style={{fontSize:12, color:'rgba(255,255,255,0.7)', marginBottom:4}}>{tFn('adminPeriodeStatus')} <span style={{color:C.green, fontWeight:600}}>{tFn('adminPeriodeActive')}</span></div>
+            <div style={{fontSize:12, color:'rgba(255,255,255,0.7)'}}>{tFn('adminPeriodeClosed')} {tFn('adminPeriodeClose')}</div>
             <div style={{
               marginTop:12, background:'rgba(255,255,255,0.1)',
               borderRadius:6, height:6, overflow:'hidden'
             }}>
               <div style={{height:'100%', width:'68%', background:C.blue, borderRadius:6}}/>
             </div>
-            <div style={{fontSize:11, color:'rgba(255,255,255,0.5)', marginTop:4}}>68 hari berlalu dari 100 hari</div>
+            <div style={{fontSize:11, color:'rgba(255,255,255,0.5)', marginTop:4}}>{tFn('adminPeriodeDays')}</div>
           </div>
         </div>
       </div>
@@ -1524,7 +1906,8 @@ function AdminDashboard({ setScreen }) {
 }
 
 // ─── ADMIN LIST ─────────────────────────────────────────────────────
-function AdminList({ setScreen }) {
+function AdminList({ setScreen, t }) {
+  const tFn = t || tG;
   const [filter, setFilter] = useState('ALL');
   const [search, setSearch] = useState('');
   const [verifyModal, setVerifyModal] = useState(null);
@@ -1553,18 +1936,18 @@ function AdminList({ setScreen }) {
     <div style={{maxWidth:1200, margin:'0 auto', padding:'40px'}}>
       <div style={{marginBottom:24, display:'flex', alignItems:'center', justifyContent:'space-between'}}>
         <div>
-          <button onClick={() => setScreen('admin-dashboard')} style={{background:'none', border:'none', color:C.muted, fontSize:13, cursor:'pointer'}}>← Dashboard</button>
-          <h1 style={{fontSize:22, color:C.navy, marginTop:4}}>Daftar Pendaftar</h1>
+          <button onClick={() => setScreen('admin-dashboard')} style={{background:'none', border:'none', color:C.muted, fontSize:13, cursor:'pointer'}}>{tFn('adminListBack')}</button>
+          <h1 style={{fontSize:22, color:C.navy, marginTop:4}}>{tFn('adminListTitle')}</h1>
         </div>
         <button style={{
           background:C.navy, border:'none', color:'#fff',
           padding:'10px 18px', borderRadius:7, fontSize:13, fontWeight:500
-        }}>⬇ Export CSV</button>
+        }}>{tFn('adminExport')}</button>
       </div>
 
       {/* FILTERS */}
       <div style={{background:C.white, borderRadius:10, padding:'16px 20px', border:`1px solid ${C.border}`, marginBottom:16, display:'flex', gap:12, alignItems:'center'}}>
-        <input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Cari nama / sekolah..."
+        <input value={search} onChange={e=>setSearch(e.target.value)} placeholder={tFn('adminSearch')}
           style={{padding:'8px 12px', borderRadius:6, border:`1px solid ${C.borderDark}`, fontSize:13, width:240}}/>
         <div style={{display:'flex', gap:6, marginLeft:'auto'}}>
           {['ALL','SUBMITTED','VERIFIED','ACCEPTED','REJECTED','DRAFT'].map(s => (
@@ -1573,7 +1956,7 @@ function AdminList({ setScreen }) {
               background: filter===s ? C.navy : C.bg,
               color: filter===s ? '#fff' : C.muted,
               border:`1px solid ${filter===s ? C.navy : C.border}`
-            }}>{s === 'ALL' ? 'Semua' : s}</button>
+            }}>{s === 'ALL' ? tFn('adminFilterAll') : s}</button>
           ))}
         </div>
       </div>
@@ -1583,7 +1966,7 @@ function AdminList({ setScreen }) {
         <table style={{width:'100%', borderCollapse:'collapse', fontSize:13}}>
           <thead>
             <tr style={{background:C.bg, borderBottom:`2px solid ${C.border}`}}>
-              {['No','Nama Pendaftar','Asal Sekolah','Tgl Daftar','Nilai','Status','Aksi'].map(h => (
+              {[tFn('adminTh1'),tFn('adminTh2'),tFn('adminTh3'),tFn('adminTh4'),tFn('adminTh5'),tFn('adminTh6'),tFn('adminTh7')].map(h => (
                 <th key={h} style={{padding:'12px 16px', textAlign:'left', fontSize:11, fontWeight:600, color:C.muted, textTransform:'uppercase', letterSpacing:'0.05em'}}>{h}</th>
               ))}
             </tr>
@@ -1613,25 +1996,25 @@ function AdminList({ setScreen }) {
                       <button onClick={() => setVerifyModal(a)} style={{
                         background:C.blue, border:'none', color:'#fff',
                         padding:'5px 12px', borderRadius:5, fontSize:11, fontWeight:500
-                      }}>Verifikasi</button>
+                      }}>{tFn('adminVerifyBtn')}</button>
                     )}
                     {a.status === 'VERIFIED' && (
                       <>
                         <button onClick={() => doVerify(a.id,'accept')} style={{
                           background:C.green, border:'none', color:'#fff',
                           padding:'5px 10px', borderRadius:5, fontSize:11
-                        }}>Terima</button>
+                        }}>{tFn('adminAcceptBtn')}</button>
                         <button onClick={() => doVerify(a.id,'reject')} style={{
                           background:C.redBg, border:`1px solid ${C.red}33`, color:C.red,
                           padding:'5px 10px', borderRadius:5, fontSize:11
-                        }}>Tolak</button>
+                        }}>{tFn('adminRejectBtn')}</button>
                       </>
                     )}
                     {['ACCEPTED','REJECTED','DRAFT'].includes(a.status) && (
                       <button style={{
                         background:C.bg, border:`1px solid ${C.border}`, color:C.muted,
                         padding:'5px 12px', borderRadius:5, fontSize:11
-                      }}>Detail</button>
+                      }}>{tFn('adminDetailBtn')}</button>
                     )}
                   </div>
                 </td>
@@ -1651,15 +2034,15 @@ function AdminList({ setScreen }) {
             background:C.white, borderRadius:14, padding:'36px 40px',
             maxWidth:520, width:'90%', boxShadow:'0 20px 60px rgba(0,0,0,0.2)'
           }}>
-            <h2 style={{fontSize:18, color:C.navy, marginBottom:6}}>Verifikasi Berkas</h2>
-            <p style={{fontSize:13, color:C.muted, marginBottom:20}}>Pendaftar: <strong style={{color:C.text}}>{verifyModal.name}</strong></p>
+            <h2 style={{fontSize:18, color:C.navy, marginBottom:6}}>{tFn('adminModalTitle')}</h2>
+            <p style={{fontSize:13, color:C.muted, marginBottom:20}}>{tFn('adminModalSub')} <strong style={{color:C.text}}>{verifyModal.name}</strong></p>
             <div style={{background:C.bg, borderRadius:8, padding:'16px', marginBottom:20}}>
               {[
-                ['Kartu Keluarga','✓ Lengkap'],
-                ['Akta Kelahiran','✓ Lengkap'],
-                ['Raport Semester 1–5','✓ Lengkap'],
-                ['Foto 3×4','✓ Lengkap'],
-                ['Ijazah / SKL','⚠ Belum ada'],
+                [tFn('adminModalDoc1'), tFn('adminModalComplete')],
+                [tFn('adminModalDoc2'), tFn('adminModalComplete')],
+                [tFn('adminModalDoc3'), tFn('adminModalComplete')],
+                [tFn('adminModalDoc4'), tFn('adminModalComplete')],
+                [tFn('adminModalDoc5'), tFn('adminModalMissing')],
               ].map(([k,v]) => (
                 <div key={k} style={{display:'flex', justifyContent:'space-between', padding:'6px 0', borderBottom:`1px solid ${C.border}`, fontSize:13}}>
                   <span style={{color:C.muted}}>{k}</span>
@@ -1668,23 +2051,23 @@ function AdminList({ setScreen }) {
               ))}
             </div>
             <div style={{marginBottom:16}}>
-              <label style={{display:'block', fontSize:13, fontWeight:500, marginBottom:6}}>Catatan Admin</label>
-              <textarea rows={3} placeholder="Tambahkan catatan jika perlu..."
+              <label style={{display:'block', fontSize:13, fontWeight:500, marginBottom:6}}>{tFn('adminModalNoteLabel')}</label>
+              <textarea rows={3} placeholder={tFn('adminModalNoteP')}
                 style={{width:'100%', padding:'10px 12px', borderRadius:7, border:`1px solid ${C.borderDark}`, fontSize:13, resize:'none'}}/>
             </div>
             <div style={{display:'flex', gap:10, justifyContent:'flex-end'}}>
               <button onClick={() => setVerifyModal(null)} style={{
                 background:'none', border:`1px solid ${C.border}`, color:C.text,
                 padding:'10px 20px', borderRadius:7, fontSize:13
-              }}>Batal</button>
+              }}>{tFn('adminModalCancel')}</button>
               <button onClick={() => doVerify(verifyModal.id,'reject')} style={{
                 background:C.redBg, border:`1px solid ${C.red}44`, color:C.red,
                 padding:'10px 20px', borderRadius:7, fontSize:13, fontWeight:500
-              }}>Tolak Berkas</button>
+              }}>{tFn('adminModalRejectBtn')}</button>
               <button onClick={() => doVerify(verifyModal.id,'verify')} style={{
                 background:C.navy, border:'none', color:'#fff',
                 padding:'10px 20px', borderRadius:7, fontSize:13, fontWeight:600
-              }}>Verifikasi ✓</button>
+              }}>{tFn('adminModalVerifyBtn')}</button>
             </div>
           </div>
         </div>
@@ -1700,26 +2083,29 @@ function App() {
   const [appStatus, setAppStatus] = useState('DRAFT');
   const [lang, setLang] = useState('id');
   const [darkMode, setDarkMode] = useState(false);
+  const isMobile = useWindowWidth() <= 768;
+
+  _lang = lang;
 
   useEffect(() => {
     document.body.classList.toggle('dark-mode', darkMode);
   }, [darkMode]);
 
-  const t = (key) => TR[lang][key] || TR.id[key] || key;
+  const t = tG;
 
   const screens = {
     landing: <Landing setScreen={setScreen} lang={lang} t={t}/>,
-    'ppdb-info': <PPDBInfo setScreen={setScreen}/>,
-    register: <Register setScreen={setScreen}/>,
-    'verify-email': <VerifyEmail setScreen={setScreen}/>,
-    login: <Login setScreen={setScreen} setUser={setUser}/>,
-    dashboard: <Dashboard setScreen={setScreen} appStatus={appStatus} setAppStatus={setAppStatus}/>,
-    form: <PPDBForm setScreen={setScreen} setAppStatus={setAppStatus}/>,
-    upload: <Upload setScreen={setScreen}/>,
-    'submit-confirm': <SubmitConfirm setScreen={setScreen} setAppStatus={setAppStatus}/>,
-    result: <Result setScreen={setScreen} appStatus={appStatus}/>,
-    'admin-dashboard': <AdminDashboard setScreen={setScreen}/>,
-    'admin-list': <AdminList setScreen={setScreen}/>,
+    'ppdb-info': <PPDBInfo setScreen={setScreen} t={t}/>,
+    register: <Register setScreen={setScreen} t={t}/>,
+    'verify-email': <VerifyEmail setScreen={setScreen} t={t}/>,
+    login: <Login setScreen={setScreen} setUser={setUser} t={t}/>,
+    dashboard: <Dashboard setScreen={setScreen} appStatus={appStatus} setAppStatus={setAppStatus} t={t}/>,
+    form: <PPDBForm setScreen={setScreen} setAppStatus={setAppStatus} t={t}/>,
+    upload: <Upload setScreen={setScreen} t={t}/>,
+    'submit-confirm': <SubmitConfirm setScreen={setScreen} setAppStatus={setAppStatus} t={t}/>,
+    result: <Result setScreen={setScreen} appStatus={appStatus} t={t}/>,
+    'admin-dashboard': <AdminDashboard setScreen={setScreen} t={t}/>,
+    'admin-list': <AdminList setScreen={setScreen} t={t}/>,
   };
 
   return (
@@ -1730,10 +2116,10 @@ function App() {
         {screens[screen] || screens.landing}
       </div>
       <footer style={{background:'#0F2440', marginTop:0}}>
-        <div style={{maxWidth:1200, margin:'0 auto', padding:'48px 60px 32px'}}>
-          <div style={{display:'grid', gridTemplateColumns:'2fr 1fr 1fr 1fr', gap:40, marginBottom:40}}>
+        <div style={{maxWidth:1200, margin:'0 auto', padding: isMobile ? '40px 20px 24px' : '48px 60px 32px'}}>
+          <div style={{display:'grid', gridTemplateColumns: isMobile ? '1fr 1fr' : '2fr 1fr 1fr 1fr', gap: isMobile ? 28 : 40, marginBottom:32}}>
             {/* Brand */}
-            <div>
+            <div style={{gridColumn: isMobile ? '1 / -1' : 'auto'}}>
               <div style={{display:'flex', alignItems:'center', gap:10, marginBottom:16}}>
                 <img src="./assets/logo.png" alt="Darul Furqan" style={{height:40, width:40, objectFit:'contain', borderRadius:4, background:'#fff', padding:2}}/>
                 <div>
@@ -1757,26 +2143,26 @@ function App() {
             </div>
             {/* Quick Links */}
             <div>
-              <div style={{fontSize:12, fontWeight:700, color:'rgba(255,255,255,0.9)', letterSpacing:'0.08em', textTransform:'uppercase', marginBottom:16}}>Navigasi</div>
-              {['Beranda','Info PPDB','Profil Sekolah','Berita','Kontak'].map(l => (
+              <div style={{fontSize:12, fontWeight:700, color:'rgba(255,255,255,0.9)', letterSpacing:'0.08em', textTransform:'uppercase', marginBottom:16}}>{t('fNav')}</div>
+              {t('fNavLinks').map(l => (
                 <div key={l} style={{fontSize:13, color:'rgba(255,255,255,0.5)', marginBottom:10, cursor:'pointer'}}>{l}</div>
               ))}
             </div>
             {/* PPDB Links */}
             <div>
-              <div style={{fontSize:12, fontWeight:700, color:'rgba(255,255,255,0.9)', letterSpacing:'0.08em', textTransform:'uppercase', marginBottom:16}}>PPDB</div>
-              {['Syarat Pendaftaran','Jadwal PPDB','Alur Pendaftaran','Daftar Sekarang','Cek Status'].map(l => (
+              <div style={{fontSize:12, fontWeight:700, color:'rgba(255,255,255,0.9)', letterSpacing:'0.08em', textTransform:'uppercase', marginBottom:16}}>{t('fPPDB')}</div>
+              {t('fPPDBLinks').map(l => (
                 <div key={l} style={{fontSize:13, color:'rgba(255,255,255,0.5)', marginBottom:10, cursor:'pointer'}}>{l}</div>
               ))}
             </div>
             {/* Contact */}
             <div>
-              <div style={{fontSize:12, fontWeight:700, color:'rgba(255,255,255,0.9)', letterSpacing:'0.08em', textTransform:'uppercase', marginBottom:16}}>Kontak</div>
+              <div style={{fontSize:12, fontWeight:700, color:'rgba(255,255,255,0.9)', letterSpacing:'0.08em', textTransform:'uppercase', marginBottom:16}}>{t('fKontak')}</div>
               {[
-                { icon:'📍', text:'Jl. M. Yamin No.12, Pariaman' },
-                { icon:'📞', text:'(0751) 93456' },
-                { icon:'✉️', text:'ppdb@darulfurqan.sch.id' },
-                { icon:'🕐', text:'Senin–Jumat 08.00–15.00' },
+                { icon:'📍', text:t('fContactAddr') },
+                { icon:'📞', text:t('fContactTelp') },
+                { icon:'✉️', text:t('fContactEmail') },
+                { icon:'🕐', text:t('fContactHours') },
               ].map((c,i) => (
                 <div key={i} style={{display:'flex', gap:8, marginBottom:10, alignItems:'flex-start'}}>
                   <span style={{fontSize:12, marginTop:1}}>{c.icon}</span>
@@ -1788,14 +2174,13 @@ function App() {
           {/* Bottom bar */}
           <div style={{
             borderTop:'1px solid rgba(255,255,255,0.08)',
-            paddingTop:20, display:'flex', justifyContent:'space-between', alignItems:'center'
+            paddingTop:20, display:'flex',
+            flexDirection: isMobile ? 'column' : 'row',
+            justifyContent:'space-between', alignItems: isMobile ? 'flex-start' : 'center',
+            gap: isMobile ? 6 : 0
           }}>
-            <div style={{fontSize:11, color:'rgba(255,255,255,0.3)'}}>
-              © 2026 Yayasan Darul Furqan Pariaman. Hak cipta dilindungi.
-            </div>
-            <div style={{fontSize:11, color:'rgba(255,255,255,0.3)'}}>
-              Sistem Informasi PPDB v1.0
-            </div>
+            <div style={{fontSize:11, color:'rgba(255,255,255,0.3)'}}>{t('fCopy')}</div>
+            <div style={{fontSize:11, color:'rgba(255,255,255,0.3)'}}>{t('fSys')}</div>
           </div>
         </div>
       </footer>
