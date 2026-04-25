@@ -5,39 +5,93 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>PPDB – Yayasan Darul Furqan Pariaman</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
 <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
 <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
 <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html,body,#root{height:100%;width:100%}
-body{font-family:'Inter',sans-serif;background:#F5F7FA;color:#1F2937;overflow-x:hidden;transition:filter .3s ease}
-body.dark-mode{filter:invert(1) hue-rotate(180deg)}
-body.dark-mode img{filter:invert(1) hue-rotate(180deg)}
-body.dark-mode .no-invert{filter:invert(1) hue-rotate(180deg)}
+body{font-family:'Inter',sans-serif;background:#F0F4FF;color:#0F172A;overflow-x:hidden;transition:background .3s ease,color .3s ease}
 :root{
-  --navy:#1E3A5F;
-  --blue:#3B82F6;
-  --bg:#F5F7FA;
-  --text:#1F2937;
-  --text-muted:#6B7280;
-  --border:#E5E7EB;
-  --white:#FFFFFF;
-  --red:#EF4444;
-  --green:#10B981;
-  --orange:#F59E0B;
+  --navy:#0C1F4A;
+  --blue:#2563EB;
+  --teal:#0EA5E9;
+  --bg:#F0F4FF;
+  --surface:#FFFFFF;
+  --text:#0F172A;
+  --text-muted:#475569;
+  --text-subtle:#94A3B8;
+  --border:#CBD5E1;
+  --radius-sm:8px;
+  --radius-md:14px;
+  --radius-lg:20px;
 }
-h1,h2,h3{font-family:'Playfair Display',serif}
-input,select,textarea{font-family:'Inter',sans-serif}
-button{cursor:pointer;font-family:'Inter',sans-serif}
-::-webkit-scrollbar{width:6px}
-::-webkit-scrollbar-track{background:#f1f1f1}
-::-webkit-scrollbar-thumb{background:#ccc;border-radius:3px}
+/* ── Dark mode: proper CSS-variable override, images untouched ── */
+body.dark-mode{
+  background:#0D1117;
+  color:#E2E8F0;
+  --bg:#0D1117;
+  --surface:#161B22;
+  --text:#E2E8F0;
+  --text-muted:#94A3B8;
+  --text-subtle:#64748B;
+  --border:#21262D;
+  --navy:#1E3A5F;
+}
+/* Sections that use C.white / C.bg as background need to follow suit */
+body.dark-mode [data-dm-surface]{background:#161B22 !important;border-color:#21262D !important}
+body.dark-mode [data-dm-bg]{background:#0D1117 !important}
+/* Cards text */
+body.dark-mode [data-dm-text]{color:#E2E8F0 !important}
+body.dark-mode [data-dm-muted]{color:#94A3B8 !important}
+/* Scrollbar in dark mode */
+body.dark-mode::-webkit-scrollbar-track{background:#161B22}
+body.dark-mode::-webkit-scrollbar-thumb{background:#334155}
+h1,h2,h3,h4,h5{font-family:'Plus Jakarta Sans',sans-serif;font-weight:700}
+input,select,textarea{font-family:'Inter',sans-serif;transition:border-color .18s ease,box-shadow .18s ease}
+button{cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;font-weight:600;transition:all .18s ease}
+a{transition:color .15s ease}
+::-webkit-scrollbar{width:5px}
+::-webkit-scrollbar-track{background:#EEF2FF}
+::-webkit-scrollbar-thumb{background:#94A3B8;border-radius:10px}
+::-webkit-scrollbar-thumb:hover{background:#64748B}
+
+/* Focus rings */
+:focus-visible{outline:2px solid #2563EB;outline-offset:2px;border-radius:6px}
+button:focus-visible{outline:2px solid #2563EB;outline-offset:2px}
+input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #2563EB;outline-offset:0}
+
+html{scroll-behavior:smooth}
+
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important;scroll-behavior:auto !important}
+}
+
+body{overscroll-behavior-y:contain}
+
 @media(max-width:768px){
   #root{overflow-x:hidden}
   input,select,textarea{font-size:16px !important}
+  button{min-height:44px}
 }
+
+/* Gradient text utility */
+.grad-text{background:linear-gradient(135deg,#0C1F4A 0%,#2563EB 50%,#0EA5E9 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+
+/* Glassmorphism card */
+.glass{background:rgba(255,255,255,0.72);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,0.55)}
+
+/* Animated gradient border */
+@keyframes gradBorder{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+
+/* Pulse dot for live badge */
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.pulse-dot{animation:pulse 2s ease-in-out infinite}
+
+/* Floating animation for hero elements */
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
 </style>
 </head>
 <body>
@@ -69,7 +123,7 @@ const TR = {
     heroTag:'PPDB 2026 / 2027 — Pendaftaran Dibuka',
     heroTitle:'PPDB Yayasan\nDarul Furqan\nPariaman',
     heroSub:'Membentuk generasi berilmu, berakhlak, dan berprestasi melalui pendidikan Islam terpadu sejak 1981.',
-    heroCta1:'Daftar Sekarang →', heroCta2:'Lihat Profil Sekolah',
+    heroCta1:'Daftar Sekarang →', heroCta2:'Info PPDB',
     // Stats
     statAlumni:'Alumni', statLulus:'Kelulusan', statTahun:'Tahun',
     // Profil
@@ -94,6 +148,17 @@ const TR = {
     k2t:'Fasilitas Lengkap', k2d:'Ruang kelas modern, laboratorium, perpustakaan, dan lapangan olahraga',
     k3t:'Lingkungan Islami', k3d:'Pesantren terpadu dengan pembiasaan ibadah harian yang terstruktur',
     k4t:'Kurikulum Modern', k4d:'Memadukan Kurikulum Merdeka dengan pendidikan agama Islam terpadu',
+    // Fasilitas
+    fasLabel:'Fasilitas', fasTitle:'Fasilitas Sekolah',
+    fasSub:'Lingkungan belajar modern yang dirancang untuk mendukung perkembangan akademik dan karakter siswa.',
+    fas1t:'Ruang Kelas Modern', fas1d:'32 ruang kelas ber-AC dengan proyektor interaktif dan kursi ergonomis untuk kenyamanan belajar maksimal.',
+    fas2t:'Laboratorium IPA', fas2d:'Lab Fisika, Kimia, dan Biologi yang dilengkapi peralatan modern sesuai standar nasional.',
+    fas3t:'Laboratorium Komputer', fas3d:'120 unit komputer terbaru dengan koneksi internet berkecepatan tinggi dan software pembelajaran.',
+    fas4t:'Perpustakaan Digital', fas4d:'Koleksi lebih dari 10.000 judul buku fisik dan akses e-library 24 jam untuk siswa.',
+    fas5t:'Masjid & Mushola', fas5d:'Fasilitas ibadah yang luas dan nyaman untuk menunjang kegiatan keagamaan harian siswa.',
+    fas6t:'Lapangan Olahraga', fas6d:'Lapangan basket, futsal, dan voli yang dilengkapi area lari dan peralatan olahraga lengkap.',
+    fas7t:'Asrama Pesantren', fas7d:'Asrama putra-putri terpisah dengan kapasitas 240 siswa, pengawasan 24 jam oleh pembina berpengalaman.',
+    fas8t:'Kantin & Koperasi', fas8d:'Kantin sehat dengan menu bergizi, halal, dan terjangkau untuk seluruh warga sekolah.',
     // Alur
     alurLabel:'Cara Mendaftar', alurTitle:'Alur Pendaftaran PPDB',
     a1l:'Daftar Akun', a1d:'Buat akun & verifikasi email',
@@ -284,7 +349,7 @@ const TR = {
     heroTag:'PPDB 2026 / 2027 — Registration Open',
     heroTitle:'New Student Admission\nDarul Furqan\nFoundation Pariaman',
     heroSub:'Building a generation of knowledge, character, and achievement through integrated Islamic education since 1981.',
-    heroCta1:'Register Now →', heroCta2:'View School Profile',
+    heroCta1:'Register Now →', heroCta2:'PPDB Info',
     // Stats
     statAlumni:'Alumni', statLulus:'Graduation Rate', statTahun:'Years',
     // Profil
@@ -309,6 +374,17 @@ const TR = {
     k2t:'Complete Facilities', k2d:'Modern classrooms, laboratories, library, and sports fields',
     k3t:'Islamic Environment', k3d:'Integrated pesantren with structured daily worship activities',
     k4t:'Modern Curriculum', k4d:'Combining the Merdeka Curriculum with integrated Islamic education',
+    // Fasilitas
+    fasLabel:'Facilities', fasTitle:'School Facilities',
+    fasSub:'A modern learning environment designed to support students\' academic development and character building.',
+    fas1t:'Modern Classrooms', fas1d:'32 air-conditioned classrooms with interactive projectors and ergonomic chairs for optimal learning comfort.',
+    fas2t:'Science Laboratory', fas2d:'Physics, Chemistry, and Biology labs equipped with modern instruments meeting national standards.',
+    fas3t:'Computer Laboratory', fas3d:'120 latest-spec computers with high-speed internet and educational software for digital learning.',
+    fas4t:'Digital Library', fas4d:'A collection of over 10,000 book titles and 24-hour e-library access for students.',
+    fas5t:'Mosque & Prayer Room', fas5d:'Spacious worship facilities to support students\' daily religious activities and spiritual growth.',
+    fas6t:'Sports Fields', fas6d:'Basketball, futsal, and volleyball courts plus a running track and complete sports equipment.',
+    fas7t:'Boarding House', fas7d:'Separate boys\' and girls\' dormitories for 240 students, with 24-hour supervision by experienced staff.',
+    fas8t:'Canteen & Cooperative', fas8d:'A healthy canteen serving nutritious, halal, and affordable meals for all school members.',
     // Alur
     alurLabel:'How to Register', alurTitle:'Admission Registration Flow',
     a1l:'Create Account', a1d:'Register & verify email',
@@ -494,15 +570,21 @@ const TR = {
 
 // ─── DESIGN TOKENS ────────────────────────────────────────────────
 const C = {
-  navy: '#1E3A5F', navyDark: '#152D4A', navyLight: '#2A4F80',
-  blue: '#3B82F6', blueDark: '#2563EB', blueLight: '#EFF6FF',
-  bg: '#F5F7FA', white: '#FFFFFF',
-  text: '#1F2937', muted: '#6B7280', subtle: '#9CA3AF',
-  border: '#E5E7EB', borderDark: '#D1D5DB',
+  navy: '#0C1F4A', navyDark: '#070F24', navyLight: '#1A3A7A',
+  blue: '#2563EB', blueDark: '#1D4ED8', blueLight: '#EFF6FF',
+  teal: '#0EA5E9', tealLight: '#E0F2FE',
+  bg: '#F0F4FF', white: '#FFFFFF',
+  text: '#0F172A', muted: '#475569', subtle: '#94A3B8',
+  border: '#CBD5E1', borderDark: '#94A3B8',
   red: '#EF4444', redBg: '#FEF2F2',
   green: '#10B981', greenBg: '#ECFDF5',
   orange: '#F59E0B', orangeBg: '#FFFBEB',
-  gray: '#6B7280', grayBg: '#F3F4F6',
+  gray: '#64748B', grayBg: '#F1F5F9',
+  // Gradient presets
+  gradHero: 'linear-gradient(135deg,#070F24 0%,#0C1F4A 50%,#1A3A7A 100%)',
+  gradBlue: 'linear-gradient(135deg,#2563EB 0%,#0EA5E9 100%)',
+  gradCard: 'linear-gradient(135deg,#1A3A7A 0%,#0C1F4A 100%)',
+  gradAccent: 'linear-gradient(135deg,#2563EB 0%,#7C3AED 100%)',
 };
 
 // ─── BADGE ────────────────────────────────────────────────────────
@@ -518,10 +600,15 @@ function Badge({ status }) {
   const label = tG('badge' + status.charAt(0).toUpperCase() + status.slice(1).toLowerCase());
   return (
     <span style={{
-      display:'inline-block', padding:'3px 10px', borderRadius:20,
-      background: s.bg, color: s.color, fontSize:11, fontWeight:600,
-      letterSpacing:'0.02em', border:`1px solid ${s.color}22`
-    }}>{label}</span>
+      display:'inline-flex', alignItems:'center', gap:5,
+      padding:'4px 12px', borderRadius:100,
+      background: s.bg, color: s.color, fontSize:11, fontWeight:700,
+      letterSpacing:'0.04em', border:`1px solid ${s.color}33`,
+      fontFamily:'Plus Jakarta Sans,sans-serif'
+    }}>
+      <span style={{width:5,height:5,borderRadius:'50%',background:s.color,flexShrink:0}}/>
+      {label}
+    </span>
   );
 }
 
@@ -531,7 +618,14 @@ function Navbar({ screen, setScreen, user, setUser, lang, setLang, darkMode, set
   const isAdmin = user?.role === 'admin';
   const tFn = t || (k => k);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const isMobile = useWindowWidth() <= 768;
+
+  useEffect(() => {
+    const handler = () => setScrolled(window.scrollY > 16);
+    window.addEventListener('scroll', handler, {passive:true});
+    return () => window.removeEventListener('scroll', handler);
+  }, []);
 
   const scrollTo = (id) => {
     setMenuOpen(false);
@@ -550,23 +644,25 @@ function Navbar({ screen, setScreen, user, setUser, lang, setLang, darkMode, set
 
   const LangDarkControls = () => (
     <div style={{display:'flex', alignItems:'center', gap:6}}>
-      <div style={{display:'flex', alignItems:'center', background:'rgba(255,255,255,0.08)', borderRadius:6, border:'1px solid rgba(255,255,255,0.15)', overflow:'hidden'}}>
+      <div style={{display:'flex', alignItems:'center', background:'rgba(255,255,255,0.1)', borderRadius:8, border:'1px solid rgba(255,255,255,0.18)', overflow:'hidden'}}>
         {['id','en'].map(l => (
           <button key={l} onClick={() => setLang && setLang(l)} style={{
-            background: lang===l ? 'rgba(255,255,255,0.2)' : 'transparent',
+            background: lang===l ? 'rgba(255,255,255,0.22)' : 'transparent',
             border:'none', color: lang===l ? '#fff' : 'rgba(255,255,255,0.5)',
-            padding:'5px 10px', fontSize:11, fontWeight: lang===l ? 700 : 400,
-            cursor:'pointer', textTransform:'uppercase', letterSpacing:'0.05em'
+            padding:'5px 11px', fontSize:11, fontWeight: lang===l ? 700 : 400,
+            cursor:'pointer', textTransform:'uppercase', letterSpacing:'0.06em',
+            transition:'all .15s'
           }}>{l}</button>
         ))}
       </div>
       <button onClick={() => setDarkMode && setDarkMode(d => !d)}
         title={darkMode ? 'Light Mode' : 'Dark Mode'}
+        aria-label={darkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
         style={{
-          width:32, height:32, borderRadius:6,
-          border:'1px solid rgba(255,255,255,0.15)',
-          background: darkMode ? 'rgba(255,255,255,0.2)' : 'rgba(255,255,255,0.08)',
-          cursor:'pointer', fontSize:16,
+          width:34, height:34, borderRadius:8,
+          border:'1px solid rgba(255,255,255,0.18)',
+          background: 'rgba(255,255,255,0.1)',
+          cursor:'pointer', fontSize:15,
           display:'flex', alignItems:'center', justifyContent:'center'
         }}>
         {darkMode ? '☀️' : '🌙'}
@@ -574,56 +670,92 @@ function Navbar({ screen, setScreen, user, setUser, lang, setLang, darkMode, set
     </div>
   );
 
+  const navBg = scrolled
+    ? 'rgba(7,15,36,0.88)'
+    : 'rgba(7,15,36,0.72)';
+
   return (
     <div style={{position:'sticky', top:0, zIndex:100}}>
       <nav style={{
-        background: C.navy, height:64, display:'flex', alignItems:'center',
+        background: navBg,
+        backdropFilter: 'blur(20px)',
+        WebkitBackdropFilter: 'blur(20px)',
+        height:66,
+        display:'flex', alignItems:'center',
         padding: isMobile ? '0 16px' : '0 40px',
-        boxShadow:'0 2px 8px rgba(0,0,0,0.15)'
+        borderBottom: scrolled ? '1px solid rgba(255,255,255,0.08)' : '1px solid rgba(255,255,255,0.06)',
+        boxShadow: scrolled ? '0 4px 32px rgba(0,0,0,0.32)' : 'none',
+        transition: 'background .25s, box-shadow .25s'
       }}>
         {/* LOGO */}
         <div style={{display:'flex', alignItems:'center', gap:10, cursor:'pointer', flexShrink:0}}
           onClick={() => { setScreen('landing'); setMenuOpen(false); window.scrollTo({top:0,behavior:'smooth'}); }}>
-          <img src="./assets/logo.png" alt="Darul Furqan" style={{height:36, width:36, objectFit:'contain', background:'rgba(255,255,255,0.9)', borderRadius:6, padding:2}}/>
+          <div style={{
+            width:38, height:38, borderRadius:10,
+            background:'linear-gradient(135deg,#2563EB,#0EA5E9)',
+            display:'flex', alignItems:'center', justifyContent:'center',
+            boxShadow:'0 2px 8px rgba(37,99,235,0.5)', flexShrink:0, overflow:'hidden'
+          }}>
+            <img src="./assets/logo.png" alt="Darul Furqan" style={{height:30, width:30, objectFit:'contain'}}/>
+          </div>
           <div>
-            <div style={{color:'#fff', fontSize:13, fontWeight:600, lineHeight:1.2}}>Darul Furqan</div>
-            <div style={{color:'rgba(255,255,255,0.6)', fontSize:10, lineHeight:1.2}}>Pariaman</div>
+            <div style={{color:'#fff', fontSize:13, fontWeight:700, lineHeight:1.2, fontFamily:'Plus Jakarta Sans,sans-serif'}}>Darul Furqan</div>
+            <div style={{color:'rgba(255,255,255,0.5)', fontSize:10, lineHeight:1.2}}>Pariaman</div>
           </div>
         </div>
 
         {/* DESKTOP NAV */}
         {!isMobile && !isAuth && (
           <div style={{display:'flex', flex:1, alignItems:'center'}}>
-            <div style={{display:'flex', gap:2, marginLeft:24}}>
+            <div style={{display:'flex', gap:1, marginLeft:28}}>
               {publicNav.map(n => (
-                <button key={n.label} onClick={n.action} style={{background:'none',border:'none',color:'rgba(255,255,255,0.75)',fontSize:13,padding:'6px 12px',borderRadius:6,cursor:'pointer'}}
-                  onMouseEnter={e=>e.target.style.color='#fff'}
-                  onMouseLeave={e=>e.target.style.color='rgba(255,255,255,0.75)'}
+                <button key={n.label} onClick={n.action} style={{
+                  background:'none', border:'none', color:'rgba(255,255,255,0.72)',
+                  fontSize:13, padding:'6px 13px', borderRadius:8, cursor:'pointer',
+                  fontFamily:'Plus Jakarta Sans,sans-serif', fontWeight:500
+                }}
+                  onMouseEnter={e=>{e.currentTarget.style.color='#fff';e.currentTarget.style.background='rgba(255,255,255,0.08)'}}
+                  onMouseLeave={e=>{e.currentTarget.style.color='rgba(255,255,255,0.72)';e.currentTarget.style.background='none'}}
                 >{n.label}</button>
               ))}
             </div>
             <div style={{display:'flex', gap:8, alignItems:'center', marginLeft:'auto'}}>
               <LangDarkControls/>
-              <div style={{width:1, height:20, background:'rgba(255,255,255,0.2)'}}/>
-              <button onClick={() => setScreen('login')} style={{background:'none',border:'1px solid rgba(255,255,255,0.4)',color:'rgba(255,255,255,0.85)',borderRadius:6,padding:'7px 18px',fontSize:13,cursor:'pointer'}}>{tFn('masuk')}</button>
-              <button onClick={() => setScreen('register')} style={{background:C.blue,border:'none',color:'#fff',borderRadius:6,padding:'7px 18px',fontSize:13,fontWeight:600,cursor:'pointer'}}>{tFn('daftar')}</button>
+              <div style={{width:1, height:20, background:'rgba(255,255,255,0.15)'}}/>
+              <button onClick={() => setScreen('login')} style={{
+                background:'rgba(255,255,255,0.08)', border:'1px solid rgba(255,255,255,0.22)',
+                color:'rgba(255,255,255,0.88)', borderRadius:10, padding:'7px 18px', fontSize:13,
+                fontFamily:'Plus Jakarta Sans,sans-serif', fontWeight:600
+              }}
+                onMouseEnter={e=>e.currentTarget.style.background='rgba(255,255,255,0.15)'}
+                onMouseLeave={e=>e.currentTarget.style.background='rgba(255,255,255,0.08)'}
+              >{tFn('masuk')}</button>
+              <button onClick={() => setScreen('register')} style={{
+                background:'linear-gradient(135deg,#2563EB,#0EA5E9)', border:'none',
+                color:'#fff', borderRadius:10, padding:'7px 20px', fontSize:13,
+                fontFamily:'Plus Jakarta Sans,sans-serif', fontWeight:700,
+                boxShadow:'0 2px 12px rgba(37,99,235,0.45)'
+              }}
+                onMouseEnter={e=>e.currentTarget.style.boxShadow='0 4px 18px rgba(37,99,235,0.6)'}
+                onMouseLeave={e=>e.currentTarget.style.boxShadow='0 2px 12px rgba(37,99,235,0.45)'}
+              >{tFn('daftar')}</button>
             </div>
           </div>
         )}
 
         {!isMobile && isAuth && (
           <div style={{display:'flex', gap:6, alignItems:'center', marginLeft:'auto'}}>
-            {!isAdmin && <button onClick={() => setScreen('dashboard')} style={{background:'none',border:'none',color:'rgba(255,255,255,0.8)',fontSize:13,padding:'4px 12px',borderRadius:6,cursor:'pointer'}}>{tFn('navDashboard')}</button>}
+            {!isAdmin && <button onClick={() => setScreen('dashboard')} style={{background:'none',border:'none',color:'rgba(255,255,255,0.78)',fontSize:13,padding:'4px 12px',borderRadius:8,cursor:'pointer',fontFamily:'Plus Jakarta Sans,sans-serif',fontWeight:500}}>{tFn('navDashboard')}</button>}
             {isAdmin && <>
-              <button onClick={() => setScreen('admin-dashboard')} style={{background:'none',border:'none',color:'rgba(255,255,255,0.8)',fontSize:13,padding:'4px 12px',borderRadius:6,cursor:'pointer'}}>{tFn('navDashboard')}</button>
-              <button onClick={() => setScreen('admin-list')} style={{background:'none',border:'none',color:'rgba(255,255,255,0.8)',fontSize:13,padding:'4px 12px',borderRadius:6,cursor:'pointer'}}>{tFn('navPendaftar')}</button>
+              <button onClick={() => setScreen('admin-dashboard')} style={{background:'none',border:'none',color:'rgba(255,255,255,0.78)',fontSize:13,padding:'4px 12px',borderRadius:8,cursor:'pointer',fontFamily:'Plus Jakarta Sans,sans-serif',fontWeight:500}}>{tFn('navDashboard')}</button>
+              <button onClick={() => setScreen('admin-list')} style={{background:'none',border:'none',color:'rgba(255,255,255,0.78)',fontSize:13,padding:'4px 12px',borderRadius:8,cursor:'pointer',fontFamily:'Plus Jakarta Sans,sans-serif',fontWeight:500}}>{tFn('navPendaftar')}</button>
             </>}
             <LangDarkControls/>
-            <div style={{display:'flex',alignItems:'center',gap:10,marginLeft:4,background:'rgba(255,255,255,0.08)',borderRadius:8,padding:'6px 12px'}}>
-              <div style={{width:28,height:28,borderRadius:'50%',background:C.blue,display:'flex',alignItems:'center',justifyContent:'center',fontSize:12,fontWeight:700,color:'#fff'}}>{user.name[0]}</div>
-              <span style={{color:'rgba(255,255,255,0.85)',fontSize:13}}>{user.name}</span>
+            <div style={{display:'flex',alignItems:'center',gap:8,marginLeft:4,background:'rgba(255,255,255,0.1)',borderRadius:10,padding:'6px 12px',border:'1px solid rgba(255,255,255,0.15)'}}>
+              <div style={{width:26,height:26,borderRadius:'50%',background:'linear-gradient(135deg,#2563EB,#0EA5E9)',display:'flex',alignItems:'center',justifyContent:'center',fontSize:11,fontWeight:800,color:'#fff',fontFamily:'Plus Jakarta Sans,sans-serif'}}>{user.name[0]}</div>
+              <span style={{color:'rgba(255,255,255,0.9)',fontSize:13,fontFamily:'Plus Jakarta Sans,sans-serif',fontWeight:600}}>{user.name}</span>
             </div>
-            <button onClick={() => { setUser(null); setScreen('landing'); }} style={{background:'none',border:'1px solid rgba(255,255,255,0.25)',color:'rgba(255,255,255,0.6)',borderRadius:6,padding:'6px 12px',fontSize:12,cursor:'pointer'}}>{tFn('navKeluar')}</button>
+            <button onClick={() => { setUser(null); setScreen('landing'); }} style={{background:'none',border:'1px solid rgba(255,255,255,0.2)',color:'rgba(255,255,255,0.55)',borderRadius:8,padding:'6px 12px',fontSize:12,cursor:'pointer'}}>{tFn('navKeluar')}</button>
           </div>
         )}
 
@@ -632,11 +764,11 @@ function Navbar({ screen, setScreen, user, setUser, lang, setLang, darkMode, set
           <div style={{display:'flex', gap:8, alignItems:'center', marginLeft:'auto'}}>
             <LangDarkControls/>
             <button onClick={() => setMenuOpen(o => !o)} style={{
-              background:'none', border:'1px solid rgba(255,255,255,0.3)',
-              borderRadius:6, width:36, height:36, cursor:'pointer',
+              background:'rgba(255,255,255,0.1)', border:'1px solid rgba(255,255,255,0.2)',
+              borderRadius:8, width:38, height:38, cursor:'pointer',
               display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', gap:5
             }}>
-              {[0,1,2].map(i => <div key={i} style={{width:18, height:2, background:'#fff', borderRadius:2}}/>)}
+              {[0,1,2].map(i => <div key={i} style={{width:17, height:2, background:'#fff', borderRadius:2}}/>)}
             </button>
           </div>
         )}
@@ -645,30 +777,33 @@ function Navbar({ screen, setScreen, user, setUser, lang, setLang, darkMode, set
       {/* MOBILE DROPDOWN MENU */}
       {isMobile && menuOpen && (
         <div style={{
-          background:C.navy, borderTop:'1px solid rgba(255,255,255,0.1)',
-          padding:'8px 0 16px', boxShadow:'0 4px 12px rgba(0,0,0,0.2)'
+          background:'rgba(7,15,36,0.96)',
+          backdropFilter:'blur(20px)', WebkitBackdropFilter:'blur(20px)',
+          borderTop:'1px solid rgba(255,255,255,0.08)',
+          padding:'8px 0 16px', boxShadow:'0 8px 32px rgba(0,0,0,0.4)'
         }}>
           {!isAuth && publicNav.map(n => (
             <button key={n.label} onClick={n.action} style={{
               display:'block', width:'100%', textAlign:'left',
-              background:'none', border:'none', color:'rgba(255,255,255,0.85)',
-              fontSize:15, padding:'12px 20px', cursor:'pointer'
+              background:'none', border:'none', color:'rgba(255,255,255,0.82)',
+              fontSize:15, padding:'12px 20px', cursor:'pointer',
+              fontFamily:'Plus Jakarta Sans,sans-serif', fontWeight:500
             }}>{n.label}</button>
           ))}
           {!isAuth && (
             <div style={{padding:'12px 16px 0', display:'flex', gap:10}}>
-              <button onClick={() => { setScreen('login'); setMenuOpen(false); }} style={{flex:1,background:'none',border:'1px solid rgba(255,255,255,0.4)',color:'#fff',borderRadius:6,padding:'10px',fontSize:13,cursor:'pointer'}}>{tFn('masuk')}</button>
-              <button onClick={() => { setScreen('register'); setMenuOpen(false); }} style={{flex:1,background:C.blue,border:'none',color:'#fff',borderRadius:6,padding:'10px',fontSize:13,fontWeight:600,cursor:'pointer'}}>{tFn('daftar')}</button>
+              <button onClick={() => { setScreen('login'); setMenuOpen(false); }} style={{flex:1,background:'rgba(255,255,255,0.08)',border:'1px solid rgba(255,255,255,0.22)',color:'#fff',borderRadius:10,padding:'11px',fontSize:13,fontWeight:600}}>{tFn('masuk')}</button>
+              <button onClick={() => { setScreen('register'); setMenuOpen(false); }} style={{flex:1,background:'linear-gradient(135deg,#2563EB,#0EA5E9)',border:'none',color:'#fff',borderRadius:10,padding:'11px',fontSize:13,fontWeight:700}}>{tFn('daftar')}</button>
             </div>
           )}
           {isAuth && (
             <div style={{padding:'8px 16px'}}>
-              {!isAdmin && <button onClick={() => { setScreen('dashboard'); setMenuOpen(false); }} style={{display:'block',width:'100%',textAlign:'left',background:'none',border:'none',color:'rgba(255,255,255,0.85)',fontSize:15,padding:'10px 4px',cursor:'pointer'}}>{tFn('navDashboard')}</button>}
+              {!isAdmin && <button onClick={() => { setScreen('dashboard'); setMenuOpen(false); }} style={{display:'block',width:'100%',textAlign:'left',background:'none',border:'none',color:'rgba(255,255,255,0.85)',fontSize:15,padding:'10px 4px',cursor:'pointer',fontFamily:'Plus Jakarta Sans,sans-serif',fontWeight:500}}>{tFn('navDashboard')}</button>}
               {isAdmin && <>
-                <button onClick={() => { setScreen('admin-dashboard'); setMenuOpen(false); }} style={{display:'block',width:'100%',textAlign:'left',background:'none',border:'none',color:'rgba(255,255,255,0.85)',fontSize:15,padding:'10px 4px',cursor:'pointer'}}>{tFn('navDashboard')}</button>
-                <button onClick={() => { setScreen('admin-list'); setMenuOpen(false); }} style={{display:'block',width:'100%',textAlign:'left',background:'none',border:'none',color:'rgba(255,255,255,0.85)',fontSize:15,padding:'10px 4px',cursor:'pointer'}}>{tFn('navPendaftar')}</button>
+                <button onClick={() => { setScreen('admin-dashboard'); setMenuOpen(false); }} style={{display:'block',width:'100%',textAlign:'left',background:'none',border:'none',color:'rgba(255,255,255,0.85)',fontSize:15,padding:'10px 4px',cursor:'pointer',fontFamily:'Plus Jakarta Sans,sans-serif',fontWeight:500}}>{tFn('navDashboard')}</button>
+                <button onClick={() => { setScreen('admin-list'); setMenuOpen(false); }} style={{display:'block',width:'100%',textAlign:'left',background:'none',border:'none',color:'rgba(255,255,255,0.85)',fontSize:15,padding:'10px 4px',cursor:'pointer',fontFamily:'Plus Jakarta Sans,sans-serif',fontWeight:500}}>{tFn('navPendaftar')}</button>
               </>}
-              <button onClick={() => { setUser(null); setScreen('landing'); setMenuOpen(false); }} style={{marginTop:8,background:'none',border:'1px solid rgba(255,255,255,0.25)',color:'rgba(255,255,255,0.6)',borderRadius:6,padding:'8px 16px',fontSize:13,cursor:'pointer'}}>{tFn('navKeluar')}</button>
+              <button onClick={() => { setUser(null); setScreen('landing'); setMenuOpen(false); }} style={{marginTop:8,background:'none',border:'1px solid rgba(255,255,255,0.2)',color:'rgba(255,255,255,0.55)',borderRadius:8,padding:'8px 16px',fontSize:13,cursor:'pointer'}}>{tFn('navKeluar')}</button>
             </div>
           )}
         </div>
@@ -747,67 +882,97 @@ function Landing({ setScreen, lang, t }) {
     { icon:'📣', label:tFn('a6l'), desc:tFn('a6d') },
   ];
 
-  const SectionLabel = ({ children }) => (
+  const SectionLabel = ({ children, light }) => (
     <div style={{
-      display:'inline-block', background:C.blueLight, color:C.blue,
-      fontSize:11, fontWeight:700, letterSpacing:'0.1em', textTransform:'uppercase',
-      padding:'4px 14px', borderRadius:20, marginBottom:12, border:`1px solid ${C.blue}33`
-    }}>{children}</div>
+      display:'inline-flex', alignItems:'center', gap:6,
+      background: light ? 'rgba(255,255,255,0.12)' : 'rgba(37,99,235,0.08)',
+      color: light ? 'rgba(255,255,255,0.9)' : C.blue,
+      fontSize:11, fontWeight:700, letterSpacing:'0.12em', textTransform:'uppercase',
+      padding:'5px 14px', borderRadius:100, marginBottom:14,
+      border: light ? '1px solid rgba(255,255,255,0.2)' : `1px solid ${C.blue}28`
+    }}>
+      <span style={{width:6,height:6,borderRadius:'50%',background:light?'rgba(255,255,255,0.7)':C.blue,flexShrink:0}}/>
+      {children}
+    </div>
   );
 
   return (
     <div style={{overflowX:'hidden'}}>
 
       {/* ══ 1. HERO ══ */}
-      <div style={{position:'relative', minHeight: isMobile ? 480 : 580, display:'flex', alignItems:'center', overflow:'hidden'}}>
+      <div style={{position:'relative', minHeight: isMobile ? 560 : 680, display:'flex', alignItems:'center', overflow:'hidden'}}>
+        {/* Background layers */}
         <div style={{position:'absolute', inset:0, backgroundImage:"url('./assets/hero-school.png')", backgroundSize:'cover', backgroundPosition:'center 35%'}}/>
-        <div style={{position:'absolute', inset:0, background: isMobile
-          ? 'linear-gradient(180deg, rgba(21,45,74,0.92) 0%, rgba(21,45,74,0.85) 100%)'
-          : 'linear-gradient(90deg, rgba(21,45,74,0.93) 0%, rgba(21,45,74,0.70) 55%, rgba(21,45,74,0.20) 100%)'
-        }}/>
-        <div style={{position:'relative', maxWidth:1200, margin:'0 auto', padding: isMobile ? '40px 20px' : '60px 60px', width:'100%'}}>
-          <div style={{maxWidth: isMobile ? '100%' : 600}}>
+        <div style={{position:'absolute', inset:0, background:'linear-gradient(135deg, rgba(7,15,36,0.97) 0%, rgba(12,31,74,0.92) 45%, rgba(26,58,122,0.75) 80%, rgba(14,165,233,0.35) 100%)'}}/>
+        {/* Decorative mesh dots */}
+        <div style={{position:'absolute', inset:0, opacity:0.12, backgroundImage:'radial-gradient(circle, rgba(255,255,255,0.8) 1px, transparent 1px)', backgroundSize:'28px 28px'}}/>
+        {/* Glowing orbs */}
+        <div style={{position:'absolute', top:'-15%', right:'8%', width:320, height:320, borderRadius:'50%', background:'radial-gradient(circle, rgba(37,99,235,0.35) 0%, transparent 70%)', pointerEvents:'none'}}/>
+        <div style={{position:'absolute', bottom:'-10%', right:'20%', width:200, height:200, borderRadius:'50%', background:'radial-gradient(circle, rgba(14,165,233,0.25) 0%, transparent 70%)', pointerEvents:'none'}}/>
+
+        <div style={{position:'relative', maxWidth:1200, margin:'0 auto', padding: isMobile ? '56px 20px 48px' : '72px 60px', width:'100%'}}>
+          <div style={{maxWidth: isMobile ? '100%' : 620}}>
+            {/* Live badge */}
             <div style={{
-              display:'inline-block', background:'rgba(59,130,246,0.25)',
-              border:'1px solid rgba(59,130,246,0.5)', borderRadius:20,
-              padding:'4px 16px', fontSize:10, color:'#93C5FD', fontWeight:600,
-              letterSpacing:'0.06em', textTransform:'uppercase', marginBottom:16
-            }}>{tFn('heroTag')}</div>
-            <h1 style={{
-              fontFamily:'Playfair Display, serif', fontSize: isMobile ? 32 : 52, fontWeight:700,
-              color:'#fff', lineHeight:1.2, marginBottom:14
-            }}>{tFn('heroTitle').split('\n').map((l,i)=><React.Fragment key={i}>{l}{i<2&&<br/>}</React.Fragment>)}</h1>
-            <p style={{
-              fontSize: isMobile ? 14 : 16, color:'rgba(255,255,255,0.78)', lineHeight:1.75,
-              marginBottom:24, maxWidth: isMobile ? '100%' : 480
-            }}>{tFn('heroSub')}</p>
-            <div style={{display:'flex', gap:10, flexWrap:'wrap', marginBottom:28}}>
-              <button onClick={() => setScreen('register')} style={{
-                background:C.blue, border:'none', color:'#fff',
-                padding: isMobile ? '12px 24px' : '14px 32px', borderRadius:8,
-                fontSize: isMobile ? 14 : 15, fontWeight:600,
-                boxShadow:'0 4px 20px rgba(59,130,246,0.45)', flex: isMobile ? 1 : 'none'
-              }}>{tFn('heroCta1')}</button>
-              <button onClick={() => { const el = document.getElementById('section-profil'); if(el) el.scrollIntoView({behavior:'smooth', block:'start'}); }} style={{
-                background:'rgba(255,255,255,0.10)', border:'1px solid rgba(255,255,255,0.35)',
-                color:'#fff', padding: isMobile ? '12px 16px' : '14px 32px', borderRadius:8,
-                fontSize: isMobile ? 14 : 15, flex: isMobile ? 1 : 'none'
-              }}>{tFn('heroCta2')}</button>
+              display:'inline-flex', alignItems:'center', gap:8,
+              background:'rgba(37,99,235,0.2)', border:'1px solid rgba(37,99,235,0.45)',
+              borderRadius:100, padding:'5px 14px 5px 8px', marginBottom:22
+            }}>
+              <span className="pulse-dot" style={{width:7,height:7,borderRadius:'50%',background:'#60A5FA',boxShadow:'0 0 6px #60A5FA',flexShrink:0}}/>
+              <span style={{fontSize:11, color:'#93C5FD', fontWeight:700, letterSpacing:'0.08em', textTransform:'uppercase'}}>{tFn('heroTag')}</span>
             </div>
-            <div style={{display:'flex', gap: isMobile ? 8 : 12}}>
+            <h1 style={{
+              fontFamily:'Plus Jakarta Sans, sans-serif', fontSize: isMobile ? 36 : 58, fontWeight:800,
+              color:'#fff', lineHeight:1.12, marginBottom:18, letterSpacing:'-0.02em'
+            }}>
+              {tFn('heroTitle').split('\n').map((l,i) => (
+                <React.Fragment key={i}>
+                  {i===1 ? <span style={{background:'linear-gradient(90deg,#60A5FA,#38BDF8)',WebkitBackgroundClip:'text',WebkitTextFillColor:'transparent'}}>{l}</span> : l}
+                  {i<2&&<br/>}
+                </React.Fragment>
+              ))}
+            </h1>
+            <p style={{
+              fontSize: isMobile ? 14 : 16, color:'rgba(255,255,255,0.7)', lineHeight:1.8,
+              marginBottom:32, maxWidth: isMobile ? '100%' : 500, fontWeight:400
+            }}>{tFn('heroSub')}</p>
+            <div style={{display:'flex', gap:12, flexWrap:'wrap', marginBottom:36}}>
+              <button onClick={() => setScreen('register')} style={{
+                background:'linear-gradient(135deg,#2563EB,#0EA5E9)', border:'none', color:'#fff',
+                padding: isMobile ? '13px 26px' : '15px 36px', borderRadius:12,
+                fontSize: isMobile ? 14 : 15, fontWeight:700,
+                boxShadow:'0 6px 24px rgba(37,99,235,0.55)', flex: isMobile ? 1 : 'none',
+                fontFamily:'Plus Jakarta Sans,sans-serif', letterSpacing:'-0.01em'
+              }}
+                onMouseEnter={e=>e.currentTarget.style.boxShadow='0 8px 32px rgba(37,99,235,0.7)'}
+                onMouseLeave={e=>e.currentTarget.style.boxShadow='0 6px 24px rgba(37,99,235,0.55)'}
+              >{tFn('heroCta1')}</button>
+              <button onClick={() => setScreen('ppdb-info')} style={{
+                background:'rgba(255,255,255,0.08)', border:'1px solid rgba(255,255,255,0.25)',
+                backdropFilter:'blur(8px)',
+                color:'rgba(255,255,255,0.9)', padding: isMobile ? '13px 20px' : '15px 32px', borderRadius:12,
+                fontSize: isMobile ? 14 : 15, fontWeight:600, flex: isMobile ? 1 : 'none',
+                fontFamily:'Plus Jakarta Sans,sans-serif', cursor:'pointer'
+              }}
+                onMouseEnter={e=>e.currentTarget.style.background='rgba(255,255,255,0.15)'}
+                onMouseLeave={e=>e.currentTarget.style.background='rgba(255,255,255,0.08)'}
+              >{tFn('heroCta2')}</button>
+            </div>
+            {/* Stats row */}
+            <div style={{display:'flex', gap: isMobile ? 10 : 14}}>
               {[
                 { n:'1.200+', label:tFn('statAlumni') },
                 { n:'98%', label:tFn('statLulus') },
                 { n:'45+', label:tFn('statTahun') },
               ].map((s,i) => (
                 <div key={i} style={{
-                  background:'rgba(255,255,255,0.12)', backdropFilter:'blur(8px)',
-                  border:'1px solid rgba(255,255,255,0.2)',
-                  borderRadius:10, padding: isMobile ? '10px 14px' : '14px 22px',
-                  textAlign:'center', flex: isMobile ? 1 : 'none', minWidth: isMobile ? 0 : 90
+                  background:'rgba(255,255,255,0.08)', backdropFilter:'blur(12px)',
+                  border:'1px solid rgba(255,255,255,0.14)',
+                  borderRadius:14, padding: isMobile ? '12px 14px' : '16px 22px',
+                  textAlign:'center', flex: isMobile ? 1 : 'none', minWidth: isMobile ? 0 : 96
                 }}>
-                  <div style={{fontSize: isMobile ? 18 : 22, fontWeight:700, color:'#fff', fontFamily:'Playfair Display, serif'}}>{s.n}</div>
-                  <div style={{fontSize:10, color:'rgba(255,255,255,0.7)', marginTop:2}}>{s.label}</div>
+                  <div style={{fontSize: isMobile ? 20 : 24, fontWeight:800, color:'#fff', fontFamily:'Plus Jakarta Sans,sans-serif', letterSpacing:'-0.03em'}}>{s.n}</div>
+                  <div style={{fontSize:10, color:'rgba(255,255,255,0.6)', marginTop:3, fontWeight:500}}>{s.label}</div>
                 </div>
               ))}
             </div>
@@ -815,64 +980,98 @@ function Landing({ setScreen, lang, t }) {
         </div>
       </div>
 
-      {/* Stats spacer removed — stats now inside hero */}
-
       {/* ══ 2. PROFIL SEKOLAH ══ */}
-      <div id="section-profil" style={{background:C.white, padding: isMobile ? '48px 0 40px' : '72px 0 64px'}}>
-        <div style={{maxWidth:1200, margin:'0 auto', padding: isMobile ? '0 20px' : '0 60px', display:'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: isMobile ? 32 : 64, alignItems:'center'}}>
+      <div id="section-profil" style={{background:C.white, padding: isMobile ? '56px 0 48px' : '88px 0 80px'}}>
+        <div style={{maxWidth:1200, margin:'0 auto', padding: isMobile ? '0 20px' : '0 60px', display:'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: isMobile ? 36 : 72, alignItems:'center'}}>
           <div>
             <SectionLabel>{tFn('tentangLabel')}</SectionLabel>
-            <h2 style={{fontSize: isMobile ? 26 : 34, color:C.navy, lineHeight:1.25, marginBottom:20}}>{tFn('tentangTitle').split('\n').map((l,i)=><React.Fragment key={i}>{l}{i<1&&<br/>}</React.Fragment>)}</h2>
-            <p style={{fontSize:14, color:C.muted, lineHeight:1.85, marginBottom:14}}>{tFn('tentangP1')}</p>
-            <p style={{fontSize:14, color:C.muted, lineHeight:1.85, marginBottom:28}}>{tFn('tentangP2')}</p>
+            <h2 style={{fontSize: isMobile ? 28 : 38, color:C.navy, lineHeight:1.18, marginBottom:20, letterSpacing:'-0.02em'}}>
+              {tFn('tentangTitle').split('\n').map((l,i)=><React.Fragment key={i}>{l}{i<1&&<br/>}</React.Fragment>)}
+            </h2>
+            <p style={{fontSize:14.5, color:C.muted, lineHeight:1.9, marginBottom:14}}>{tFn('tentangP1')}</p>
+            <p style={{fontSize:14.5, color:C.muted, lineHeight:1.9, marginBottom:32}}>{tFn('tentangP2')}</p>
             <div style={{display:'grid', gridTemplateColumns:'1fr 1fr', gap:12}}>
               {[
-                { n:'120', label:tFn('statKuota') },
-                { n:'35+', label:tFn('statGuru') },
-                { n:'3', label:tFn('statJenjang') },
-                { n:'A', label:tFn('statAkred') },
+                { n:'120', label:tFn('statKuota'), icon:'🎓' },
+                { n:'35+', label:tFn('statGuru'), icon:'👨‍🏫' },
+                { n:'3', label:tFn('statJenjang'), icon:'🏫' },
+                { n:'A', label:tFn('statAkred'), icon:'⭐' },
               ].map((s,i) => (
                 <div key={i} style={{
-                  background:C.bg, borderRadius:8, padding:'14px 18px',
-                  border:`1px solid ${C.border}`
-                }}>
-                  <div style={{fontSize:22, fontWeight:700, color:C.navy, fontFamily:'Playfair Display, serif'}}>{s.n}</div>
-                  <div style={{fontSize:11, color:C.muted, marginTop:2}}>{s.label}</div>
+                  background:C.bg, borderRadius:14, padding:'18px 20px',
+                  border:`1px solid ${C.border}`,
+                  boxShadow:'0 1px 4px rgba(12,31,74,0.04)',
+                  transition:'box-shadow .2s, transform .2s'
+                }}
+                  onMouseEnter={e=>{e.currentTarget.style.boxShadow='0 8px 24px rgba(12,31,74,0.10)';e.currentTarget.style.transform='translateY(-2px)'}}
+                  onMouseLeave={e=>{e.currentTarget.style.boxShadow='0 1px 4px rgba(12,31,74,0.04)';e.currentTarget.style.transform='none'}}
+                >
+                  <div style={{fontSize:24, fontWeight:800, color:C.navy, fontFamily:'Plus Jakarta Sans,sans-serif', letterSpacing:'-0.03em'}}>{s.n}</div>
+                  <div style={{fontSize:11.5, color:C.muted, marginTop:3, fontWeight:500}}>{s.label}</div>
                 </div>
               ))}
             </div>
           </div>
-          <div style={{borderRadius:14, overflow:'hidden', boxShadow:'0 12px 40px rgba(0,0,0,0.12)'}}>
-            <img src="./assets/school-building.png" alt="Gedung Yayasan Darul Furqan Pariaman" style={{width:'100%', height: isMobile ? 220 : 380, objectFit:'cover', display:'block'}}/>
+          <div style={{borderRadius:20, overflow:'hidden', boxShadow:'0 20px 60px rgba(12,31,74,0.16)', position:'relative'}}>
+            <img src="./assets/school-building.png" alt="Gedung Yayasan Darul Furqan Pariaman" style={{width:'100%', height: isMobile ? 240 : 420, objectFit:'cover', display:'block'}}/>
+            {/* Floating accreditation badge */}
+            <div style={{
+              position:'absolute', top:20, right:20,
+              background:'linear-gradient(135deg,#2563EB,#0EA5E9)',
+              borderRadius:14, padding:'12px 16px', textAlign:'center',
+              boxShadow:'0 8px 24px rgba(37,99,235,0.5)'
+            }}>
+              <div style={{fontSize:28, fontWeight:800, color:'#fff', fontFamily:'Plus Jakarta Sans,sans-serif', lineHeight:1}}>A</div>
+              <div style={{fontSize:9, color:'rgba(255,255,255,0.85)', fontWeight:700, letterSpacing:'0.05em', textTransform:'uppercase', marginTop:3}}>Akreditasi</div>
+            </div>
           </div>
         </div>
       </div>
 
       {/* ══ 3. VISI & MISI ══ */}
-      <div style={{background:C.bg, padding: isMobile ? '48px 0' : '72px 0'}}>
+      <div style={{background:C.bg, padding: isMobile ? '56px 0' : '88px 0'}}>
         <div style={{maxWidth:1200, margin:'0 auto', padding: isMobile ? '0 20px' : '0 60px'}}>
-          <div style={{textAlign:'center', marginBottom:32}}>
+          <div style={{textAlign:'center', marginBottom:40}}>
             <SectionLabel>{tFn('visiLabel')}</SectionLabel>
-            <h2 style={{fontSize: isMobile ? 22 : 30, color:C.navy}}>{tFn('visiTitle')}</h2>
+            <h2 style={{fontSize: isMobile ? 24 : 34, color:C.navy, letterSpacing:'-0.02em'}}>{tFn('visiTitle')}</h2>
           </div>
           {/* VISI highlight */}
           <div style={{
-            background:`linear-gradient(135deg, ${C.navy} 0%, ${C.navyLight} 100%)`,
-            borderRadius:14, padding: isMobile ? '24px 20px' : '32px 40px', marginBottom:16, textAlign:'center',
-            boxShadow:'0 8px 32px rgba(30,58,95,0.2)'
+            background:C.gradHero, position:'relative', overflow:'hidden',
+            borderRadius:20, padding: isMobile ? '28px 24px' : '40px 56px', marginBottom:20, textAlign:'center',
+            boxShadow:'0 16px 48px rgba(12,31,74,0.25)'
           }}>
-            <div style={{fontSize:11, color:'rgba(255,255,255,0.6)', fontWeight:600, letterSpacing:'0.1em', textTransform:'uppercase', marginBottom:10}}>{tFn('visiSub')}</div>
-            <div style={{fontSize: isMobile ? 15 : 20, color:'#fff', fontFamily:'Playfair Display, serif', fontWeight:600, lineHeight:1.5, maxWidth:720, margin:'0 auto'}}>{tFn('visi')}</div>
+            {/* decorative dots */}
+            <div style={{position:'absolute',inset:0,opacity:0.07,backgroundImage:'radial-gradient(circle, rgba(255,255,255,0.9) 1px, transparent 1px)',backgroundSize:'24px 24px'}}/>
+            <div style={{position:'absolute',top:'-30%',right:'-5%',width:240,height:240,borderRadius:'50%',background:'radial-gradient(circle,rgba(14,165,233,0.22) 0%,transparent 70%)',pointerEvents:'none'}}/>
+            <div style={{position:'relative'}}>
+              <div style={{
+                display:'inline-block', fontSize:10, color:'rgba(255,255,255,0.6)', fontWeight:700,
+                letterSpacing:'0.12em', textTransform:'uppercase', marginBottom:14,
+                background:'rgba(255,255,255,0.1)', padding:'4px 14px', borderRadius:100,
+                border:'1px solid rgba(255,255,255,0.18)'
+              }}>{tFn('visiSub')}</div>
+              <div style={{fontSize: isMobile ? 16 : 21, color:'#fff', fontFamily:'Plus Jakarta Sans,sans-serif', fontWeight:700, lineHeight:1.55, maxWidth:760, margin:'0 auto', letterSpacing:'-0.01em'}}>{tFn('visi')}</div>
+            </div>
           </div>
           {/* MISI cards */}
-          <div style={{display:'grid', gridTemplateColumns: isMobile ? 'repeat(2,1fr)' : 'repeat(5,1fr)', gap:10}}>
+          <div style={{display:'grid', gridTemplateColumns: isMobile ? 'repeat(2,1fr)' : 'repeat(5,1fr)', gap:12}}>
             {misi.map((m,i) => (
               <div key={i} style={{
-                background:C.white, borderRadius:10, padding:'20px 16px', textAlign:'center',
-                border:`1px solid ${C.border}`, boxShadow:'0 2px 8px rgba(0,0,0,0.04)'
-              }}>
-                <div style={{fontSize:28, marginBottom:10}}>{m.icon}</div>
-                <div style={{fontSize:12, color:C.text, lineHeight:1.6}}>{m.text}</div>
+                background:C.white, borderRadius:16, padding:'22px 18px', textAlign:'center',
+                border:`1px solid ${C.border}`, boxShadow:'0 2px 8px rgba(12,31,74,0.05)',
+                transition:'all .2s'
+              }}
+                onMouseEnter={e=>{e.currentTarget.style.boxShadow='0 10px 28px rgba(12,31,74,0.12)';e.currentTarget.style.transform='translateY(-3px)';e.currentTarget.style.borderColor=C.blue+'55'}}
+                onMouseLeave={e=>{e.currentTarget.style.boxShadow='0 2px 8px rgba(12,31,74,0.05)';e.currentTarget.style.transform='none';e.currentTarget.style.borderColor=C.border}}
+              >
+                <div style={{
+                  width:48, height:48, borderRadius:14, margin:'0 auto 12px',
+                  background:`linear-gradient(135deg,${C.blue}18,${C.teal}22)`,
+                  display:'flex', alignItems:'center', justifyContent:'center',
+                  fontSize:22, border:`1px solid ${C.blue}18`
+                }}>{m.icon}</div>
+                <div style={{fontSize:12.5, color:C.text, lineHeight:1.65, fontWeight:500}}>{m.text}</div>
               </div>
             ))}
           </div>
@@ -880,40 +1079,52 @@ function Landing({ setScreen, lang, t }) {
       </div>
 
       {/* ══ 4. AKREDITASI & KEUNGGULAN ══ */}
-      <div style={{background:C.white, padding: isMobile ? '48px 0' : '72px 0'}}>
+      <div style={{background:C.white, padding: isMobile ? '56px 0' : '88px 0'}}>
         <div style={{maxWidth:1200, margin:'0 auto', padding: isMobile ? '0 20px' : '0 60px'}}>
-          <div style={{display:'grid', gridTemplateColumns: isMobile ? '1fr' : '280px 1fr', gap: isMobile ? 24 : 32, alignItems:'start'}}>
+          <div style={{display:'grid', gridTemplateColumns: isMobile ? '1fr' : '260px 1fr', gap: isMobile ? 28 : 36, alignItems:'start'}}>
             {/* Akreditasi highlight */}
             <div style={{
-              background:`linear-gradient(160deg, ${C.navy} 0%, #2A4F80 100%)`,
-              borderRadius:14, padding:'36px 28px', textAlign:'center', color:'#fff',
-              boxShadow:'0 8px 32px rgba(30,58,95,0.25)', position:'sticky', top:80
+              background:C.gradHero, position:'relative', overflow:'hidden',
+              borderRadius:20, padding:'36px 28px', textAlign:'center', color:'#fff',
+              boxShadow:'0 16px 48px rgba(12,31,74,0.28)', position:'sticky', top:82
             }}>
-              <div style={{fontSize:11, color:'rgba(255,255,255,0.6)', letterSpacing:'0.1em', textTransform:'uppercase', marginBottom:16}}>{tFn('akredSub')}</div>
-              <div style={{fontSize:80, fontWeight:700, color:'#fff', fontFamily:'Playfair Display, serif', lineHeight:1}}>A</div>
-              <div style={{fontSize:14, color:'rgba(255,255,255,0.8)', marginTop:8, marginBottom:20}}>{tFn('akredLabel')}</div>
-              <div style={{background:'rgba(255,255,255,0.12)', borderRadius:8, padding:'12px', fontSize:11, color:'rgba(255,255,255,0.7)', lineHeight:1.6}}>
-                {tFn('akredDesc')}
+              <div style={{position:'absolute',inset:0,opacity:0.08,backgroundImage:'radial-gradient(circle,rgba(255,255,255,0.8) 1px,transparent 1px)',backgroundSize:'20px 20px'}}/>
+              <div style={{position:'relative'}}>
+                <div style={{fontSize:10, color:'rgba(255,255,255,0.55)', letterSpacing:'0.12em', textTransform:'uppercase', marginBottom:14, fontWeight:700}}>{tFn('akredSub')}</div>
+                <div style={{
+                  fontSize:88, fontWeight:800, color:'transparent', fontFamily:'Plus Jakarta Sans,sans-serif', lineHeight:1,
+                  background:'linear-gradient(135deg,#fff 0%,#93C5FD 100%)',
+                  WebkitBackgroundClip:'text', backgroundClip:'text'
+                }}>A</div>
+                <div style={{fontSize:14, color:'rgba(255,255,255,0.8)', marginTop:8, marginBottom:20, fontWeight:600}}>{tFn('akredLabel')}</div>
+                <div style={{background:'rgba(255,255,255,0.1)', borderRadius:12, padding:'14px', fontSize:12, color:'rgba(255,255,255,0.72)', lineHeight:1.65, border:'1px solid rgba(255,255,255,0.15)'}}>
+                  {tFn('akredDesc')}
+                </div>
               </div>
             </div>
             {/* Feature cards */}
             <div>
               <SectionLabel>{tFn('keunggulanLabel')}</SectionLabel>
-              <h2 style={{fontSize: isMobile ? 22 : 28, color:C.navy, marginBottom:20}}>{tFn('keunggulanTitle')}</h2>
-              <div style={{display:'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap:12}}>
+              <h2 style={{fontSize: isMobile ? 24 : 32, color:C.navy, marginBottom:24, letterSpacing:'-0.02em'}}>{tFn('keunggulanTitle')}</h2>
+              <div style={{display:'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap:14}}>
                 {keunggulan.map((k,i) => (
                   <div key={i} style={{
-                    background:C.bg, borderRadius:10, padding:'22px 24px',
-                    border:`1px solid ${C.border}`, display:'flex', gap:16, alignItems:'flex-start'
-                  }}>
+                    background:C.bg, borderRadius:16, padding:'22px 24px',
+                    border:`1px solid ${C.border}`, display:'flex', gap:16, alignItems:'flex-start',
+                    transition:'all .2s'
+                  }}
+                    onMouseEnter={e=>{e.currentTarget.style.boxShadow='0 10px 28px rgba(12,31,74,0.10)';e.currentTarget.style.transform='translateY(-2px)';e.currentTarget.style.borderColor=C.blue+'44'}}
+                    onMouseLeave={e=>{e.currentTarget.style.boxShadow='none';e.currentTarget.style.transform='none';e.currentTarget.style.borderColor=C.border}}
+                  >
                     <div style={{
-                      width:44, height:44, borderRadius:10, background:C.white,
-                      border:`1px solid ${C.border}`, display:'flex', alignItems:'center',
-                      justifyContent:'center', fontSize:22, flexShrink:0
+                      width:48, height:48, borderRadius:14, flexShrink:0,
+                      background:`linear-gradient(135deg,${C.blue}22,${C.teal}28)`,
+                      border:`1px solid ${C.blue}22`,
+                      display:'flex', alignItems:'center', justifyContent:'center', fontSize:22
                     }}>{k.icon}</div>
                     <div>
-                      <div style={{fontWeight:600, fontSize:14, color:C.navy, marginBottom:4}}>{k.title}</div>
-                      <div style={{fontSize:12, color:C.muted, lineHeight:1.6}}>{k.desc}</div>
+                      <div style={{fontWeight:700, fontSize:14.5, color:C.navy, marginBottom:5, fontFamily:'Plus Jakarta Sans,sans-serif'}}>{k.title}</div>
+                      <div style={{fontSize:13, color:C.muted, lineHeight:1.65}}>{k.desc}</div>
                     </div>
                   </div>
                 ))}
@@ -923,102 +1134,222 @@ function Landing({ setScreen, lang, t }) {
         </div>
       </div>
 
-      {/* ══ 5. ALUR PENDAFTARAN ══ */}
-      <div style={{background:C.bg, padding: isMobile ? '48px 0' : '72px 0'}}>
+      {/* ══ 5. FASILITAS SEKOLAH ══ */}
+      <div style={{background:C.bg, padding: isMobile ? '56px 0' : '88px 0'}}>
         <div style={{maxWidth:1200, margin:'0 auto', padding: isMobile ? '0 20px' : '0 60px'}}>
-          <div style={{textAlign:'center', marginBottom: isMobile ? 32 : 48}}>
-            <SectionLabel>{tFn('alurLabel')}</SectionLabel>
-            <h2 style={{fontSize: isMobile ? 22 : 30, color:C.navy}}>{tFn('alurTitle')}</h2>
+          <div style={{textAlign:'center', marginBottom: isMobile ? 36 : 52}}>
+            <SectionLabel>{tFn('fasLabel')}</SectionLabel>
+            <h2 style={{fontSize: isMobile ? 24 : 34, color:C.navy, letterSpacing:'-0.02em', marginBottom:12}}>{tFn('fasTitle')}</h2>
+            <p style={{fontSize:15, color:C.muted, maxWidth:560, margin:'0 auto', lineHeight:1.7}}>{tFn('fasSub')}</p>
           </div>
-          {isMobile ? (
-            <div style={{display:'grid', gridTemplateColumns:'1fr 1fr', gap:16}}>
-              {alurSteps.map((s,i) => (
-                <div key={i} style={{
-                  background:C.white, borderRadius:10, padding:'16px 12px', textAlign:'center',
-                  border:`1px solid ${i===0||i===5 ? C.navy : C.border}`,
-                  boxShadow:'0 2px 8px rgba(0,0,0,0.04)'
-                }}>
-                  <div style={{
-                    width:44, height:44, borderRadius:'50%', margin:'0 auto 10px',
-                    background: i===0||i===5 ? C.navy : C.bg,
-                    border:`2px solid ${i===0||i===5 ? C.navy : C.border}`,
-                    display:'flex', alignItems:'center', justifyContent:'center', fontSize:20
-                  }}>{s.icon}</div>
-                  <div style={{fontWeight:600, fontSize:12, color:C.navy, marginBottom:4}}>{s.label}</div>
-                  <div style={{fontSize:11, color:C.muted, lineHeight:1.4}}>{s.desc}</div>
-                </div>
-              ))}
-            </div>
-          ) : (
-          <div style={{display:'flex', alignItems:'flex-start', gap:0, position:'relative'}}>
-            {alurSteps.map((s,i) => (
-              <React.Fragment key={i}>
-                <div style={{flex:1, display:'flex', flexDirection:'column', alignItems:'center', gap:12}}>
-                  <div style={{
-                    width:60, height:60, borderRadius:'50%',
-                    background: i===0 || i===5 ? C.navy : C.white,
-                    border:`2px solid ${i===0||i===5 ? C.navy : C.border}`,
-                    display:'flex', alignItems:'center', justifyContent:'center',
-                    fontSize:24, boxShadow:'0 4px 12px rgba(0,0,0,0.08)', position:'relative', zIndex:1
-                  }}>{s.icon}</div>
-                  <div style={{fontWeight:600, fontSize:13, color:C.navy, textAlign:'center'}}>{s.label}</div>
-                  <div style={{fontSize:11, color:C.muted, textAlign:'center', lineHeight:1.5}}>{s.desc}</div>
-                </div>
-                {i < alurSteps.length-1 && (
-                  <div style={{
-                    height:2, flex:1, background:`linear-gradient(90deg, ${C.blue}, ${C.border})`,
-                    marginTop:29, maxWidth:80, flexShrink:0
-                  }}/>
-                )}
-              </React.Fragment>
+
+          {/* 4-column grid of facility cards */}
+          <div style={{display:'grid', gridTemplateColumns: isMobile ? '1fr 1fr' : 'repeat(4,1fr)', gap: isMobile ? 12 : 18}}>
+            {[
+              { key:'fas1', icon:'🏫', color:'#2563EB', bg:'#EFF6FF' },
+              { key:'fas2', icon:'🔬', color:'#059669', bg:'#ECFDF5' },
+              { key:'fas3', icon:'💻', color:'#7C3AED', bg:'#F5F3FF' },
+              { key:'fas4', icon:'📚', color:'#D97706', bg:'#FFFBEB' },
+              { key:'fas5', icon:'🕌', color:'#0EA5E9', bg:'#E0F2FE' },
+              { key:'fas6', icon:'⚽', color:'#10B981', bg:'#ECFDF5' },
+              { key:'fas7', icon:'🏠', color:'#F59E0B', bg:'#FFFBEB' },
+              { key:'fas8', icon:'🍽️', color:'#EF4444', bg:'#FEF2F2' },
+            ].map((f,i) => (
+              <div key={f.key} style={{
+                background:C.white, borderRadius:18, padding: isMobile ? '18px 14px' : '24px 20px',
+                border:`1px solid ${C.border}`,
+                boxShadow:'0 2px 10px rgba(12,31,74,0.05)',
+                transition:'all .22s'
+              }}
+                onMouseEnter={e=>{
+                  e.currentTarget.style.boxShadow=`0 12px 32px rgba(12,31,74,0.12)`;
+                  e.currentTarget.style.transform='translateY(-4px)';
+                  e.currentTarget.style.borderColor=f.color+'44';
+                }}
+                onMouseLeave={e=>{
+                  e.currentTarget.style.boxShadow='0 2px 10px rgba(12,31,74,0.05)';
+                  e.currentTarget.style.transform='none';
+                  e.currentTarget.style.borderColor=C.border;
+                }}
+              >
+                {/* Icon bubble */}
+                <div style={{
+                  width: isMobile ? 44 : 52, height: isMobile ? 44 : 52,
+                  borderRadius:16, background:f.bg, border:`1px solid ${f.color}22`,
+                  display:'flex', alignItems:'center', justifyContent:'center',
+                  fontSize: isMobile ? 22 : 26, marginBottom:14
+                }}>{f.icon}</div>
+
+                <div style={{
+                  fontWeight:700, fontSize: isMobile ? 13 : 14.5, color:C.navy,
+                  marginBottom:6, fontFamily:'Plus Jakarta Sans,sans-serif', lineHeight:1.3
+                }}>{tFn(f.key + 't')}</div>
+
+                <div style={{
+                  fontSize: isMobile ? 11.5 : 12.5, color:C.muted, lineHeight:1.65
+                }}>{tFn(f.key + 'd')}</div>
+
+                {/* Color accent bottom bar */}
+                <div style={{
+                  height:3, borderRadius:100, marginTop:16,
+                  background:`linear-gradient(90deg,${f.color},${f.color}55)`,
+                  width:'40%'
+                }}/>
+              </div>
             ))}
           </div>
-          )}
-          <div style={{textAlign:'center', marginTop:32}}>
-            <button onClick={() => setScreen('register')} style={{
-              background:C.navy, border:'none', color:'#fff',
-              padding:'13px 32px', borderRadius:8, fontSize:14, fontWeight:600
-            }}>{tFn('mulaiDaftar')}</button>
+
+          {/* Stats ribbon */}
+          <div style={{
+            marginTop: isMobile ? 32 : 40,
+            background:C.gradHero, borderRadius:20, padding: isMobile ? '24px 20px' : '28px 40px',
+            display:'grid', gridTemplateColumns: isMobile ? 'repeat(2,1fr)' : 'repeat(4,1fr)',
+            gap: isMobile ? 20 : 0, position:'relative', overflow:'hidden'
+          }}>
+            <div style={{position:'absolute',inset:0,opacity:0.07,backgroundImage:'radial-gradient(circle,rgba(255,255,255,0.8) 1px,transparent 1px)',backgroundSize:'22px 22px'}}/>
+            {[
+              { n:'32', label:'Ruang Kelas', sub:'Ber-AC & Proyektor' },
+              { n:'8', label:'Laboratorium', sub:'Fisika, Kimia, Bio, TIK' },
+              { n:'10.000+', label:'Koleksi Buku', sub:'Perpustakaan & E-Library' },
+              { n:'240', label:'Kapasitas Asrama', sub:'Putra & Putri Terpisah' },
+            ].map((s,i) => (
+              <div key={i} style={{
+                textAlign:'center', position:'relative',
+                borderRight: !isMobile && i < 3 ? '1px solid rgba(255,255,255,0.12)' : 'none',
+                padding: isMobile ? '0' : '0 32px'
+              }}>
+                <div style={{fontSize: isMobile ? 26 : 32, fontWeight:800, color:'#fff', fontFamily:'Plus Jakarta Sans,sans-serif', letterSpacing:'-0.03em', lineHeight:1}}>{s.n}</div>
+                <div style={{fontSize:13, color:'rgba(255,255,255,0.9)', fontWeight:700, marginTop:6, fontFamily:'Plus Jakarta Sans,sans-serif'}}>{s.label}</div>
+                <div style={{fontSize:11, color:'rgba(255,255,255,0.55)', marginTop:3}}>{s.sub}</div>
+              </div>
+            ))}
           </div>
         </div>
       </div>
 
-      {/* ══ 6. BERITA & PENGUMUMAN ══ */}
-      <div id="section-berita" style={{background:C.white, padding: isMobile ? '48px 0' : '72px 0'}}>
+      {/* ══ 6. ALUR PENDAFTARAN ══ */}
+      <div style={{background:C.white, padding: isMobile ? '56px 0' : '88px 0'}}>
         <div style={{maxWidth:1200, margin:'0 auto', padding: isMobile ? '0 20px' : '0 60px'}}>
-          <div style={{display:'flex', justifyContent:'space-between', alignItems: isMobile ? 'flex-start' : 'flex-end', flexDirection: isMobile ? 'column' : 'row', gap: isMobile ? 8 : 0, marginBottom:24}}>
+          <div style={{textAlign:'center', marginBottom: isMobile ? 36 : 56}}>
+            <SectionLabel>{tFn('alurLabel')}</SectionLabel>
+            <h2 style={{fontSize: isMobile ? 24 : 34, color:C.navy, letterSpacing:'-0.02em'}}>{tFn('alurTitle')}</h2>
+          </div>
+          {isMobile ? (
+            <div style={{display:'grid', gridTemplateColumns:'1fr 1fr', gap:14}}>
+              {alurSteps.map((s,i) => (
+                <div key={i} style={{
+                  background:C.white, borderRadius:16, padding:'18px 14px', textAlign:'center',
+                  border:`1px solid ${i===0||i===5 ? C.blue+'44' : C.border}`,
+                  boxShadow: i===0||i===5 ? `0 4px 16px ${C.blue}22` : '0 2px 8px rgba(0,0,0,0.04)'
+                }}>
+                  <div style={{
+                    width:46, height:46, borderRadius:'50%', margin:'0 auto 12px',
+                    background: i===0||i===5 ? C.gradBlue : C.bg,
+                    border:`2px solid ${i===0||i===5 ? 'transparent' : C.border}`,
+                    display:'flex', alignItems:'center', justifyContent:'center', fontSize:20
+                  }}>
+                    {i===0||i===5 ? <span style={{filter:'brightness(0) invert(1)'}}>{s.icon}</span> : s.icon}
+                  </div>
+                  <div style={{fontWeight:700, fontSize:12.5, color:C.navy, marginBottom:4, fontFamily:'Plus Jakarta Sans,sans-serif'}}>{s.label}</div>
+                  <div style={{fontSize:11, color:C.muted, lineHeight:1.5}}>{s.desc}</div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div style={{display:'flex', alignItems:'flex-start', position:'relative'}}>
+              {alurSteps.map((s,i) => (
+                <React.Fragment key={i}>
+                  <div style={{flex:1, display:'flex', flexDirection:'column', alignItems:'center', gap:14}}>
+                    <div style={{
+                      width:64, height:64, borderRadius:'50%',
+                      background: i===0 || i===5 ? C.gradBlue : C.white,
+                      border: i===0||i===5 ? 'none' : `2px solid ${C.border}`,
+                      display:'flex', alignItems:'center', justifyContent:'center',
+                      fontSize:26, boxShadow: i===0||i===5 ? `0 8px 24px ${C.blue}44` : '0 4px 12px rgba(12,31,74,0.08)',
+                      position:'relative', zIndex:1
+                    }}>
+                      {i===0||i===5 ? <span style={{filter:'brightness(0) invert(1)'}}>{s.icon}</span> : s.icon}
+                      <div style={{
+                        position:'absolute', top:-6, right:-6,
+                        width:22, height:22, borderRadius:'50%',
+                        background:C.gradBlue, border:'2px solid #fff',
+                        display:'flex', alignItems:'center', justifyContent:'center',
+                        fontSize:10, fontWeight:800, color:'#fff', fontFamily:'Plus Jakarta Sans,sans-serif'
+                      }}>{i+1}</div>
+                    </div>
+                    <div style={{fontWeight:700, fontSize:13, color:C.navy, textAlign:'center', fontFamily:'Plus Jakarta Sans,sans-serif'}}>{s.label}</div>
+                    <div style={{fontSize:11.5, color:C.muted, textAlign:'center', lineHeight:1.55, maxWidth:110}}>{s.desc}</div>
+                  </div>
+                  {i < alurSteps.length-1 && (
+                    <div style={{
+                      height:2, flex:1, background:`linear-gradient(90deg,${C.blue},${C.teal})`,
+                      marginTop:31, maxWidth:72, flexShrink:0, borderRadius:2, opacity:0.5
+                    }}/>
+                  )}
+                </React.Fragment>
+              ))}
+            </div>
+          )}
+          <div style={{textAlign:'center', marginTop:40}}>
+            <button onClick={() => setScreen('register')} style={{
+              background:C.gradBlue, border:'none', color:'#fff',
+              padding:'14px 36px', borderRadius:14, fontSize:15, fontWeight:700,
+              fontFamily:'Plus Jakarta Sans,sans-serif', letterSpacing:'-0.01em',
+              boxShadow:`0 6px 24px ${C.blue}44`
+            }}
+              onMouseEnter={e=>e.currentTarget.style.boxShadow=`0 10px 32px ${C.blue}66`}
+              onMouseLeave={e=>e.currentTarget.style.boxShadow=`0 6px 24px ${C.blue}44`}
+            >{tFn('mulaiDaftar')}</button>
+          </div>
+        </div>
+      </div>
+
+      {/* ══ 7. BERITA & PENGUMUMAN ══ */}
+      <div id="section-berita" style={{background:C.white, padding: isMobile ? '56px 0' : '88px 0'}}>
+        <div style={{maxWidth:1200, margin:'0 auto', padding: isMobile ? '0 20px' : '0 60px'}}>
+          <div style={{display:'flex', justifyContent:'space-between', alignItems: isMobile ? 'flex-start' : 'flex-end', flexDirection: isMobile ? 'column' : 'row', gap: isMobile ? 10 : 0, marginBottom:32}}>
             <div>
               <SectionLabel>{tFn('beritaLabel')}</SectionLabel>
-              <h2 style={{fontSize: isMobile ? 22 : 30, color:C.navy}}>{tFn('beritaTitle')}</h2>
+              <h2 style={{fontSize: isMobile ? 24 : 34, color:C.navy, letterSpacing:'-0.02em'}}>{tFn('beritaTitle')}</h2>
             </div>
-            <button style={{background:'none', border:`1px solid ${C.border}`, color:C.muted, padding:'8px 18px', borderRadius:6, fontSize:13, cursor:'pointer'}}>{tFn('lihatSemua')}</button>
+            <button style={{
+              background:'none', border:`1.5px solid ${C.border}`, color:C.muted,
+              padding:'9px 20px', borderRadius:10, fontSize:13, cursor:'pointer',
+              fontFamily:'Plus Jakarta Sans,sans-serif', fontWeight:600, transition:'all .18s'
+            }}
+              onMouseEnter={e=>{e.currentTarget.style.borderColor=C.blue;e.currentTarget.style.color=C.blue}}
+              onMouseLeave={e=>{e.currentTarget.style.borderColor=C.border;e.currentTarget.style.color=C.muted}}
+            >{tFn('lihatSemua')}</button>
           </div>
-          <div style={{display:'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(3,1fr)', gap: isMobile ? 16 : 20}}>
+          <div style={{display:'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(3,1fr)', gap: isMobile ? 16 : 22}}>
             {news.map((n,i) => (
               <div key={i}
                 onMouseEnter={() => setHoveredNews(i)}
                 onMouseLeave={() => setHoveredNews(null)}
                 style={{
-                  background:C.white, borderRadius:12,
-                  border:`1px solid ${hoveredNews===i ? C.blue+'55' : C.border}`,
+                  background:C.white, borderRadius:18,
+                  border:`1.5px solid ${hoveredNews===i ? C.blue+'44' : C.border}`,
                   overflow:'hidden', cursor:'pointer',
-                  transform: hoveredNews===i ? 'translateY(-4px)' : 'none',
-                  boxShadow: hoveredNews===i ? '0 12px 32px rgba(0,0,0,0.10)' : '0 2px 8px rgba(0,0,0,0.04)',
-                  transition:'all 0.2s ease'
+                  transform: hoveredNews===i ? 'translateY(-5px)' : 'none',
+                  boxShadow: hoveredNews===i ? '0 16px 40px rgba(12,31,74,0.13)' : '0 2px 10px rgba(12,31,74,0.05)',
+                  transition:'all 0.22s ease'
                 }}>
-                {n.img
-                  ? <img src={n.img} alt={n.title} style={{width:'100%', height:160, objectFit:'cover', display:'block'}}/>
-                  : <ImgPlaceholder label={`foto berita: ${n.title}`} height={160} bg="#C7D7E8" stripe="#B5C8DC"/>
-                }
-                <div style={{padding:'18px 20px'}}>
+                <div style={{position:'relative', overflow:'hidden'}}>
+                  {n.img
+                    ? <img src={n.img} alt={n.title} style={{width:'100%', height:180, objectFit:'cover', display:'block', transition:'transform .3s', transform: hoveredNews===i?'scale(1.04)':'scale(1)'}}/>
+                    : <ImgPlaceholder label={`foto berita: ${n.title}`} height={180} bg="#C7D7E8" stripe="#B5C8DC"/>
+                  }
+                </div>
+                <div style={{padding:'20px 22px'}}>
                   <div style={{
                     display:'inline-block', fontSize:10, fontWeight:700,
-                    color:n.catColor, background:n.catColor+'18',
-                    padding:'2px 10px', borderRadius:10, marginBottom:10,
-                    textTransform:'uppercase', letterSpacing:'0.06em'
+                    color:n.catColor, background:n.catColor+'15',
+                    padding:'3px 11px', borderRadius:100, marginBottom:12,
+                    textTransform:'uppercase', letterSpacing:'0.08em',
+                    border:`1px solid ${n.catColor}28`
                   }}>{n.cat}</div>
-                  <div style={{fontSize:14, fontWeight:600, color:C.text, lineHeight:1.5, marginBottom:8}}>{n.title}</div>
-                  <div style={{fontSize:11, color:C.muted}}>{n.date}</div>
+                  <div style={{fontSize:14.5, fontWeight:700, color:C.text, lineHeight:1.5, marginBottom:10, fontFamily:'Plus Jakarta Sans,sans-serif'}}>{n.title}</div>
+                  <div style={{fontSize:12, color:C.subtle, fontWeight:500}}>{n.date}</div>
                 </div>
               </div>
             ))}
@@ -1026,39 +1357,39 @@ function Landing({ setScreen, lang, t }) {
         </div>
       </div>
 
-      {/* ══ 7. GALERI KEGIATAN ══ */}
-      <div id="section-kegiatan" style={{background:C.bg, padding: isMobile ? '48px 0' : '72px 0'}}>
+      {/* ══ 8. GALERI KEGIATAN ══ */}
+      <div id="section-kegiatan" style={{background:C.bg, padding: isMobile ? '56px 0' : '88px 0'}}>
         <div style={{maxWidth:1200, margin:'0 auto', padding: isMobile ? '0 20px' : '0 60px'}}>
-          <div style={{textAlign:'center', marginBottom:28}}>
+          <div style={{textAlign:'center', marginBottom:36}}>
             <SectionLabel>{tFn('galeriLabel')}</SectionLabel>
-            <h2 style={{fontSize: isMobile ? 22 : 30, color:C.navy}}>{tFn('galeriTitle')}</h2>
+            <h2 style={{fontSize: isMobile ? 24 : 34, color:C.navy, letterSpacing:'-0.02em'}}>{tFn('galeriTitle')}</h2>
           </div>
-          <div style={{display:'grid', gridTemplateColumns: isMobile ? 'repeat(2,1fr)' : 'repeat(3,1fr)', gap: isMobile ? 8 : 12}}>
+          <div style={{display:'grid', gridTemplateColumns: isMobile ? 'repeat(2,1fr)' : 'repeat(3,1fr)', gap: isMobile ? 10 : 14}}>
             {gallery.map((g,i) => (
               <div key={i}
                 onMouseEnter={() => setHoveredGallery(i)}
                 onMouseLeave={() => setHoveredGallery(null)}
                 style={{
-                  borderRadius:10, overflow:'hidden', position:'relative', cursor:'pointer',
-                  boxShadow: hoveredGallery===i ? '0 8px 28px rgba(0,0,0,0.18)' : '0 2px 8px rgba(0,0,0,0.06)',
-                  transform: hoveredGallery===i ? 'scale(1.02)' : 'scale(1)',
+                  borderRadius:18, overflow:'hidden', position:'relative', cursor:'pointer',
+                  boxShadow: hoveredGallery===i ? '0 12px 36px rgba(12,31,74,0.22)' : '0 2px 10px rgba(12,31,74,0.07)',
+                  transform: hoveredGallery===i ? 'scale(1.025)' : 'scale(1)',
                   transition:'all 0.25s ease',
                   aspectRatio:'4/3'
                 }}>
                 {g.img
-                  ? <img src={g.img} alt={g.label} style={{width:'100%', height:'100%', objectFit:'cover', display:'block'}}/>
+                  ? <img src={g.img} alt={g.label} style={{width:'100%', height:'100%', objectFit:'cover', display:'block', transition:'transform .35s', transform:hoveredGallery===i?'scale(1.06)':'scale(1)'}}/>
                   : <div style={{width:'100%', height:'100%', background:'#AABBCF', display:'flex', alignItems:'center', justifyContent:'center'}}>
                       <span style={{fontFamily:'monospace', fontSize:11, color:'#374151'}}>{g.label}</span>
                     </div>
                 }
                 <div style={{
                   position:'absolute', inset:0,
-                  background:'rgba(21,45,74,0.55)',
-                  opacity: hoveredGallery===i ? 1 : 0,
+                  background:'linear-gradient(to top, rgba(7,15,36,0.75) 0%, rgba(7,15,36,0) 50%)',
+                  opacity: hoveredGallery===i ? 1 : 0.5,
                   transition:'opacity 0.25s',
-                  display:'flex', alignItems:'center', justifyContent:'center'
+                  display:'flex', alignItems:'flex-end', justifyContent:'flex-start', padding:'16px'
                 }}>
-                  <div style={{color:'#fff', fontSize:13, fontWeight:600, textAlign:'center', padding:'0 16px'}}>{g.label}</div>
+                  <div style={{color:'#fff', fontSize:12.5, fontWeight:700, textAlign:'left', fontFamily:'Plus Jakarta Sans,sans-serif', opacity: hoveredGallery===i?1:0, transition:'opacity .25s'}}>{g.label}</div>
                 </div>
               </div>
             ))}
@@ -1066,64 +1397,147 @@ function Landing({ setScreen, lang, t }) {
         </div>
       </div>
 
-      {/* ══ 8. CTA BANNER ══ */}
+      {/* ══ 9. CTA BANNER ══ */}
       <div style={{
-        background:`linear-gradient(135deg, ${C.navy} 0%, ${C.navyLight} 100%)`,
-        padding: isMobile ? '48px 20px' : '64px 60px', textAlign:'center', position:'relative', overflow:'hidden'
+        background: C.gradHero, position:'relative', overflow:'hidden',
+        padding: isMobile ? '56px 20px' : '80px 60px', textAlign:'center'
       }}>
-        <div style={{position:'absolute', inset:0, opacity:0.05, backgroundImage:'radial-gradient(circle at 20% 50%, #fff 1px, transparent 1px), radial-gradient(circle at 80% 50%, #fff 1px, transparent 1px)', backgroundSize:'32px 32px'}}/>
-        <div style={{position:'relative', maxWidth:640, margin:'0 auto'}}>
-          <div style={{fontSize:12, color:'rgba(255,255,255,0.6)', letterSpacing:'0.1em', textTransform:'uppercase', marginBottom:12}}>{tFn('ctaTag')}</div>
-          <h2 style={{fontSize: isMobile ? 26 : 36, color:'#fff', fontFamily:'Playfair Display, serif', marginBottom:16, lineHeight:1.3}}>
+        <div style={{position:'absolute', inset:0, opacity:0.08, backgroundImage:'radial-gradient(circle, rgba(255,255,255,0.9) 1px, transparent 1px)', backgroundSize:'28px 28px'}}/>
+        <div style={{position:'absolute', top:'-20%', left:'50%', transform:'translateX(-50%)', width:500, height:500, borderRadius:'50%', background:'radial-gradient(circle, rgba(37,99,235,0.35) 0%, transparent 65%)', pointerEvents:'none'}}/>
+        <div style={{position:'absolute', bottom:'-20%', right:'-5%', width:300, height:300, borderRadius:'50%', background:'radial-gradient(circle, rgba(14,165,233,0.25) 0%, transparent 70%)', pointerEvents:'none'}}/>
+        <div style={{position:'relative', maxWidth:660, margin:'0 auto'}}>
+          <div style={{
+            display:'inline-block', fontSize:11, color:'rgba(255,255,255,0.65)', fontWeight:700,
+            letterSpacing:'0.12em', textTransform:'uppercase', marginBottom:14,
+            background:'rgba(255,255,255,0.08)', padding:'5px 16px', borderRadius:100,
+            border:'1px solid rgba(255,255,255,0.18)'
+          }}>{tFn('ctaTag')}</div>
+          <h2 style={{
+            fontSize: isMobile ? 28 : 40, color:'#fff', fontFamily:'Plus Jakarta Sans,sans-serif',
+            fontWeight:800, marginBottom:16, lineHeight:1.2, letterSpacing:'-0.025em'
+          }}>
             {tFn('ctaTitle').split('\n').map((l,i)=><React.Fragment key={i}>{l}{i<1&&<br/>}</React.Fragment>)}
           </h2>
-          <p style={{fontSize:14, color:'rgba(255,255,255,0.70)', lineHeight:1.7, marginBottom:28}}>{tFn('ctaSub')}</p>
-          <div style={{display:'flex', gap:12, justifyContent:'center'}}>
-            <button onClick={() => setScreen('register')} style={{background:C.blue,border:'none',color:'#fff',padding:'14px 36px',borderRadius:8,fontSize:15,fontWeight:700,boxShadow:'0 4px 20px rgba(59,130,246,0.5)'}}>{tFn('heroCta1')}</button>
-            <button onClick={() => setScreen('ppdb-info')} style={{background:'rgba(255,255,255,0.10)',border:'1px solid rgba(255,255,255,0.3)',color:'#fff',padding:'14px 28px',borderRadius:8,fontSize:15}}>{tFn('infoGPPDB')}</button>
+          <p style={{fontSize:15, color:'rgba(255,255,255,0.68)', lineHeight:1.75, marginBottom:36, maxWidth:520, margin:'0 auto 36px'}}>{tFn('ctaSub')}</p>
+          <div style={{display:'flex', gap:14, justifyContent:'center', flexWrap:'wrap'}}>
+            <button onClick={() => setScreen('register')} style={{
+              background:'linear-gradient(135deg,#2563EB,#0EA5E9)', border:'none', color:'#fff',
+              padding: isMobile?'13px 28px':'15px 40px', borderRadius:14, fontSize:15, fontWeight:700,
+              boxShadow:'0 6px 28px rgba(37,99,235,0.6)', fontFamily:'Plus Jakarta Sans,sans-serif'
+            }}
+              onMouseEnter={e=>e.currentTarget.style.boxShadow='0 10px 36px rgba(37,99,235,0.75)'}
+              onMouseLeave={e=>e.currentTarget.style.boxShadow='0 6px 28px rgba(37,99,235,0.6)'}
+            >{tFn('heroCta1')}</button>
+            <button onClick={() => setScreen('ppdb-info')} style={{
+              background:'rgba(255,255,255,0.1)', border:'1.5px solid rgba(255,255,255,0.28)',
+              backdropFilter:'blur(8px)', color:'rgba(255,255,255,0.9)',
+              padding: isMobile?'13px 24px':'15px 32px', borderRadius:14, fontSize:15, fontWeight:600,
+              fontFamily:'Plus Jakarta Sans,sans-serif'
+            }}
+              onMouseEnter={e=>e.currentTarget.style.background='rgba(255,255,255,0.17)'}
+              onMouseLeave={e=>e.currentTarget.style.background='rgba(255,255,255,0.1)'}
+            >{tFn('infoGPPDB')}</button>
           </div>
         </div>
       </div>
 
-      {/* ══ 9. KONTAK & LOKASI ══ */}
-      <div id="section-kontak" style={{background:C.white, padding: isMobile ? '48px 0' : '72px 0'}}>
+      {/* ══ 10. KONTAK & LOKASI ══ */}
+      <div id="section-kontak" style={{background:C.white, padding: isMobile ? '56px 0' : '88px 0'}}>
         <div style={{maxWidth:1200, margin:'0 auto', padding: isMobile ? '0 20px' : '0 60px'}}>
-          <div style={{textAlign:'center', marginBottom:32}}>
+          <div style={{textAlign:'center', marginBottom:40}}>
             <SectionLabel>{tFn('kontakLabel')}</SectionLabel>
-            <h2 style={{fontSize: isMobile ? 22 : 30, color:C.navy}}>{tFn('kontakTitle')}</h2>
+            <h2 style={{fontSize: isMobile ? 24 : 34, color:C.navy, letterSpacing:'-0.02em'}}>{tFn('kontakTitle')}</h2>
           </div>
-          <div style={{display:'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1.4fr', gap: isMobile ? 20 : 32}}>
-            <div>
-              <div style={{background:C.bg, borderRadius:12, padding:'28px 32px', border:`1px solid ${C.border}`, marginBottom:16}}>
-                <h3 style={{fontSize:15, color:C.navy, marginBottom:20}}>{tFn('kInfoTitle')}</h3>
+          <div style={{display:'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1.4fr', gap: isMobile ? 20 : 32, alignItems:'stretch'}}>
+            {/* Kontak info — full height flex column */}
+            <div style={{display:'flex', flexDirection:'column'}}>
+              <div style={{
+                background:C.bg, borderRadius:20, padding: isMobile?'24px':'32px',
+                border:`1px solid ${C.border}`, flex:1
+              }}>
+                <h3 style={{fontSize:16, color:C.navy, marginBottom:24, fontFamily:'Plus Jakarta Sans,sans-serif', fontWeight:700}}>{tFn('kInfoTitle')}</h3>
                 {[
                   { icon:'📍', label:tFn('kAlamatL'), val:tFn('kAlamatV') },
                   { icon:'📞', label:tFn('kTelpL'), val:tFn('kTelpV') },
                   { icon:'✉️', label:tFn('kEmailL'), val:tFn('kEmailV') },
                   { icon:'🕐', label:tFn('kJamL'), val:tFn('kJamV') },
                 ].map((c,i) => (
-                  <div key={i} style={{display:'flex', gap:14, marginBottom:16}}>
+                  <div key={i} style={{display:'flex', gap:14, marginBottom:i<3?20:0}}>
                     <div style={{
-                      width:36, height:36, borderRadius:8, background:C.blueLight,
-                      display:'flex', alignItems:'center', justifyContent:'center', fontSize:16, flexShrink:0
+                      width:40, height:40, borderRadius:12, flexShrink:0,
+                      background:`linear-gradient(135deg,${C.blue}18,${C.teal}22)`,
+                      border:`1px solid ${C.blue}22`,
+                      display:'flex', alignItems:'center', justifyContent:'center', fontSize:18
                     }}>{c.icon}</div>
                     <div>
-                      <div style={{fontSize:11, color:C.muted, fontWeight:600, textTransform:'uppercase', letterSpacing:'0.05em', marginBottom:2}}>{c.label}</div>
-                      <div style={{fontSize:13, color:C.text, lineHeight:1.5}}>{c.val}</div>
+                      <div style={{fontSize:11, color:C.subtle, fontWeight:600, textTransform:'uppercase', letterSpacing:'0.08em', marginBottom:3}}>{c.label}</div>
+                      <div style={{fontSize:13.5, color:C.text, lineHeight:1.55, fontWeight:500}}>{c.val}</div>
                     </div>
                   </div>
                 ))}
               </div>
             </div>
-            <div style={{borderRadius:12, overflow:'hidden', border:`1px solid ${C.border}`, position:'relative'}}>
-              <ImgPlaceholder label="Google Maps embed — Yayasan Darul Furqan Pariaman" height={320} bg="#C5D5E8" stripe="#B3C6DC"/>
-              <div style={{
-                position:'absolute', top:12, left:12, background:'#fff',
-                borderRadius:8, padding:'8px 14px', fontSize:12, fontWeight:600,
-                color:C.navy, boxShadow:'0 2px 10px rgba(0,0,0,0.15)', display:'flex', alignItems:'center', gap:6
-              }}>
-                <span>📍</span> Yayasan Darul Furqan Pariaman
-              </div>
+
+            {/* Map — fills full height of the grid row */}
+            <div style={{
+              borderRadius:20, overflow:'hidden', border:`1px solid ${C.border}`,
+              position:'relative', boxShadow:'0 4px 20px rgba(12,31,74,0.07)',
+              minHeight: isMobile ? 260 : 0
+            }}>
+              {/* iframe fills 100% of parent height */}
+              <iframe
+                title="Lokasi Yayasan Darul Furqan Pariaman"
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3989.3488799856374!2d100.12388!3d-0.62583!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2fd4ba4c6b5b5b5b%3A0x0!2sPariaman%2C+Kota+Pariaman%2C+Sumatera+Barat!5e0!3m2!1sid!2sid!4v1714000000000!5m2!1sid!2sid"
+                width="100%"
+                height="100%"
+                style={{
+                  display:'block', border:'none',
+                  position:'absolute', inset:0, width:'100%', height:'100%'
+                }}
+                allowFullScreen=""
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+              />
+              {/* Clickable overlay badge */}
+              <a
+                href="https://maps.google.com/?q=Pariaman,Sumatera+Barat,Indonesia"
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  position:'absolute', top:14, left:14, background:'#fff',
+                  borderRadius:12, padding:'10px 16px', fontSize:12.5, fontWeight:700,
+                  color:C.navy, boxShadow:'0 4px 16px rgba(12,31,74,0.18)',
+                  display:'flex', alignItems:'center', gap:8,
+                  fontFamily:'Plus Jakarta Sans,sans-serif', textDecoration:'none',
+                  transition:'box-shadow .18s, transform .18s'
+                }}
+                onMouseEnter={e=>{e.currentTarget.style.boxShadow='0 6px 22px rgba(12,31,74,0.28)';e.currentTarget.style.transform='translateY(-1px)'}}
+                onMouseLeave={e=>{e.currentTarget.style.boxShadow='0 4px 16px rgba(12,31,74,0.18)';e.currentTarget.style.transform='none'}}
+              >
+                <span>📍</span> Buka di Google Maps ↗
+              </a>
+              {/* Full-map click overlay */}
+              <a
+                href="https://maps.google.com/?q=Pariaman,Sumatera+Barat,Indonesia"
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  position:'absolute', bottom:14, right:14,
+                  background:'linear-gradient(135deg,#2563EB,#0EA5E9)',
+                  borderRadius:10, padding:'9px 16px', fontSize:12, fontWeight:700,
+                  color:'#fff', textDecoration:'none', display:'flex', alignItems:'center', gap:6,
+                  fontFamily:'Plus Jakarta Sans,sans-serif',
+                  boxShadow:'0 4px 14px rgba(37,99,235,0.45)',
+                  transition:'box-shadow .18s, transform .18s'
+                }}
+                onMouseEnter={e=>{e.currentTarget.style.boxShadow='0 6px 20px rgba(37,99,235,0.6)';e.currentTarget.style.transform='translateY(-1px)'}}
+                onMouseLeave={e=>{e.currentTarget.style.boxShadow='0 4px 14px rgba(37,99,235,0.45)';e.currentTarget.style.transform='none'}}
+              >
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/>
+                </svg>
+                Lihat Rute
+              </a>
             </div>
           </div>
         </div>
@@ -1148,63 +1562,70 @@ function PPDBInfo({ setScreen, t }) {
   const docs = [tFn('ppdbDoc1'),tFn('ppdbDoc2'),tFn('ppdbDoc3'),tFn('ppdbDoc4'),tFn('ppdbDoc5'),tFn('ppdbDoc6')];
   return (
     <div style={{maxWidth:1100, margin:'0 auto', padding: isMobile ? '32px 16px' : '48px 40px'}}>
-      <h1 style={{fontSize: isMobile ? 22 : 30, color:C.navy, marginBottom:6}}>{tFn('ppdbInfoTitle')}</h1>
-      <p style={{color:C.muted, marginBottom:28, fontSize:14}}>{tFn('ppdbInfoSub')}</p>
+      <h1 style={{fontSize: isMobile ? 24 : 32, color:C.navy, marginBottom:8, fontFamily:'Plus Jakarta Sans,sans-serif', fontWeight:800, letterSpacing:'-0.02em'}}>{tFn('ppdbInfoTitle')}</h1>
+      <p style={{color:C.muted, marginBottom:32, fontSize:14.5, fontWeight:500}}>{tFn('ppdbInfoSub')}</p>
 
       <div style={{display:'grid', gridTemplateColumns: isMobile ? '1fr' : '2fr 1fr', gap: isMobile ? 20 : 24}}>
         <div>
-          <div style={{background:C.white, borderRadius:10, padding:'28px 32px', border:`1px solid ${C.border}`, marginBottom:20}}>
-            <h2 style={{fontSize:18, color:C.navy, marginBottom:20}}>{tFn('ppdbAlurTitle')}</h2>
+          <div style={{background:C.white, borderRadius:16, padding:'28px 32px', border:`1px solid ${C.border}`, marginBottom:20, boxShadow:'0 2px 12px rgba(12,31,74,0.05)'}}>
+            <h2 style={{fontSize:19, color:C.navy, marginBottom:22, fontFamily:'Plus Jakarta Sans,sans-serif', fontWeight:700}}>{tFn('ppdbAlurTitle')}</h2>
             <div style={{display:'flex', flexDirection:'column', gap:16}}>
               {steps.map((s) => (
                 <div key={s.n} style={{display:'flex', gap:16, alignItems:'flex-start'}}>
                   <div style={{
-                    width:32, height:32, borderRadius:'50%', background:C.navy,
-                    color:'#fff', fontSize:13, fontWeight:700,
-                    display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0
+                    width:34, height:34, borderRadius:'50%',
+                    background:C.gradBlue,
+                    color:'#fff', fontSize:13, fontWeight:800,
+                    display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0,
+                    fontFamily:'Plus Jakarta Sans,sans-serif',
+                    boxShadow:`0 3px 10px ${C.blue}44`
                   }}>{s.n}</div>
                   <div>
-                    <div style={{fontWeight:600, fontSize:14, marginBottom:2}}>{s.title}</div>
-                    <div style={{fontSize:13, color:C.muted}}>{s.desc}</div>
+                    <div style={{fontWeight:700, fontSize:14, marginBottom:3, fontFamily:'Plus Jakarta Sans,sans-serif', color:C.navy}}>{s.title}</div>
+                    <div style={{fontSize:13, color:C.muted, lineHeight:1.5}}>{s.desc}</div>
                   </div>
                 </div>
               ))}
             </div>
           </div>
-          <div style={{background:C.white, borderRadius:10, padding:'28px 32px', border:`1px solid ${C.border}`}}>
-            <h2 style={{fontSize:18, color:C.navy, marginBottom:16}}>{tFn('ppdbDocsTitle')}</h2>
-            <ul style={{listStyle:'none', display:'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap:'8px 24px'}}>
+          <div style={{background:C.white, borderRadius:14, padding:'28px 32px', border:`1px solid ${C.border}`}}>
+            <h2 style={{fontSize:18, color:C.navy, marginBottom:16, fontFamily:'Plus Jakarta Sans,sans-serif', fontWeight:700}}>{tFn('ppdbDocsTitle')}</h2>
+            <ul style={{listStyle:'none', display:'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap:'10px 24px'}}>
               {docs.map((d,i) => (
                 <li key={i} style={{fontSize:13, color:C.text, display:'flex', gap:8, alignItems:'center'}}>
-                  <span style={{color:C.green, fontWeight:700}}>✓</span> {d}
+                  <span style={{width:18,height:18,borderRadius:'50%',background:C.greenBg,color:C.green,fontSize:11,fontWeight:700,display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>✓</span> {d}
                 </li>
               ))}
             </ul>
           </div>
         </div>
         <div style={{display:'flex', flexDirection:'column', gap:16}}>
-          <div style={{background:C.navy, borderRadius:10, padding:'24px', color:'#fff'}}>
-            <h3 style={{fontSize:16, marginBottom:16, fontFamily:'Playfair Display, serif'}}>{tFn('ppdbJadwalTitle')}</h3>
-            {[
-              [tFn('ppdbJ1k'), tFn('ppdbJ1v')],
-              [tFn('ppdbJ2k'), tFn('ppdbJ2v')],
-              [tFn('ppdbJ3k'), tFn('ppdbJ3v')],
-              [tFn('ppdbJ4k'), tFn('ppdbJ4v')],
-            ].map(([k,v]) => (
-              <div key={k} style={{display:'flex', justifyContent:'space-between', padding:'8px 0', borderBottom:'1px solid rgba(255,255,255,0.1)', fontSize:13}}>
-                <span style={{color:'rgba(255,255,255,0.7)'}}>{k}</span>
-                <span style={{fontWeight:600}}>{v}</span>
-              </div>
-            ))}
+          <div style={{background:C.gradHero, borderRadius:16, padding:'28px', color:'#fff', position:'relative', overflow:'hidden'}}>
+            <div style={{position:'absolute',inset:0,opacity:0.07,backgroundImage:'radial-gradient(circle,rgba(255,255,255,0.8) 1px,transparent 1px)',backgroundSize:'20px 20px'}}/>
+            <div style={{position:'relative'}}>
+              <h3 style={{fontSize:16, marginBottom:18, fontFamily:'Plus Jakarta Sans,sans-serif', fontWeight:700}}>{tFn('ppdbJadwalTitle')}</h3>
+              {[
+                [tFn('ppdbJ1k'), tFn('ppdbJ1v')],
+                [tFn('ppdbJ2k'), tFn('ppdbJ2v')],
+                [tFn('ppdbJ3k'), tFn('ppdbJ3v')],
+                [tFn('ppdbJ4k'), tFn('ppdbJ4v')],
+              ].map(([k,v]) => (
+                <div key={k} style={{display:'flex', justifyContent:'space-between', padding:'9px 0', borderBottom:'1px solid rgba(255,255,255,0.1)', fontSize:13}}>
+                  <span style={{color:'rgba(255,255,255,0.65)'}}>{k}</span>
+                  <span style={{fontWeight:700, fontFamily:'Plus Jakarta Sans,sans-serif'}}>{v}</span>
+                </div>
+              ))}
+            </div>
           </div>
-          <div style={{background:C.white, borderRadius:10, padding:'24px', border:`1px solid ${C.border}`}}>
-            <h3 style={{fontSize:15, color:C.navy, marginBottom:12}}>{tFn('ppdbBiayaTitle')}</h3>
-            <div style={{fontSize:28, fontWeight:700, color:C.navy, fontFamily:'Playfair Display, serif'}}>{tFn('ppdbBiayaVal')}</div>
-            <div style={{fontSize:12, color:C.muted, marginTop:4}}>{tFn('ppdbBiayaDesc')}</div>
+          <div style={{background:C.white, borderRadius:14, padding:'24px', border:`1px solid ${C.border}`}}>
+            <h3 style={{fontSize:15, color:C.navy, marginBottom:12, fontFamily:'Plus Jakarta Sans,sans-serif', fontWeight:700}}>{tFn('ppdbBiayaTitle')}</h3>
+            <div style={{fontSize:32, fontWeight:800, color:C.navy, fontFamily:'Plus Jakarta Sans,sans-serif', letterSpacing:'-0.03em'}}>{tFn('ppdbBiayaVal')}</div>
+            <div style={{fontSize:12.5, color:C.muted, marginTop:5}}>{tFn('ppdbBiayaDesc')}</div>
           </div>
           <button onClick={() => setScreen('register')} style={{
-            background:C.blue, border:'none', color:'#fff', borderRadius:8,
-            padding:'14px', fontSize:15, fontWeight:600
+            background:C.gradBlue, border:'none', color:'#fff', borderRadius:12,
+            padding:'14px', fontSize:15, fontWeight:700,
+            fontFamily:'Plus Jakarta Sans,sans-serif', boxShadow:`0 4px 18px ${C.blue}44`
           }}>{tFn('ppdbCta')}</button>
         </div>
       </div>
@@ -1216,38 +1637,49 @@ function PPDBInfo({ setScreen, t }) {
 function AuthCard({ title, subtitle, children }) {
   return (
     <div style={{
-      minHeight:'calc(100vh - 64px)', display:'flex', alignItems:'center',
-      justifyContent:'center', padding:'40px 20px', background:C.bg
+      minHeight:'calc(100vh - 66px)', display:'flex', alignItems:'center',
+      justifyContent:'center', padding:'40px 20px',
+      background:`linear-gradient(135deg, #EEF2FF 0%, #F0F4FF 50%, #E0F2FE 100%)`
     }}>
       <div style={{
-        background:C.white, borderRadius:12, padding:'40px 44px',
-        border:`1px solid ${C.border}`, width:'100%', maxWidth:460,
-        boxShadow:'0 4px 24px rgba(0,0,0,0.06)'
+        background:'rgba(255,255,255,0.90)', backdropFilter:'blur(20px)', WebkitBackdropFilter:'blur(20px)',
+        borderRadius:22, padding:'40px 44px',
+        border:'1px solid rgba(255,255,255,0.7)', width:'100%', maxWidth:468,
+        boxShadow:'0 8px 40px rgba(12,31,74,0.10), 0 2px 8px rgba(12,31,74,0.06)'
       }}>
-        <div style={{marginBottom:28, textAlign:'center'}}>
-          <img src="./assets/logo.png" alt="Darul Furqan" style={{height:48, width:48, objectFit:'contain', margin:'0 auto 16px', display:'block'}}/>
-          <h2 style={{fontSize:22, color:C.navy}}>{title}</h2>
-          {subtitle && <p style={{fontSize:13, color:C.muted, marginTop:6}}>{subtitle}</p>}
+        <div style={{marginBottom:32, textAlign:'center'}}>
+          <div style={{
+            width:56, height:56, borderRadius:16, margin:'0 auto 18px',
+            background:'linear-gradient(135deg,#2563EB,#0EA5E9)',
+            display:'flex', alignItems:'center', justifyContent:'center',
+            boxShadow:'0 6px 20px rgba(37,99,235,0.4)', overflow:'hidden'
+          }}>
+            <img src="./assets/logo.png" alt="Darul Furqan" style={{height:44, width:44, objectFit:'contain'}}/>
+          </div>
+          <h2 style={{fontSize:23, color:C.navy, fontFamily:'Plus Jakarta Sans,sans-serif', fontWeight:800, letterSpacing:'-0.02em'}}>{title}</h2>
+          {subtitle && <p style={{fontSize:13, color:C.muted, marginTop:6, lineHeight:1.55}}>{subtitle}</p>}
         </div>
         {children}
       </div>
     </div>
   );
 }
-function Field({ label, type='text', value, onChange, placeholder, hint }) {
+function Field({ label, type='text', value, onChange, placeholder, hint, inputMode }) {
   return (
-    <div style={{marginBottom:16}}>
-      <label style={{display:'block', fontSize:13, fontWeight:500, color:C.text, marginBottom:6}}>{label}</label>
+    <div style={{marginBottom:18}}>
+      <label style={{display:'block', fontSize:13, fontWeight:600, color:C.text, marginBottom:7, fontFamily:'Plus Jakarta Sans,sans-serif'}}>{label}</label>
       <input type={type} value={value} onChange={e=>onChange(e.target.value)} placeholder={placeholder}
+        inputMode={inputMode}
         style={{
-          width:'100%', padding:'10px 12px', borderRadius:7,
-          border:`1px solid ${C.borderDark}`, fontSize:13, outline:'none',
-          transition:'border-color .15s'
+          width:'100%', padding:'11px 14px', borderRadius:10,
+          border:`1.5px solid ${C.border}`, fontSize:13.5, outline:'none',
+          background:'#FAFBFF', color:C.text,
+          transition:'border-color .18s, box-shadow .18s'
         }}
-        onFocus={e=>e.target.style.borderColor=C.blue}
-        onBlur={e=>e.target.style.borderColor=C.borderDark}
+        onFocus={e=>{e.target.style.borderColor=C.blue; e.target.style.boxShadow=`0 0 0 3px ${C.blue}1A`; e.target.style.background='#fff'}}
+        onBlur={e=>{e.target.style.borderColor=C.border; e.target.style.boxShadow='none'; e.target.style.background='#FAFBFF'}}
       />
-      {hint && <div style={{fontSize:11, color:C.muted, marginTop:4}}>{hint}</div>}
+      {hint && <div style={{fontSize:12, color:C.muted, marginTop:5, lineHeight:1.5}}>{hint}</div>}
     </div>
   );
 }
@@ -1269,13 +1701,16 @@ function Register({ setScreen, t }) {
       <Field label={tFn('regPass')} type="password" value={form.password} onChange={set('password')} placeholder={tFn('regPassP')}/>
       <Field label={tFn('regConfirm')} type="password" value={form.confirm} onChange={set('confirm')} placeholder={tFn('regConfirmP')}/>
       <button onClick={submit} disabled={loading} style={{
-        width:'100%', background: loading ? C.muted : C.navy,
-        border:'none', color:'#fff', padding:'12px', borderRadius:8,
-        fontSize:14, fontWeight:600, marginTop:8
+        width:'100%', background: loading ? C.subtle : C.gradBlue,
+        border:'none', color:'#fff', padding:'13px', borderRadius:12,
+        fontSize:14, fontWeight:700, marginTop:8,
+        fontFamily:'Plus Jakarta Sans,sans-serif', letterSpacing:'-0.01em',
+        boxShadow: loading ? 'none' : `0 4px 18px ${C.blue}44`,
+        opacity: loading ? 0.7 : 1
       }}>{loading ? tFn('regLoading') : tFn('regBtn')}</button>
-      <div style={{textAlign:'center', marginTop:16, fontSize:13, color:C.muted}}>
+      <div style={{textAlign:'center', marginTop:18, fontSize:13, color:C.muted}}>
         {tFn('regHaveAcc')}{' '}
-        <span onClick={() => setScreen('login')} style={{color:C.blue, cursor:'pointer', fontWeight:500}}>{tFn('regLoginLink')}</span>
+        <span onClick={() => setScreen('login')} style={{color:C.blue, cursor:'pointer', fontWeight:600}}>{tFn('regLoginLink')}</span>
       </div>
     </AuthCard>
   );
@@ -1288,17 +1723,19 @@ function VerifyEmail({ setScreen, t }) {
   return (
     <AuthCard title={tFn('verTitle')} subtitle={tFn('verSub')}>
       <div style={{
-        background:C.blueLight, border:`1px solid ${C.blue}33`,
-        borderRadius:8, padding:'14px 16px', marginBottom:20, fontSize:13, color:C.navy
+        background:`${C.blue}0D`, border:`1.5px solid ${C.blue}28`,
+        borderRadius:12, padding:'14px 16px', marginBottom:22, fontSize:13, color:C.navy,
+        lineHeight:1.6
       }}>
-        <strong>{tFn('verHintBold')}</strong>{tFn('verHintTail')}
+        <strong style={{color:C.blue}}>{tFn('verHintBold')}</strong>{tFn('verHintTail')}
       </div>
       <Field label={tFn('verCodeLabel')} value={code} onChange={setCode} placeholder={tFn('verCodeP')}/>
       <button onClick={() => setScreen('login')} style={{
-        width:'100%', background:C.navy, border:'none', color:'#fff',
-        padding:'12px', borderRadius:8, fontSize:14, fontWeight:600
+        width:'100%', background:C.gradBlue, border:'none', color:'#fff',
+        padding:'13px', borderRadius:12, fontSize:14, fontWeight:700,
+        fontFamily:'Plus Jakarta Sans,sans-serif', boxShadow:`0 4px 18px ${C.blue}44`
       }}>{tFn('verBtn')}</button>
-      <div style={{textAlign:'center', marginTop:14, fontSize:13, color:C.muted}}>
+      <div style={{textAlign:'center', marginTop:16, fontSize:13, color:C.muted}}>
         {tFn('verNoEmail')}{' '}
         <span onClick={() => setSent(true)} style={{color:C.blue, cursor:'pointer', fontWeight:500}}>
           {sent ? tFn('verSent') : tFn('verResend')}
@@ -1331,15 +1768,21 @@ function Login({ setScreen, setUser, t }) {
       <Field label={tFn('regEmail')} type="email" value={email} onChange={setEmail} placeholder={tFn('loginEmailP')}/>
       <Field label={tFn('regPass')} type="password" value={pass} onChange={setPass} placeholder={tFn('loginPassP')}/>
       <button onClick={() => doLogin('student')} disabled={loading} style={{
-        width:'100%', background: loading ? C.muted : C.navy,
-        border:'none', color:'#fff', padding:'12px', borderRadius:8,
-        fontSize:14, fontWeight:600, marginBottom:10
+        width:'100%', background: loading ? C.subtle : C.gradBlue,
+        border:'none', color:'#fff', padding:'13px', borderRadius:12,
+        fontSize:14, fontWeight:700, marginBottom:12,
+        fontFamily:'Plus Jakarta Sans,sans-serif', letterSpacing:'-0.01em',
+        boxShadow: loading?'none':`0 4px 18px ${C.blue}44`, opacity: loading?0.7:1
       }}>{loading ? tFn('loginLoading') : tFn('loginBtn')}</button>
       <button onClick={() => doLogin('admin')} style={{
-        width:'100%', background:'none', border:`1px solid ${C.borderDark}`,
-        color:C.text, padding:'11px', borderRadius:8, fontSize:13
-      }}>{tFn('loginAdminBtn')}</button>
-      <div style={{textAlign:'center', marginTop:16, fontSize:13, color:C.muted}}>
+        width:'100%', background:'none', border:`1.5px solid ${C.border}`,
+        color:C.muted, padding:'12px', borderRadius:12, fontSize:13,
+        fontFamily:'Plus Jakarta Sans,sans-serif', fontWeight:600, transition:'all .18s'
+      }}
+        onMouseEnter={e=>{e.currentTarget.style.borderColor=C.blue;e.currentTarget.style.color=C.blue}}
+        onMouseLeave={e=>{e.currentTarget.style.borderColor=C.border;e.currentTarget.style.color=C.muted}}
+      >{tFn('loginAdminBtn')}</button>
+      <div style={{textAlign:'center', marginTop:18, fontSize:13, color:C.muted}}>
         {tFn('loginNoAcc')}{' '}
         <span onClick={() => setScreen('register')} style={{color:C.blue, cursor:'pointer', fontWeight:500}}>{tFn('loginRegLink')}</span>
       </div>
@@ -1347,27 +1790,275 @@ function Login({ setScreen, setUser, t }) {
   );
 }
 
+// ─── SVG ICONS ────────────────────────────────────────────────────
+const Icon = ({ name, size=20, color='currentColor' }) => {
+  const paths = {
+    form:    <path strokeLinecap="round" strokeLinejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10"/>,
+    upload:  <path strokeLinecap="round" strokeLinejoin="round" d="M18.375 12.739l-7.693 7.693a4.5 4.5 0 01-6.364-6.364l10.94-10.94A3 3 0 1119.5 7.372L8.552 18.32m.009-.01l-.01.01m5.699-9.941l-7.81 7.81a1.5 1.5 0 002.112 2.13"/>,
+    submit:  <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75"/>,
+    bell:    <path strokeLinecap="round" strokeLinejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0"/>,
+    verify:  <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"/>,
+    export:  <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3"/>,
+    settings:<path strokeLinecap="round" strokeLinejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.324.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 011.37.49l1.296 2.247a1.125 1.125 0 01-.26 1.431l-1.003.827c-.293.24-.438.613-.431.992a6.759 6.759 0 010 .255c-.007.378.138.75.43.99l1.005.828c.424.35.534.954.26 1.43l-1.298 2.247a1.125 1.125 0 01-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.57 6.57 0 01-.22.128c-.331.183-.581.495-.644.869l-.213 1.28c-.09.543-.56.941-1.11.941h-2.594c-.55 0-1.02-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 01-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 01-1.369-.49l-1.297-2.247a1.125 1.125 0 01.26-1.431l1.004-.827c.292-.24.437-.613.43-.992a6.932 6.932 0 010-.255c.007-.378-.138-.75-.43-.99l-1.004-.828a1.125 1.125 0 01-.26-1.43l1.297-2.247a1.125 1.125 0 011.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.087.22-.128.332-.183.582-.495.644-.869l.214-1.281z"/>,
+    users:   <path strokeLinecap="round" strokeLinejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z"/>,
+  };
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="1.75" style={{flexShrink:0}}>
+      {paths[name]}
+    </svg>
+  );
+};
+
 // ─── STUDENT DASHBOARD ─────────────────────────────────────────────
 function Dashboard({ setScreen, appStatus, setAppStatus, t }) {
   const tFn = t || tG;
+  const isMobile = useWindowWidth() <= 768;
+
+  // Popup states
+  const [refreshPopup, setRefreshPopup] = useState(null); // null | 'loading' | 'done-verified' | 'done-accepted'
+  const [showCongrats, setShowCongrats] = useState(false);
+  const [progress, setProgress] = useState(0);
+
+  // Auto-trigger refresh popup after 3.5s when SUBMITTED or VERIFIED
+  useEffect(() => {
+    if (appStatus !== 'SUBMITTED' && appStatus !== 'VERIFIED') return;
+    const delay = setTimeout(() => {
+      setRefreshPopup('loading');
+      setProgress(0);
+    }, 3500);
+    return () => clearTimeout(delay);
+  }, [appStatus]);
+
+  // Animate progress bar then flip status
+  useEffect(() => {
+    if (refreshPopup !== 'loading') return;
+    setProgress(0);
+    const ticks = [
+      setTimeout(() => setProgress(30),  200),
+      setTimeout(() => setProgress(60),  700),
+      setTimeout(() => setProgress(85),  1300),
+      setTimeout(() => setProgress(100), 1900),
+      setTimeout(() => {
+        if (appStatus === 'SUBMITTED') {
+          setAppStatus('VERIFIED');
+          setRefreshPopup('done-verified');
+        } else if (appStatus === 'VERIFIED') {
+          setAppStatus('ACCEPTED');
+          setRefreshPopup('done-accepted');
+        }
+      }, 2200),
+    ];
+    return () => ticks.forEach(clearTimeout);
+  }, [refreshPopup]);
+
+  // After "done-accepted" popup auto-closes, show congrats
+  useEffect(() => {
+    if (refreshPopup !== 'done-accepted') return;
+    const t = setTimeout(() => {
+      setRefreshPopup(null);
+      setShowCongrats(true);
+    }, 2000);
+    return () => clearTimeout(t);
+  }, [refreshPopup]);
+
   const notifications = [
     { msg:tFn('dashN1'), time:tFn('dashN1t'), unread:true },
     { msg:tFn('dashN2'), time:tFn('dashN2t'), unread:false },
   ];
   const steps = [
     { key:'register', label:tFn('dashStep1'), done:true },
-    { key:'verify', label:tFn('dashStep2'), done:true },
-    { key:'form', label:tFn('dashStep3'), done:appStatus !== 'DRAFT' || false, active: appStatus === 'DRAFT' },
-    { key:'upload', label:tFn('dashStep4'), done:['SUBMITTED','VERIFIED','ACCEPTED','REJECTED'].includes(appStatus) },
-    { key:'submit', label:tFn('dashStep5'), done:['SUBMITTED','VERIFIED','ACCEPTED','REJECTED'].includes(appStatus) },
-    { key:'result', label:tFn('dashStep6'), done:['ACCEPTED','REJECTED'].includes(appStatus) },
+    { key:'verify',   label:tFn('dashStep2'), done:true },
+    { key:'form',     label:tFn('dashStep3'), done:appStatus !== 'DRAFT', active: appStatus === 'DRAFT' },
+    { key:'upload',   label:tFn('dashStep4'), done:['SUBMITTED','VERIFIED','ACCEPTED','REJECTED'].includes(appStatus) },
+    { key:'submit',   label:tFn('dashStep5'), done:['SUBMITTED','VERIFIED','ACCEPTED','REJECTED'].includes(appStatus) },
+    { key:'result',   label:tFn('dashStep6'), done:['ACCEPTED','REJECTED'].includes(appStatus) },
   ];
 
   return (
-    <div style={{maxWidth:1200, margin:'0 auto', padding:'40px 40px'}}>
+    <div style={{maxWidth:1200, margin:'0 auto', padding: isMobile?'28px 16px':'40px 40px'}}>
+
+      {/* ── REFRESH POPUP ─────────────────────────────────────── */}
+      {refreshPopup && (
+        <div style={{
+          position:'fixed', inset:0, zIndex:500,
+          background:'rgba(7,15,36,0.72)', backdropFilter:'blur(6px)',
+          display:'flex', alignItems:'center', justifyContent:'center', padding:20
+        }}>
+          <div style={{
+            background:C.white, borderRadius:24, padding: isMobile?'32px 24px':'40px 48px',
+            maxWidth:420, width:'100%', textAlign:'center',
+            boxShadow:'0 32px 80px rgba(0,0,0,0.35)'
+          }}>
+            {refreshPopup === 'loading' && (
+              <>
+                {/* Spinner */}
+                <div style={{position:'relative', width:72, height:72, margin:'0 auto 24px'}}>
+                  <svg width="72" height="72" viewBox="0 0 72 72" style={{animation:'spin 1s linear infinite',display:'block'}}>
+                    <style>{`@keyframes spin{to{transform:rotate(360deg)}}`}</style>
+                    <circle cx="36" cy="36" r="30" fill="none" stroke={C.border} strokeWidth="5"/>
+                    <circle cx="36" cy="36" r="30" fill="none" stroke={C.blue} strokeWidth="5"
+                      strokeDasharray="60 130" strokeLinecap="round"/>
+                  </svg>
+                  <div style={{position:'absolute',inset:0,display:'flex',alignItems:'center',justifyContent:'center',fontSize:22}}>🔄</div>
+                </div>
+                <h3 style={{fontSize:18, fontWeight:800, color:C.navy, fontFamily:'Plus Jakarta Sans,sans-serif', marginBottom:8}}>
+                  Memperbarui Status...
+                </h3>
+                <p style={{fontSize:13.5, color:C.muted, marginBottom:24, lineHeight:1.6}}>
+                  Mohon tunggu, sistem sedang menyinkronkan data pendaftaran Anda.
+                </p>
+                {/* Progress bar */}
+                <div style={{background:C.border, borderRadius:100, height:6, overflow:'hidden'}}>
+                  <div style={{
+                    height:'100%', borderRadius:100,
+                    background:`linear-gradient(90deg,${C.blue},${C.teal})`,
+                    width:`${progress}%`, transition:'width .4s ease'
+                  }}/>
+                </div>
+                <div style={{fontSize:12, color:C.subtle, marginTop:8}}>{progress}%</div>
+              </>
+            )}
+
+            {refreshPopup === 'done-verified' && (
+              <>
+                <div style={{
+                  width:72, height:72, borderRadius:'50%', margin:'0 auto 20px',
+                  background:`linear-gradient(135deg,${C.orange},#F97316)`,
+                  display:'flex', alignItems:'center', justifyContent:'center',
+                  fontSize:34, boxShadow:`0 8px 24px ${C.orange}55`
+                }}>🔍</div>
+                <h3 style={{fontSize:20, fontWeight:800, color:C.navy, fontFamily:'Plus Jakarta Sans,sans-serif', marginBottom:8}}>
+                  Status Diperbarui!
+                </h3>
+                <p style={{fontSize:14, color:C.muted, marginBottom:6, lineHeight:1.6}}>
+                  Berkas Anda telah <strong style={{color:C.orange}}>diverifikasi</strong> oleh tim admin.
+                </p>
+                <p style={{fontSize:13, color:C.subtle}}>Menunggu keputusan akhir penerimaan...</p>
+                <button onClick={() => setRefreshPopup(null)} style={{
+                  marginTop:24, background:C.gradBlue, border:'none', color:'#fff',
+                  padding:'11px 32px', borderRadius:12, fontSize:14, fontWeight:700,
+                  fontFamily:'Plus Jakarta Sans,sans-serif', cursor:'pointer',
+                  boxShadow:`0 4px 16px ${C.blue}44`
+                }}>Lihat Dashboard →</button>
+              </>
+            )}
+
+            {refreshPopup === 'done-accepted' && (
+              <>
+                <div style={{fontSize:56, marginBottom:16}}>🎉</div>
+                <h3 style={{fontSize:20, fontWeight:800, color:C.green, fontFamily:'Plus Jakarta Sans,sans-serif', marginBottom:8}}>
+                  Kabar Baik!
+                </h3>
+                <p style={{fontSize:14, color:C.muted, lineHeight:1.6}}>
+                  Status Anda baru saja diperbarui. Memuat hasil penerimaan...
+                </p>
+                <div style={{background:C.border, borderRadius:100, height:4, overflow:'hidden', marginTop:20}}>
+                  <div style={{height:'100%', borderRadius:100, background:`linear-gradient(90deg,${C.green},#34D399)`, width:'100%', transition:'width 1.8s ease'}}/>
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* ── CONGRATS POPUP ────────────────────────────────────── */}
+      {showCongrats && (
+        <div style={{
+          position:'fixed', inset:0, zIndex:500,
+          background:'rgba(7,15,36,0.80)', backdropFilter:'blur(8px)',
+          display:'flex', alignItems:'center', justifyContent:'center', padding:20
+        }}>
+          {/* Confetti dots (decorative) */}
+          {[...Array(18)].map((_,i) => (
+            <div key={i} style={{
+              position:'absolute',
+              left:`${5 + (i*17%90)}%`,
+              top:`${10 + (i*23%70)}%`,
+              width: 8 + (i%3)*4,
+              height: 8 + (i%3)*4,
+              borderRadius: i%2===0 ? '50%' : 3,
+              background:['#2563EB','#0EA5E9','#10B981','#F59E0B','#EF4444','#7C3AED'][i%6],
+              opacity: 0.5 + (i%3)*0.15,
+              animation:`float ${2 + i%3}s ease-in-out infinite`,
+              animationDelay:`${(i*0.3)%2}s`
+            }}/>
+          ))}
+
+          <div style={{
+            background:C.white, borderRadius:28, padding: isMobile?'36px 24px':'48px 56px',
+            maxWidth:500, width:'100%', textAlign:'center', position:'relative',
+            boxShadow:'0 40px 100px rgba(0,0,0,0.4)'
+          }}>
+            {/* Gold star badge */}
+            <div style={{
+              width:90, height:90, borderRadius:'50%', margin:'0 auto 24px',
+              background:'linear-gradient(135deg,#F59E0B,#FBBF24)',
+              display:'flex', alignItems:'center', justifyContent:'center',
+              fontSize:44, boxShadow:'0 10px 32px rgba(245,158,11,0.55)'
+            }}>🏆</div>
+
+            <div style={{
+              display:'inline-block', background:`linear-gradient(135deg,${C.green}18,${C.teal}22)`,
+              border:`1px solid ${C.green}44`, borderRadius:100,
+              padding:'4px 18px', fontSize:11, fontWeight:700,
+              color:C.green, letterSpacing:'0.1em', textTransform:'uppercase', marginBottom:18
+            }}>✓ Pendaftaran Diterima</div>
+
+            <h2 style={{
+              fontSize: isMobile?22:28, fontWeight:800, color:C.navy,
+              fontFamily:'Plus Jakarta Sans,sans-serif', letterSpacing:'-0.02em', lineHeight:1.2, marginBottom:12
+            }}>
+              Selamat! Anda Diterima di<br/>
+              <span style={{
+                background:`linear-gradient(135deg,${C.blue},${C.teal})`,
+                WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent'
+              }}>Yayasan Darul Furqan</span>
+            </h2>
+
+            <p style={{fontSize:14.5, color:C.muted, lineHeight:1.75, marginBottom:28}}>
+              Alhamdulillah, selamat bergabung bersama keluarga besar Yayasan Darul Furqan Pariaman.
+              Silakan cek surat penerimaan resmi Anda dan lakukan daftar ulang sebelum <strong>31 Juli 2026</strong>.
+            </p>
+
+            {/* Details row */}
+            <div style={{
+              background:C.bg, borderRadius:16, padding:'16px 20px', marginBottom:28,
+              display:'grid', gridTemplateColumns:'1fr 1fr', gap:12, textAlign:'left'
+            }}>
+              {[
+                { label:'No. Peserta', val:'PPDB-2026-001' },
+                { label:'Nama',        val:'Ahmad Fauzi' },
+                { label:'Kelas',       val:'Kelas VII (SMP)' },
+                { label:'Daftar Ulang',val:'21–31 Juli 2026' },
+              ].map((d,i) => (
+                <div key={i}>
+                  <div style={{fontSize:10, color:C.subtle, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.08em', marginBottom:3}}>{d.label}</div>
+                  <div style={{fontSize:13, fontWeight:600, color:C.navy, fontFamily:'Plus Jakarta Sans,sans-serif'}}>{d.val}</div>
+                </div>
+              ))}
+            </div>
+
+            <div style={{display:'flex', gap:12, justifyContent:'center', flexWrap:'wrap'}}>
+              <button onClick={() => { setShowCongrats(false); setScreen('result'); }} style={{
+                background:`linear-gradient(135deg,${C.green},#34D399)`, border:'none', color:'#fff',
+                padding:'13px 28px', borderRadius:14, fontSize:14, fontWeight:700,
+                fontFamily:'Plus Jakarta Sans,sans-serif', cursor:'pointer',
+                boxShadow:`0 6px 20px ${C.green}55`
+              }}>Lihat Surat Penerimaan →</button>
+              <button onClick={() => setShowCongrats(false)} style={{
+                background:'none', border:`1.5px solid ${C.border}`, color:C.muted,
+                padding:'13px 22px', borderRadius:14, fontSize:14, fontWeight:600,
+                fontFamily:'Plus Jakarta Sans,sans-serif', cursor:'pointer'
+              }}>Tutup</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ── MAIN DASHBOARD CONTENT ────────────────────────────── */}
       <div style={{marginBottom:32}}>
-        <h1 style={{fontSize:26, color:C.navy}}>{tFn('dashTitle')}</h1>
-        <p style={{color:C.muted, fontSize:14, marginTop:4}}>{tFn('dashSub')}</p>
+        <h1 style={{fontSize: isMobile?22:28, color:C.navy, fontFamily:'Plus Jakarta Sans,sans-serif', fontWeight:800, letterSpacing:'-0.02em'}}>{tFn('dashTitle')}</h1>
+        <p style={{color:C.muted, fontSize:14, marginTop:5, fontWeight:500}}>{tFn('dashSub')}</p>
       </div>
 
       {/* STATUS CARD */}
@@ -1376,37 +2067,50 @@ function Dashboard({ setScreen, appStatus, setAppStatus, t }) {
                     appStatus === 'REJECTED' ? C.redBg :
                     appStatus === 'SUBMITTED' ? C.blueLight :
                     appStatus === 'VERIFIED' ? C.orangeBg : C.white,
-        border:`1px solid ${
+        border:`1.5px solid ${
           appStatus === 'ACCEPTED' ? C.green+'44' :
           appStatus === 'REJECTED' ? C.red+'44' :
           appStatus === 'SUBMITTED' ? C.blue+'44' :
           appStatus === 'VERIFIED' ? C.orange+'44' : C.border}`,
-        borderRadius:12, padding:'24px 28px', marginBottom:24,
-        display:'flex', alignItems:'center', justifyContent:'space-between'
-      }}>
+        borderRadius:16, padding:'22px 26px', marginBottom:24,
+        display:'flex', alignItems:'center', justifyContent:'space-between', gap:12,
+        boxShadow:'0 2px 12px rgba(12,31,74,0.06)'
+      }} role="alert" aria-live="polite">
         <div>
-          <div style={{fontSize:12, color:C.muted, fontWeight:500, textTransform:'uppercase', letterSpacing:'0.06em', marginBottom:6}}>{tFn('dashStatusLabel')}</div>
-          <div style={{display:'flex', alignItems:'center', gap:12}}>
+          <div style={{fontSize:11, color:C.subtle, fontWeight:600, textTransform:'uppercase', letterSpacing:'0.08em', marginBottom:8}}>{tFn('dashStatusLabel')}</div>
+          <div style={{display:'flex', alignItems:'center', gap:12, flexWrap:'wrap'}}>
             <Badge status={appStatus}/>
-            <span style={{fontSize:14, color:C.text}}>
-              {appStatus === 'DRAFT' && tFn('dashDraft')}
+            <span style={{fontSize:14, color:C.text, fontWeight:500}}>
+              {appStatus === 'DRAFT'     && tFn('dashDraft')}
               {appStatus === 'SUBMITTED' && tFn('dashSubmitted')}
-              {appStatus === 'VERIFIED' && tFn('dashVerified')}
-              {appStatus === 'ACCEPTED' && tFn('dashAccepted')}
-              {appStatus === 'REJECTED' && tFn('dashRejected')}
+              {appStatus === 'VERIFIED'  && tFn('dashVerified')}
+              {appStatus === 'ACCEPTED'  && tFn('dashAccepted')}
+              {appStatus === 'REJECTED'  && tFn('dashRejected')}
             </span>
           </div>
+          {/* Countdown hint for SUBMITTED / VERIFIED */}
+          {(appStatus === 'SUBMITTED' || appStatus === 'VERIFIED') && (
+            <div style={{
+              display:'flex', alignItems:'center', gap:6, marginTop:10,
+              fontSize:12, color:C.blue, fontWeight:500
+            }}>
+              <span className="pulse-dot" style={{width:6,height:6,borderRadius:'50%',background:C.blue,boxShadow:`0 0 4px ${C.blue}`,flexShrink:0}}/>
+              Sistem sedang memproses — akan diperbarui otomatis...
+            </div>
+          )}
         </div>
         {appStatus === 'DRAFT' && (
           <button onClick={() => setScreen('form')} style={{
-            background:C.navy, border:'none', color:'#fff',
-            padding:'10px 20px', borderRadius:7, fontSize:13, fontWeight:600, flexShrink:0
+            background:C.gradBlue, border:'none', color:'#fff',
+            padding:'10px 20px', borderRadius:10, fontSize:13, fontWeight:700, flexShrink:0,
+            fontFamily:'Plus Jakarta Sans,sans-serif', boxShadow:`0 3px 12px ${C.blue}44`
           }}>{tFn('dashContinue')}</button>
         )}
         {appStatus === 'ACCEPTED' && (
-          <button onClick={() => setScreen('result')} style={{
-            background:C.green, border:'none', color:'#fff',
-            padding:'10px 20px', borderRadius:7, fontSize:13, fontWeight:600, flexShrink:0
+          <button onClick={() => setShowCongrats(true)} style={{
+            background:`linear-gradient(135deg,${C.green},#34D399)`, border:'none', color:'#fff',
+            padding:'10px 20px', borderRadius:10, fontSize:13, fontWeight:700, flexShrink:0,
+            fontFamily:'Plus Jakarta Sans,sans-serif', boxShadow:`0 3px 12px ${C.green}44`
           }}>{tFn('dashViewResult')}</button>
         )}
       </div>
@@ -1438,23 +2142,27 @@ function Dashboard({ setScreen, appStatus, setAppStatus, t }) {
         </div>
       </div>
 
-      <div style={{display:'grid', gridTemplateColumns:'2fr 1fr', gap:20}}>
+      <div style={{display:'grid', gridTemplateColumns: isMobile?'1fr':'2fr 1fr', gap:20}}>
         {/* QUICK ACTIONS */}
         <div style={{background:C.white, borderRadius:12, padding:'24px 28px', border:`1px solid ${C.border}`}}>
           <div style={{fontSize:13, fontWeight:600, color:C.text, marginBottom:16}}>{tFn('dashActions')}</div>
           <div style={{display:'grid', gridTemplateColumns:'1fr 1fr', gap:10}}>
             {[
-              { label:tFn('dashAct1'), icon:'📝', action:'form', color:C.navy },
-              { label:tFn('dashAct2'), icon:'📎', action:'upload', color:C.blue },
-              { label:tFn('dashAct3'), icon:'✉️', action:'submit-confirm', color:C.green },
-              { label:tFn('dashAct4'), icon:'🔔', action:'notifications', color:C.orange },
+              { label:tFn('dashAct1'), icon:'form',   action:'form',           color:C.navy },
+              { label:tFn('dashAct2'), icon:'upload',  action:'upload',         color:C.blue },
+              { label:tFn('dashAct3'), icon:'submit',  action:'submit-confirm', color:C.green },
+              { label:tFn('dashAct4'), icon:'bell',    action:'notifications',  color:C.orange },
             ].map(a => (
               <button key={a.action} onClick={() => setScreen(a.action)} style={{
                 background:C.bg, border:`1px solid ${C.border}`, borderRadius:8,
                 padding:'14px', display:'flex', alignItems:'center', gap:10,
-                cursor:'pointer', textAlign:'left'
-              }}>
-                <span style={{fontSize:20}}>{a.icon}</span>
+                cursor:'pointer', textAlign:'left',
+                transition:'border-color .15s, background .15s, box-shadow .15s'
+              }}
+                onMouseEnter={e=>{e.currentTarget.style.borderColor=a.color; e.currentTarget.style.boxShadow=`0 2px 8px ${a.color}22`}}
+                onMouseLeave={e=>{e.currentTarget.style.borderColor=C.border; e.currentTarget.style.boxShadow='none'}}
+              >
+                <Icon name={a.icon} size={20} color={a.color}/>
                 <span style={{fontSize:13, fontWeight:500, color:C.text}}>{a.label}</span>
               </button>
             ))}
@@ -1479,9 +2187,9 @@ function Dashboard({ setScreen, appStatus, setAppStatus, t }) {
       {/* DEMO CONTROLS */}
       <div style={{marginTop:20, background:C.grayBg, borderRadius:8, padding:'16px 20px', border:`1px dashed ${C.borderDark}`}}>
         <div style={{fontSize:12, fontWeight:600, color:C.muted, marginBottom:8}}>{tFn('dashDemo')}</div>
-        <div style={{display:'flex', gap:8}}>
+        <div style={{display:'flex', gap:8, flexWrap:'wrap'}}>
           {['DRAFT','SUBMITTED','VERIFIED','ACCEPTED','REJECTED'].map(s => (
-            <button key={s} onClick={() => setAppStatus(s)} style={{
+            <button key={s} onClick={() => { setAppStatus(s); setRefreshPopup(null); setShowCongrats(false); }} style={{
               padding:'5px 12px', fontSize:11, borderRadius:5, cursor:'pointer',
               background: appStatus===s ? C.navy : C.white,
               color: appStatus===s ? '#fff' : C.text,
@@ -1511,7 +2219,7 @@ function PPDBForm({ setScreen, setAppStatus, t }) {
     if (step === 0) return (
       <div style={{display:'grid', gridTemplateColumns:'1fr 1fr', gap:'0 20px'}}>
         <div style={{gridColumn:'1/-1'}}><Field label={tFn('formNama')} value={form.nama} onChange={set('nama')} placeholder={tFn('formNamaP')}/></div>
-        <Field label={tFn('formNIK')} value={form.nik} onChange={set('nik')} placeholder={tFn('formNIKP')}/>
+        <Field label={tFn('formNIK')} value={form.nik} onChange={set('nik')} placeholder={tFn('formNIKP')} inputMode="numeric"/>
         <Field label={tFn('formTempat')} value={form.tempatLahir} onChange={set('tempatLahir')} placeholder={tFn('formTempatP')}/>
         <Field label={tFn('formTglLahir')} type="date" value={form.tglLahir} onChange={set('tglLahir')}/>
         <div>
@@ -1556,13 +2264,13 @@ function PPDBForm({ setScreen, setAppStatus, t }) {
             <option>Petani</option><option>Nelayan</option><option>TNI/Polri</option><option>Lainnya</option>
           </select>
         </div>
-        <Field label={tFn('formTelp')} value={form.telp} onChange={set('telp')} placeholder={tFn('formTelpP')}/>
+        <Field label={tFn('formTelp')} value={form.telp} onChange={set('telp')} placeholder={tFn('formTelpP')} inputMode="tel"/>
       </div>
     );
     if (step === 2) return (
       <div style={{display:'grid', gridTemplateColumns:'1fr 1fr', gap:'0 20px'}}>
         <div style={{gridColumn:'1/-1'}}><Field label={tFn('formAsalSekolah')} value={form.asalSekolah} onChange={set('asalSekolah')} placeholder={tFn('formAsalP')}/></div>
-        <Field label={tFn('formNilai')} value={form.nilaiUN} onChange={set('nilaiUN')} placeholder={tFn('formNilaiP')}/>
+        <Field label={tFn('formNilai')} value={form.nilaiUN} onChange={set('nilaiUN')} placeholder={tFn('formNilaiP')} inputMode="decimal"/>
         <div style={{gridColumn:'1/-1'}}>
           <label style={{display:'block', fontSize:13, fontWeight:500, marginBottom:6}}>{tFn('formPrestasi')}</label>
           <textarea value={form.prestasi} onChange={e=>set('prestasi')(e.target.value)} rows={3}
@@ -1573,45 +2281,50 @@ function PPDBForm({ setScreen, setAppStatus, t }) {
     );
   };
 
+  const isMobile = useWindowWidth() <= 768;
   return (
-    <div style={{maxWidth:860, margin:'0 auto', padding:'40px'}}>
+    <div style={{maxWidth:860, margin:'0 auto', padding: isMobile?'24px 16px':'40px'}}>
       <div style={{marginBottom:24, display:'flex', alignItems:'center', gap:12}}>
-        <button onClick={() => setScreen('dashboard')} style={{background:'none', border:'none', color:C.muted, fontSize:13, cursor:'pointer'}}>{tFn('formBack')}</button>
-        <h1 style={{fontSize:22, color:C.navy}}>{tFn('formTitle')}</h1>
+        <button onClick={() => setScreen('dashboard')} style={{background:'none', border:`1px solid ${C.border}`, color:C.muted, fontSize:13, cursor:'pointer', padding:'6px 14px', borderRadius:8, fontFamily:'Plus Jakarta Sans,sans-serif', fontWeight:600}}>{tFn('formBack')}</button>
+        <h1 style={{fontSize: isMobile?20:24, color:C.navy, fontFamily:'Plus Jakarta Sans,sans-serif', fontWeight:800, letterSpacing:'-0.02em'}}>{tFn('formTitle')}</h1>
       </div>
 
       {/* STEP TABS */}
-      <div style={{display:'flex', background:C.white, borderRadius:10, border:`1px solid ${C.border}`, marginBottom:24, overflow:'hidden'}}>
+      <div style={{display:'flex', background:C.white, borderRadius:14, border:`1px solid ${C.border}`, marginBottom:24, overflow:'hidden', boxShadow:'0 2px 8px rgba(12,31,74,0.05)'}}>
         {steps.map((s,i) => (
           <div key={i} onClick={() => i < step && setStep(i)} style={{
-            flex:1, padding:'14px', textAlign:'center', fontSize:13, fontWeight: i===step ? 600 : 400,
-            color: i===step ? C.blue : i<step ? C.green : C.muted,
-            background: i===step ? C.blueLight : 'transparent',
-            borderBottom: i===step ? `2px solid ${C.blue}` : '2px solid transparent',
-            cursor: i < step ? 'pointer' : 'default'
+            flex:1, padding:'14px', textAlign:'center', fontSize:13, fontWeight: i===step ? 700 : 500,
+            color: i===step ? C.blue : i<step ? C.green : C.subtle,
+            background: i===step ? `${C.blue}0D` : 'transparent',
+            borderBottom: i===step ? `2.5px solid ${C.blue}` : '2.5px solid transparent',
+            cursor: i < step ? 'pointer' : 'default',
+            fontFamily:'Plus Jakarta Sans,sans-serif'
           }}>
             {i < step ? '✓ ' : `${i+1}. `}{s}
           </div>
         ))}
       </div>
 
-      <div style={{background:C.white, borderRadius:12, padding:'32px', border:`1px solid ${C.border}`}}>
-        <h2 style={{fontSize:16, color:C.navy, marginBottom:20}}>{tFn('formSection')} {step+1}: {steps[step]}</h2>
+      <div style={{background:C.white, borderRadius:16, padding: isMobile?'20px':'32px', border:`1px solid ${C.border}`, boxShadow:'0 2px 12px rgba(12,31,74,0.05)'}}>
+        <h2 style={{fontSize:16, color:C.navy, marginBottom:20, fontFamily:'Plus Jakarta Sans,sans-serif', fontWeight:700}}>{tFn('formSection')} {step+1}: {steps[step]}</h2>
         {renderStep()}
         <div style={{display:'flex', justifyContent:'space-between', marginTop:24, paddingTop:20, borderTop:`1px solid ${C.border}`}}>
           <button onClick={() => step > 0 && setStep(step-1)} disabled={step===0} style={{
-            background:'none', border:`1px solid ${C.border}`, color:C.text,
-            padding:'10px 20px', borderRadius:7, fontSize:13, opacity: step===0 ? 0.4 : 1
+            background:'none', border:`1.5px solid ${C.border}`, color:C.muted,
+            padding:'10px 22px', borderRadius:10, fontSize:13, fontWeight:600,
+            fontFamily:'Plus Jakarta Sans,sans-serif', opacity: step===0 ? 0.4 : 1
           }}>{tFn('formPrev')}</button>
           {step < steps.length-1 ? (
             <button onClick={() => setStep(step+1)} style={{
-              background:C.navy, border:'none', color:'#fff',
-              padding:'10px 24px', borderRadius:7, fontSize:13, fontWeight:600
+              background:C.gradBlue, border:'none', color:'#fff',
+              padding:'10px 26px', borderRadius:10, fontSize:13, fontWeight:700,
+              fontFamily:'Plus Jakarta Sans,sans-serif', boxShadow:`0 3px 12px ${C.blue}44`
             }}>{tFn('formNext')}</button>
           ) : (
             <button onClick={() => { setAppStatus('DRAFT'); setScreen('upload'); }} style={{
-              background:C.blue, border:'none', color:'#fff',
-              padding:'10px 24px', borderRadius:7, fontSize:13, fontWeight:600
+              background:C.gradBlue, border:'none', color:'#fff',
+              padding:'10px 26px', borderRadius:10, fontSize:13, fontWeight:700,
+              fontFamily:'Plus Jakarta Sans,sans-serif', boxShadow:`0 3px 12px ${C.blue}44`
             }}>{tFn('formSaveUpload')}</button>
           )}
         </div>
@@ -1769,7 +2482,7 @@ function Result({ setScreen, appStatus, t }) {
         borderRadius:16, padding:'40px', textAlign:'center', marginBottom:20
       }}>
         <div style={{fontSize:48, marginBottom:16}}>{accepted ? '🎉' : '😔'}</div>
-        <h1 style={{fontSize:26, color: accepted ? C.green : C.red, fontFamily:'Playfair Display, serif', marginBottom:12}}>
+        <h1 style={{fontSize:26, color: accepted ? C.green : C.red, fontFamily:'Plus Jakarta Sans,sans-serif', marginBottom:12}}>
           {accepted ? tFn('resultAccepted') : tFn('resultRejected')}
         </h1>
         <p style={{fontSize:14, color:C.muted, lineHeight:1.6}}>
@@ -1793,8 +2506,9 @@ function Result({ setScreen, appStatus, t }) {
         )}
       </div>
       <button onClick={() => setScreen('dashboard')} style={{
-        background:C.navy, border:'none', color:'#fff',
-        padding:'12px 24px', borderRadius:8, fontSize:14, fontWeight:600
+        background:C.gradBlue, border:'none', color:'#fff',
+        padding:'12px 26px', borderRadius:12, fontSize:14, fontWeight:700,
+        fontFamily:'Plus Jakarta Sans,sans-serif', boxShadow:`0 4px 16px ${C.blue}44`
       }}>{tFn('resultBackBtn')}</button>
     </div>
   );
@@ -1804,29 +2518,36 @@ function Result({ setScreen, appStatus, t }) {
 function AdminDashboard({ setScreen, t }) {
   const tFn = t || tG;
   const stats = [
-    { label:tFn('adminStat1'), value:247, color:C.navy, icon:'👥' },
-    { label:tFn('adminStat2'), value:38, color:C.orange, icon:'⏳' },
-    { label:tFn('adminStat3'), value:120, color:C.green, icon:'✅' },
-    { label:tFn('adminStat4'), value:89, color:C.red, icon:'❌' },
+    { label:tFn('adminStat1'), value:247, color:C.navy, icon:'users' },
+    { label:tFn('adminStat2'), value:38, color:C.orange, icon:'bell' },
+    { label:tFn('adminStat3'), value:120, color:C.green, icon:'verify' },
+    { label:tFn('adminStat4'), value:89, color:C.red, icon:'submit' },
   ];
+  const isMobile = useWindowWidth() <= 768;
   return (
-    <div style={{maxWidth:1200, margin:'0 auto', padding:'40px'}}>
+    <div style={{maxWidth:1200, margin:'0 auto', padding: isMobile?'24px 16px':'40px'}}>
       <div style={{marginBottom:32}}>
-        <h1 style={{fontSize:26, color:C.navy}}>{tFn('adminTitle')}</h1>
-        <p style={{color:C.muted, fontSize:14, marginTop:4}}>{tFn('adminSub')}</p>
+        <h1 style={{fontSize: isMobile?22:28, color:C.navy, fontFamily:'Plus Jakarta Sans,sans-serif', fontWeight:800, letterSpacing:'-0.02em'}}>{tFn('adminTitle')}</h1>
+        <p style={{color:C.muted, fontSize:14, marginTop:5, fontWeight:500}}>{tFn('adminSub')}</p>
       </div>
 
       <div style={{display:'grid', gridTemplateColumns:'repeat(4,1fr)', gap:16, marginBottom:24}}>
         {stats.map((s,i) => (
           <div key={i} style={{
-            background:C.white, borderRadius:10, padding:'20px 24px',
-            border:`1px solid ${C.border}`, borderLeft:`4px solid ${s.color}`
-          }}>
-            <div style={{display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:8}}>
-              <div style={{fontSize:12, color:C.muted, fontWeight:500}}>{s.label}</div>
-              <span style={{fontSize:20}}>{s.icon}</span>
+            background:C.white, borderRadius:16, padding:'20px 24px',
+            border:`1px solid ${C.border}`, borderLeft:`4px solid ${s.color}`,
+            boxShadow:'0 2px 10px rgba(12,31,74,0.05)', transition:'all .2s'
+          }}
+            onMouseEnter={e=>{e.currentTarget.style.boxShadow='0 8px 24px rgba(12,31,74,0.10)';e.currentTarget.style.transform='translateY(-2px)'}}
+            onMouseLeave={e=>{e.currentTarget.style.boxShadow='0 2px 10px rgba(12,31,74,0.05)';e.currentTarget.style.transform='none'}}
+          >
+            <div style={{display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:10}}>
+              <div style={{fontSize:12, color:C.muted, fontWeight:600, textTransform:'uppercase', letterSpacing:'0.06em'}}>{s.label}</div>
+              <div style={{width:36,height:36,borderRadius:10,background:`${s.color}12`,display:'flex',alignItems:'center',justifyContent:'center'}}>
+                <Icon name={s.icon} size={18} color={s.color}/>
+              </div>
             </div>
-            <div style={{fontSize:30, fontWeight:700, color:s.color, fontFamily:'Playfair Display, serif'}}>{s.value}</div>
+            <div style={{fontSize:32, fontWeight:800, color:s.color, fontFamily:'Plus Jakarta Sans,sans-serif', letterSpacing:'-0.03em'}}>{s.value}</div>
           </div>
         ))}
       </div>
@@ -1870,16 +2591,19 @@ function AdminDashboard({ setScreen, t }) {
           <div style={{background:C.white, borderRadius:12, border:`1px solid ${C.border}`, padding:'24px'}}>
             <div style={{fontSize:14, fontWeight:600, color:C.text, marginBottom:14}}>{tFn('adminActionsTitle')}</div>
             {[
-              { label:tFn('adminAct1'), badge:38, action:'admin-list' },
-              { label:tFn('adminAct2'), badge:null, action:'admin-list' },
-              { label:tFn('adminAct3'), badge:null, action:'admin-list' },
+              { label:tFn('adminAct1'), icon:'verify', badge:38, action:'admin-list' },
+              { label:tFn('adminAct2'), icon:'export', badge:null, action:'admin-list' },
+              { label:tFn('adminAct3'), icon:'settings', badge:null, action:'admin-list' },
             ].map((a,i) => (
               <button key={i} onClick={() => setScreen(a.action)} style={{
                 width:'100%', background:C.bg, border:`1px solid ${C.border}`,
                 borderRadius:7, padding:'10px 14px', display:'flex', justifyContent:'space-between',
                 alignItems:'center', fontSize:13, cursor:'pointer', marginBottom:8, textAlign:'left'
               }}>
-                <span>{a.label}</span>
+                <span style={{display:'flex', alignItems:'center', gap:8}}>
+                  <Icon name={a.icon} size={16} color={C.navy}/>
+                  {a.label}
+                </span>
                 {a.badge && <span style={{
                   background:C.orange, color:'#fff', borderRadius:10,
                   padding:'1px 7px', fontSize:11, fontWeight:600
@@ -2091,6 +2815,35 @@ function App() {
     document.body.classList.toggle('dark-mode', darkMode);
   }, [darkMode]);
 
+  // Override design tokens for dark mode — images are never touched
+  if (darkMode) {
+    C.bg        = '#0D1117';
+    C.white     = '#161B22';
+    C.text      = '#E2E8F0';
+    C.muted     = '#94A3B8';
+    C.subtle    = '#64748B';
+    C.border    = '#21262D';
+    C.borderDark= '#30363D';
+    C.grayBg    = '#1C2128';
+    C.blueLight = '#0D1F3C';
+    C.greenBg   = '#0D2620';
+    C.redBg     = '#2D1515';
+    C.orangeBg  = '#2D1F06';
+  } else {
+    C.bg        = '#F0F4FF';
+    C.white     = '#FFFFFF';
+    C.text      = '#0F172A';
+    C.muted     = '#475569';
+    C.subtle    = '#94A3B8';
+    C.border    = '#CBD5E1';
+    C.borderDark= '#94A3B8';
+    C.grayBg    = '#F1F5F9';
+    C.blueLight = '#EFF6FF';
+    C.greenBg   = '#ECFDF5';
+    C.redBg     = '#FEF2F2';
+    C.orangeBg  = '#FFFBEB';
+  }
+
   const t = tG;
 
   const screens = {
@@ -2112,75 +2865,93 @@ function App() {
     <div style={{minHeight:'100vh', background:C.bg}}>
       <Navbar screen={screen} setScreen={setScreen} user={user} setUser={setUser}
         lang={lang} setLang={setLang} darkMode={darkMode} setDarkMode={setDarkMode} t={t}/>
-      <div style={{minHeight:'calc(100vh - 64px)'}}>
+      <div style={{minHeight:'calc(100vh - 66px)'}}>
         {screens[screen] || screens.landing}
       </div>
-      <footer style={{background:'#0F2440', marginTop:0}}>
-        <div style={{maxWidth:1200, margin:'0 auto', padding: isMobile ? '40px 20px 24px' : '48px 60px 32px'}}>
-          <div style={{display:'grid', gridTemplateColumns: isMobile ? '1fr 1fr' : '2fr 1fr 1fr 1fr', gap: isMobile ? 28 : 40, marginBottom:32}}>
+      <footer style={{background:C.navyDark, borderTop:'1px solid rgba(255,255,255,0.06)'}}>
+        {/* Top gradient stripe */}
+        <div style={{height:3, background:'linear-gradient(90deg,#2563EB,#0EA5E9,#7C3AED)'}}/>
+        <div style={{maxWidth:1200, margin:'0 auto', padding: isMobile ? '44px 20px 28px' : '56px 60px 36px'}}>
+          <div style={{display:'grid', gridTemplateColumns: isMobile ? '1fr 1fr' : '2.2fr 1fr 1fr 1fr', gap: isMobile ? 28 : 48, marginBottom:36}}>
             {/* Brand */}
             <div style={{gridColumn: isMobile ? '1 / -1' : 'auto'}}>
-              <div style={{display:'flex', alignItems:'center', gap:10, marginBottom:16}}>
-                <img src="./assets/logo.png" alt="Darul Furqan" style={{height:40, width:40, objectFit:'contain', borderRadius:4, background:'#fff', padding:2}}/>
+              <div style={{display:'flex', alignItems:'center', gap:12, marginBottom:18}}>
+                <div style={{width:44,height:44,borderRadius:12,background:'linear-gradient(135deg,#2563EB,#0EA5E9)',display:'flex',alignItems:'center',justifyContent:'center',boxShadow:'0 4px 14px rgba(37,99,235,0.4)',overflow:'hidden',flexShrink:0}}>
+                  <img src="./assets/logo.png" alt="Darul Furqan" style={{height:36,width:36,objectFit:'contain'}}/>
+                </div>
                 <div>
-                  <div style={{color:'#fff', fontSize:14, fontWeight:600}}>Darul Furqan</div>
-                  <div style={{color:'rgba(255,255,255,0.45)', fontSize:11}}>Pariaman</div>
+                  <div style={{color:'#fff', fontSize:15, fontWeight:700, fontFamily:'Plus Jakarta Sans,sans-serif'}}>Darul Furqan</div>
+                  <div style={{color:'rgba(255,255,255,0.4)', fontSize:11}}>Pariaman — Sejak 1981</div>
                 </div>
               </div>
-              <p style={{fontSize:12, color:'rgba(255,255,255,0.5)', lineHeight:1.8, marginBottom:20, maxWidth:280}}>
-                Yayasan Darul Furqan Pariaman — Lembaga pendidikan Islam terpadu sejak 1981 yang berkomitmen mencetak generasi unggul berakhlak mulia.
+              <p style={{fontSize:12.5, color:'rgba(255,255,255,0.46)', lineHeight:1.85, marginBottom:22, maxWidth:300}}>
+                {t('fDesc')}
               </p>
-              <div style={{display:'flex', gap:10}}>
-                {['f', 'ig', 'yt'].map((s,i) => (
+              <div style={{display:'flex', gap:8}}>
+                {[
+                  { label:'FB', colors:'#1877F2' },
+                  { label:'IG', colors:'#E4405F' },
+                  { label:'YT', colors:'#FF0000' },
+                ].map((s,i) => (
                   <div key={i} style={{
-                    width:32, height:32, borderRadius:7,
-                    background:'rgba(255,255,255,0.08)', border:'1px solid rgba(255,255,255,0.12)',
+                    width:34, height:34, borderRadius:9,
+                    background:'rgba(255,255,255,0.07)', border:'1px solid rgba(255,255,255,0.12)',
                     display:'flex', alignItems:'center', justifyContent:'center',
-                    fontSize:11, color:'rgba(255,255,255,0.5)', cursor:'pointer', fontWeight:700
-                  }}>{s.toUpperCase()}</div>
+                    fontSize:11, color:'rgba(255,255,255,0.5)', cursor:'pointer', fontWeight:800,
+                    fontFamily:'Plus Jakarta Sans,sans-serif', transition:'all .18s'
+                  }}
+                    onMouseEnter={e=>{e.currentTarget.style.background=s.colors+'22';e.currentTarget.style.borderColor=s.colors+'55';e.currentTarget.style.color='#fff'}}
+                    onMouseLeave={e=>{e.currentTarget.style.background='rgba(255,255,255,0.07)';e.currentTarget.style.borderColor='rgba(255,255,255,0.12)';e.currentTarget.style.color='rgba(255,255,255,0.5)'}}
+                  >{s.label}</div>
                 ))}
               </div>
             </div>
             {/* Quick Links */}
             <div>
-              <div style={{fontSize:12, fontWeight:700, color:'rgba(255,255,255,0.9)', letterSpacing:'0.08em', textTransform:'uppercase', marginBottom:16}}>{t('fNav')}</div>
+              <div style={{fontSize:11, fontWeight:700, color:'rgba(255,255,255,0.85)', letterSpacing:'0.1em', textTransform:'uppercase', marginBottom:18, fontFamily:'Plus Jakarta Sans,sans-serif'}}>{t('fNav')}</div>
               {t('fNavLinks').map(l => (
-                <div key={l} style={{fontSize:13, color:'rgba(255,255,255,0.5)', marginBottom:10, cursor:'pointer'}}>{l}</div>
+                <div key={l} style={{fontSize:13, color:'rgba(255,255,255,0.46)', marginBottom:11, cursor:'pointer', transition:'color .15s'}}
+                  onMouseEnter={e=>e.currentTarget.style.color='rgba(255,255,255,0.9)'}
+                  onMouseLeave={e=>e.currentTarget.style.color='rgba(255,255,255,0.46)'}
+                >{l}</div>
               ))}
             </div>
             {/* PPDB Links */}
             <div>
-              <div style={{fontSize:12, fontWeight:700, color:'rgba(255,255,255,0.9)', letterSpacing:'0.08em', textTransform:'uppercase', marginBottom:16}}>{t('fPPDB')}</div>
+              <div style={{fontSize:11, fontWeight:700, color:'rgba(255,255,255,0.85)', letterSpacing:'0.1em', textTransform:'uppercase', marginBottom:18, fontFamily:'Plus Jakarta Sans,sans-serif'}}>{t('fPPDB')}</div>
               {t('fPPDBLinks').map(l => (
-                <div key={l} style={{fontSize:13, color:'rgba(255,255,255,0.5)', marginBottom:10, cursor:'pointer'}}>{l}</div>
+                <div key={l} style={{fontSize:13, color:'rgba(255,255,255,0.46)', marginBottom:11, cursor:'pointer', transition:'color .15s'}}
+                  onMouseEnter={e=>e.currentTarget.style.color='rgba(255,255,255,0.9)'}
+                  onMouseLeave={e=>e.currentTarget.style.color='rgba(255,255,255,0.46)'}
+                >{l}</div>
               ))}
             </div>
             {/* Contact */}
             <div>
-              <div style={{fontSize:12, fontWeight:700, color:'rgba(255,255,255,0.9)', letterSpacing:'0.08em', textTransform:'uppercase', marginBottom:16}}>{t('fKontak')}</div>
+              <div style={{fontSize:11, fontWeight:700, color:'rgba(255,255,255,0.85)', letterSpacing:'0.1em', textTransform:'uppercase', marginBottom:18, fontFamily:'Plus Jakarta Sans,sans-serif'}}>{t('fKontak')}</div>
               {[
                 { icon:'📍', text:t('fContactAddr') },
                 { icon:'📞', text:t('fContactTelp') },
                 { icon:'✉️', text:t('fContactEmail') },
                 { icon:'🕐', text:t('fContactHours') },
               ].map((c,i) => (
-                <div key={i} style={{display:'flex', gap:8, marginBottom:10, alignItems:'flex-start'}}>
-                  <span style={{fontSize:12, marginTop:1}}>{c.icon}</span>
-                  <span style={{fontSize:12, color:'rgba(255,255,255,0.5)', lineHeight:1.5}}>{c.text}</span>
+                <div key={i} style={{display:'flex', gap:9, marginBottom:11, alignItems:'flex-start'}}>
+                  <span style={{fontSize:13, marginTop:1}}>{c.icon}</span>
+                  <span style={{fontSize:12.5, color:'rgba(255,255,255,0.46)', lineHeight:1.55}}>{c.text}</span>
                 </div>
               ))}
             </div>
           </div>
           {/* Bottom bar */}
           <div style={{
-            borderTop:'1px solid rgba(255,255,255,0.08)',
-            paddingTop:20, display:'flex',
+            borderTop:'1px solid rgba(255,255,255,0.07)',
+            paddingTop:22, display:'flex',
             flexDirection: isMobile ? 'column' : 'row',
             justifyContent:'space-between', alignItems: isMobile ? 'flex-start' : 'center',
             gap: isMobile ? 6 : 0
           }}>
-            <div style={{fontSize:11, color:'rgba(255,255,255,0.3)'}}>{t('fCopy')}</div>
-            <div style={{fontSize:11, color:'rgba(255,255,255,0.3)'}}>{t('fSys')}</div>
+            <div style={{fontSize:12, color:'rgba(255,255,255,0.28)'}}>{t('fCopy')}</div>
+            <div style={{fontSize:12, color:'rgba(255,255,255,0.28)'}}>{t('fSys')}</div>
           </div>
         </div>
       </footer>
