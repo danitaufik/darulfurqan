@@ -4607,21 +4607,35 @@ function App() {
             {/* Quick Links */}
             <div>
               <div style={{fontSize:11, fontWeight:700, color:'rgba(255,255,255,0.85)', letterSpacing:'0.1em', textTransform:'uppercase', marginBottom:18, fontFamily:'Plus Jakarta Sans,sans-serif'}}>{t('fNav')}</div>
-              {t('fNavLinks').map(l => (
-                <div key={l} style={{fontSize:13, color:'rgba(255,255,255,0.46)', marginBottom:11, cursor:'pointer', transition:'color .15s'}}
+              {[
+                { label: t('fNavLinks')[0], screen: 'landing' },
+                { label: t('fNavLinks')[1], screen: 'ppdb-info' },
+                { label: t('fNavLinks')[2], screen: 'school-profile' },
+                { label: t('fNavLinks')[3], screen: 'news' },
+                { label: t('fNavLinks')[4], screen: 'contact' },
+              ].map(item => (
+                <div key={item.label} onClick={() => setScreen(item.screen)}
+                  style={{fontSize:13, color:'rgba(255,255,255,0.46)', marginBottom:11, cursor:'pointer', transition:'color .15s'}}
                   onMouseEnter={e=>e.currentTarget.style.color='rgba(255,255,255,0.9)'}
                   onMouseLeave={e=>e.currentTarget.style.color='rgba(255,255,255,0.46)'}
-                >{l}</div>
+                >{item.label}</div>
               ))}
             </div>
             {/* PPDB Links */}
             <div>
               <div style={{fontSize:11, fontWeight:700, color:'rgba(255,255,255,0.85)', letterSpacing:'0.1em', textTransform:'uppercase', marginBottom:18, fontFamily:'Plus Jakarta Sans,sans-serif'}}>{t('fPPDB')}</div>
-              {t('fPPDBLinks').map(l => (
-                <div key={l} style={{fontSize:13, color:'rgba(255,255,255,0.46)', marginBottom:11, cursor:'pointer', transition:'color .15s'}}
+              {[
+                { label: t('fPPDBLinks')[0], screen: 'ppdb-info' },
+                { label: t('fPPDBLinks')[1], screen: 'ppdb-info' },
+                { label: t('fPPDBLinks')[2], screen: 'ppdb-info' },
+                { label: t('fPPDBLinks')[3], screen: 'register' },
+                { label: t('fPPDBLinks')[4], screen: 'login' },
+              ].map(item => (
+                <div key={item.label} onClick={() => setScreen(item.screen)}
+                  style={{fontSize:13, color:'rgba(255,255,255,0.46)', marginBottom:11, cursor:'pointer', transition:'color .15s'}}
                   onMouseEnter={e=>e.currentTarget.style.color='rgba(255,255,255,0.9)'}
                   onMouseLeave={e=>e.currentTarget.style.color='rgba(255,255,255,0.46)'}
-                >{l}</div>
+                >{item.label}</div>
               ))}
             </div>
             {/* Contact */}
