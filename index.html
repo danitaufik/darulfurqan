@@ -97,7 +97,7 @@ body{overscroll-behavior-y:contain}
 <body>
 <div id="root"></div>
 <script type="text/babel">
-const { useState, useEffect, useCallback } = React;
+const { useState, useEffect, useCallback, useRef } = React;
 
 let _lang = 'id';
 const tG = (key) => (TR[_lang] && TR[_lang][key]) || (TR.id && TR.id[key]) || key;
@@ -266,6 +266,7 @@ const TR = {
     verHintBold:'Cek inbox email Anda',
     verHintTail:' — kode verifikasi dikirim secara otomatis. Periksa folder spam jika tidak ada di inbox.',
     verCodeLabel:'Kode Verifikasi', verCodeP:'Masukkan 6 digit kode',
+    verCodeNumOnly:'Kode verifikasi hanya boleh berisi angka',
     verBtn:'Verifikasi Email',
     verNoEmail:'Tidak menerima email?', verResend:'Kirim ulang', verSent:'Terkirim!',
     // Login
@@ -545,6 +546,7 @@ const TR = {
     verHintBold:'Check your email inbox',
     verHintTail:' — the verification code was sent automatically. Check spam folder if not in inbox.',
     verCodeLabel:'Verification Code', verCodeP:'Enter 6-digit code',
+    verCodeNumOnly:'Verification code must contain numbers only',
     verBtn:'Verify Email',
     verNoEmail:"Didn't receive the email?", verResend:'Resend', verSent:'Sent!',
     // Login
@@ -1470,9 +1472,19 @@ function Landing({ setScreen, lang, t }) {
       {/* ══ 8. GALERI KEGIATAN ══ */}
       <div id="section-kegiatan" style={{background:C.bg, padding: isMobile ? '56px 0' : '88px 0'}}>
         <div style={{maxWidth:1200, margin:'0 auto', padding: isMobile ? '0 20px' : '0 60px'}}>
-          <div style={{textAlign:'center', marginBottom:36}}>
-            <SectionLabel>{tFn('galeriLabel')}</SectionLabel>
-            <h2 style={{fontSize: isMobile ? 24 : 34, color:C.navy, letterSpacing:'-0.02em'}}>{tFn('galeriTitle')}</h2>
+          <div style={{display:'flex', justifyContent:'space-between', alignItems: isMobile?'flex-start':'flex-end', flexDirection: isMobile?'column':'row', gap: isMobile?10:0, marginBottom:32}}>
+            <div>
+              <SectionLabel>{tFn('galeriLabel')}</SectionLabel>
+              <h2 style={{fontSize: isMobile ? 24 : 34, color:C.navy, letterSpacing:'-0.02em', margin:0}}>{tFn('galeriTitle')}</h2>
+            </div>
+            <button onClick={() => setScreen('activities')} style={{
+              background:'none', border:`1.5px solid ${C.border}`, color:C.muted,
+              padding:'9px 20px', borderRadius:10, fontSize:13, cursor:'pointer',
+              fontFamily:'Plus Jakarta Sans,sans-serif', fontWeight:600, transition:'all .18s', whiteSpace:'nowrap'
+            }}
+              onMouseEnter={e=>{e.currentTarget.style.borderColor=C.blue;e.currentTarget.style.color=C.blue}}
+              onMouseLeave={e=>{e.currentTarget.style.borderColor=C.border;e.currentTarget.style.color=C.muted}}
+            >{tFn('lihatSemua')}</button>
           </div>
           <div style={{display:'grid', gridTemplateColumns: isMobile ? 'repeat(2,1fr)' : 'repeat(3,1fr)', gap: isMobile ? 10 : 14}}>
             {gallery.map((g,i) => (
@@ -2948,8 +2960,50 @@ function Register({ setScreen, t }) {
 
 function VerifyEmail({ setScreen, t }) {
   const tFn = t || tG;
-  const [code, setCode] = useState('');
+  const [digits, setDigits] = useState(['','','','','','']);
+  const [codeError, setCodeError] = useState('');
   const [sent, setSent] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const inputRefs = [useRef(),useRef(),useRef(),useRef(),useRef(),useRef()];
+
+  const handleDigit = (i, val) => {
+    // reject any non-numeric character
+    if (val && !/^\d$/.test(val)) {
+      setCodeError(tFn ? (tFn('verCodeNumOnly') || 'Kode hanya boleh berisi angka') : 'Kode hanya boleh berisi angka');
+      return;
+    }
+    setCodeError('');
+    const next = [...digits];
+    next[i] = val;
+    setDigits(next);
+    if (val && i < 5) inputRefs[i+1].current.focus();
+  };
+
+  const handleKeyDown = (i, e) => {
+    if (e.key === 'Backspace' && !digits[i] && i > 0) {
+      inputRefs[i-1].current.focus();
+    }
+  };
+
+  const handlePaste = (e) => {
+    e.preventDefault();
+    const pasted = e.clipboardData.getData('text').trim();
+    if (!/^\d+$/.test(pasted)) {
+      setCodeError(tFn ? (tFn('verCodeNumOnly') || 'Kode hanya boleh berisi angka') : 'Kode hanya boleh berisi angka');
+      return;
+    }
+    setCodeError('');
+    const chars = pasted.slice(0,6).split('');
+    const next = ['','','','','',''];
+    chars.forEach((c,idx) => { next[idx] = c; });
+    setDigits(next);
+    const focusIdx = Math.min(chars.length, 5);
+    inputRefs[focusIdx].current.focus();
+  };
+
+  const code = digits.join('');
+  const isComplete = code.length === 6;
+
   return (
     <AuthCard title={tFn('verTitle')} subtitle={tFn('verSub')}>
       <div style={{
@@ -2959,12 +3013,92 @@ function VerifyEmail({ setScreen, t }) {
       }}>
         <strong style={{color:C.blue}}>{tFn('verHintBold')}</strong>{tFn('verHintTail')}
       </div>
-      <Field label={tFn('verCodeLabel')} value={code} onChange={setCode} placeholder={tFn('verCodeP')}/>
-      <button onClick={() => setScreen('login')} style={{
-        width:'100%', background:C.gradBlue, border:'none', color:'#fff',
-        padding:'13px', borderRadius:12, fontSize:14, fontWeight:700,
-        fontFamily:'Plus Jakarta Sans,sans-serif', boxShadow:`0 4px 18px ${C.blue}44`
-      }}>{tFn('verBtn')}</button>
+
+      {/* OTP digit boxes */}
+      <div style={{marginBottom: codeError ? 8 : 22}}>
+        <label style={{display:'block', fontSize:13, fontWeight:600, color: codeError ? '#DC2626' : C.text, marginBottom:12, fontFamily:'Plus Jakarta Sans,sans-serif'}}>
+          {tFn('verCodeLabel')}
+        </label>
+        <div style={{display:'flex', gap:10, justifyContent:'center'}}>
+          {digits.map((d, i) => (
+            <input
+              key={i}
+              ref={inputRefs[i]}
+              type="text"
+              inputMode="numeric"
+              maxLength={1}
+              value={d}
+              onChange={e => handleDigit(i, e.target.value.slice(-1))}
+              onKeyDown={e => handleKeyDown(i, e)}
+              onPaste={i === 0 ? handlePaste : undefined}
+              style={{
+                width:46, height:54, textAlign:'center',
+                fontSize:22, fontWeight:700, letterSpacing:0,
+                borderRadius:12,
+                border: codeError ? '2px solid #DC2626' : d ? `2px solid ${C.blue}` : `1.5px solid ${C.border}`,
+                background: codeError ? '#FEF2F2' : d ? `${C.blue}0D` : '#FAFBFF',
+                color: codeError ? '#DC2626' : C.navy,
+                outline:'none',
+                boxShadow: codeError ? '0 0 0 3px rgba(220,38,38,0.10)' : d ? `0 0 0 3px ${C.blue}1A` : 'none',
+                transition:'border-color .18s, box-shadow .18s, background .18s',
+                fontFamily:'Plus Jakarta Sans,sans-serif',
+                caretColor: C.blue,
+              }}
+              onFocus={e => {
+                if (!codeError) {
+                  e.target.style.borderColor = C.blue;
+                  e.target.style.boxShadow = `0 0 0 3px ${C.blue}1A`;
+                  e.target.style.background = '#fff';
+                }
+              }}
+              onBlur={e => {
+                if (!codeError && !d) {
+                  e.target.style.borderColor = C.border;
+                  e.target.style.boxShadow = 'none';
+                  e.target.style.background = '#FAFBFF';
+                }
+              }}
+            />
+          ))}
+        </div>
+        {codeError && (
+          <div style={{fontSize:12, color:'#DC2626', marginTop:10, fontWeight:600, textAlign:'center', fontFamily:'Plus Jakarta Sans,sans-serif', display:'flex', alignItems:'center', justifyContent:'center', gap:5}}>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+            </svg>
+            {codeError}
+          </div>
+        )}
+      </div>
+
+      <button
+        onClick={() => {
+          if (!isComplete || !!codeError || loading) return;
+          setLoading(true);
+          setTimeout(() => { setLoading(false); setScreen('login'); }, 2000);
+        }}
+        disabled={!isComplete || !!codeError || loading}
+        style={{
+          width:'100%', background: isComplete && !codeError ? C.gradBlue : '#E2E8F0',
+          border:'none', color: isComplete && !codeError ? '#fff' : '#94A3B8',
+          padding:'13px', borderRadius:12, fontSize:14, fontWeight:700,
+          fontFamily:'Plus Jakarta Sans,sans-serif',
+          boxShadow: isComplete && !codeError ? `0 4px 18px ${C.blue}44` : 'none',
+          cursor: isComplete && !codeError && !loading ? 'pointer' : 'not-allowed',
+          transition:'all .2s', display:'flex', alignItems:'center', justifyContent:'center', gap:8
+        }}
+      >
+        {loading ? (
+          <>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"
+              style={{animation:'spin 0.8s linear infinite'}}>
+              <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
+            </svg>
+            Memverifikasi...
+          </>
+        ) : tFn('verBtn')}
+      </button>
+
       <div style={{textAlign:'center', marginTop:16, fontSize:13, color:C.muted}}>
         {tFn('verNoEmail')}{' '}
         <span onClick={() => setSent(true)} style={{color:C.blue, cursor:'pointer', fontWeight:500}}>
@@ -3533,7 +3667,7 @@ function PPDBForm({ setScreen, setAppStatus, t }) {
   const TextareaField2 = ({ label, value, onChange, placeholder, error }) => (
     <div style={{marginBottom:18}}>
       <label style={{display:'block', fontSize:13, fontWeight:600, color: error ? '#DC2626' : C.text, marginBottom:7, fontFamily:'Plus Jakarta Sans,sans-serif'}}>{label}</label>
-      <textarea value={value} onChange={e=>onChange(e.target.value)} rows={2} placeholder={placeholder}
+      <textarea value={value} onChange={e=>onChange(e.target.value)} rows={4} placeholder={placeholder}
         style={{width:'100%', padding:'11px 14px', borderRadius:10,
           border: error ? '1.5px solid #DC2626' : `1.5px solid ${C.border}`,
           fontSize:13, resize:'vertical', outline:'none',
@@ -4365,6 +4499,10 @@ function App() {
   const isMobile = useWindowWidth() <= 768;
 
   _lang = lang;
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'instant' });
+  }, [screen]);
 
   useEffect(() => {
     document.body.classList.toggle('dark-mode', darkMode);
