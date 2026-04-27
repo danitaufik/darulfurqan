@@ -38,7 +38,7 @@ body.dark-mode{
   --text-muted:#94A3B8;
   --text-subtle:#64748B;
   --border:#21262D;
-  --navy:#1E3A5F;
+  --navy:#E2E8F0;
 }
 /* Sections that use C.white / C.bg as background need to follow suit */
 body.dark-mode [data-dm-surface]{background:#161B22 !important;border-color:#21262D !important}
@@ -678,7 +678,7 @@ const TR = {
 
 // ─── DESIGN TOKENS ────────────────────────────────────────────────
 const C = {
-  navy: '#0C1F4A', navyDark: '#070F24', navyLight: '#1A3A7A',
+  navy: '#0C1F4A', navyDark: '#070F24', navyLight: '#1A3A7A', navyBg: '#0C1F4A',
   blue: '#2563EB', blueDark: '#1D4ED8', blueLight: '#EFF6FF',
   teal: '#0EA5E9', tealLight: '#E0F2FE',
   bg: '#F0F4FF', white: '#FFFFFF',
@@ -688,6 +688,11 @@ const C = {
   green: '#10B981', greenBg: '#ECFDF5',
   orange: '#F59E0B', orangeBg: '#FFFBEB',
   gray: '#64748B', grayBg: '#F1F5F9',
+  // Warning box tokens (theme-aware)
+  warningBg: '#FFFBEB', warningBorder: '#FCD34D',
+  warningText: '#92400E', warningSubtext: '#A16207',
+  // Input tokens
+  inputBg: '#FFFFFF', inputBgDisabled: '#F8FAFF',
   // Gradient presets
   gradHero: 'linear-gradient(135deg,#070F24 0%,#0C1F4A 50%,#1A3A7A 100%)',
   gradBlue: 'linear-gradient(135deg,#2563EB 0%,#0EA5E9 100%)',
@@ -945,7 +950,7 @@ function ImgPlaceholder({ label, width='100%', height=200, bg='#C7D2E0', stripe=
       <div style={{
         position:'relative', textAlign:'center', padding:'8px 16px',
         background:'rgba(255,255,255,0.55)', borderRadius:6,
-        fontFamily:'monospace', fontSize:11, color:'#374151', lineHeight:1.5
+        fontFamily:'monospace', fontSize:11, color:C.text, lineHeight:1.5
       }}>{label}</div>
     </div>
   );
@@ -1522,7 +1527,7 @@ function Landing({ setScreen, lang, t }) {
                 {g.img
                   ? <img src={g.img} alt={g.label} style={{width:'100%', height:'100%', objectFit:'cover', display:'block', transition:'transform .35s', transform:hoveredGallery===i?'scale(1.06)':'scale(1)'}}/>
                   : <div style={{width:'100%', height:'100%', background:'#AABBCF', display:'flex', alignItems:'center', justifyContent:'center'}}>
-                      <span style={{fontFamily:'monospace', fontSize:11, color:'#374151'}}>{g.label}</span>
+                      <span style={{fontFamily:'monospace', fontSize:11, color:C.text}}>{g.label}</span>
                     </div>
                 }
                 <div style={{
@@ -2370,10 +2375,10 @@ function ActivitiesPage({ setScreen, t }) {
                 padding:'7px 16px', borderRadius:100, fontSize:12.5, fontWeight:600,
                 cursor:'pointer', fontFamily:'Plus Jakarta Sans,sans-serif',
                 transition:'all .2s',
-                background: active ? (m ? m.color : C.navy) : 'transparent',
+                background: active ? (m ? m.color : C.navyBg) : 'transparent',
                 color: active ? '#fff' : C.muted,
-                border: active ? `1.5px solid ${m ? m.color : C.navy}` : `1.5px solid ${C.border}`,
-                boxShadow: active ? `0 3px 10px ${m ? m.color : C.navy}33` : 'none',
+                border: active ? `1.5px solid ${m ? m.color : C.navyBg}` : `1.5px solid ${C.border}`,
+                boxShadow: active ? `0 3px 10px ${m ? m.color : C.navyBg}33` : 'none',
               }}>
                 {cat !== 'all' && m && <CatSvg pathKey={m.pathKey} size={13} color={active ? '#fff' : m.color}/>}
                 {cat === 'all'
@@ -2671,7 +2676,7 @@ function ProfilePage({ setScreen, t }) {
     width:'100%', padding:'11px 14px', borderRadius:10, fontSize:13.5, outline:'none',
     color: C.text, fontFamily:'Plus Jakarta Sans,sans-serif',
     border: err ? `1.5px solid ${C.red}` : `1.5px solid ${C.border}`,
-    background: err ? C.redBg : '#FAFBFF',
+    background: err ? C.redBg : C.inputBg,
     boxSizing:'border-box', transition:'border-color .18s, box-shadow .18s'
   });
 
@@ -2742,24 +2747,24 @@ function ProfilePage({ setScreen, t }) {
                 <label style={labelStyle(false)}>{tFn('profileName')}</label>
                 <input value={biodata.name} onChange={e => setBiodata(b=>({...b, name:e.target.value}))}
                   style={inputStyle(false)}
-                  onFocus={e=>{e.target.style.borderColor=C.blue; e.target.style.boxShadow=`0 0 0 3px ${C.blue}1A`; e.target.style.background='#fff'}}
-                  onBlur={e=>{e.target.style.borderColor=C.border; e.target.style.boxShadow='none'; e.target.style.background='#FAFBFF'}}
+                  onFocus={e=>{e.target.style.borderColor=C.blue; e.target.style.boxShadow=`0 0 0 3px ${C.blue}1A`; e.target.style.background=C.inputBg}}
+                  onBlur={e=>{e.target.style.borderColor=C.border; e.target.style.boxShadow='none'; e.target.style.background=C.inputBg}}
                 />
               </div>
               <div style={{ marginBottom:18 }}>
                 <label style={labelStyle(false)}>{tFn('profileEmail')}</label>
                 <input type="email" value={biodata.email} onChange={e => setBiodata(b=>({...b, email:e.target.value}))}
                   style={inputStyle(false)}
-                  onFocus={e=>{e.target.style.borderColor=C.blue; e.target.style.boxShadow=`0 0 0 3px ${C.blue}1A`; e.target.style.background='#fff'}}
-                  onBlur={e=>{e.target.style.borderColor=C.border; e.target.style.boxShadow='none'; e.target.style.background='#FAFBFF'}}
+                  onFocus={e=>{e.target.style.borderColor=C.blue; e.target.style.boxShadow=`0 0 0 3px ${C.blue}1A`; e.target.style.background=C.inputBg}}
+                  onBlur={e=>{e.target.style.borderColor=C.border; e.target.style.boxShadow='none'; e.target.style.background=C.inputBg}}
                 />
               </div>
               <div style={{ marginBottom:28 }}>
                 <label style={labelStyle(false)}>{tFn('profilePhone')}</label>
                 <input type="tel" value={biodata.phone} onChange={e => setBiodata(b=>({...b, phone:e.target.value}))}
                   style={inputStyle(false)}
-                  onFocus={e=>{e.target.style.borderColor=C.blue; e.target.style.boxShadow=`0 0 0 3px ${C.blue}1A`; e.target.style.background='#fff'}}
-                  onBlur={e=>{e.target.style.borderColor=C.border; e.target.style.boxShadow='none'; e.target.style.background='#FAFBFF'}}
+                  onFocus={e=>{e.target.style.borderColor=C.blue; e.target.style.boxShadow=`0 0 0 3px ${C.blue}1A`; e.target.style.background=C.inputBg}}
+                  onBlur={e=>{e.target.style.borderColor=C.border; e.target.style.boxShadow='none'; e.target.style.background=C.inputBg}}
                 />
               </div>
               <div style={{ display:'flex', alignItems:'center', gap:14 }}>
@@ -2795,8 +2800,8 @@ function ProfilePage({ setScreen, t }) {
                   <input type="password" value={pass[f.key]}
                     onChange={e => { setPass(p=>({...p, [f.key]:e.target.value})); setPassErr(er=>({...er, [f.key]:''})); }}
                     style={inputStyle(passErr[f.key])}
-                    onFocus={e=>{if(!passErr[f.key]){e.target.style.borderColor=C.blue; e.target.style.boxShadow=`0 0 0 3px ${C.blue}1A`; e.target.style.background='#fff'}}}
-                    onBlur={e=>{if(!passErr[f.key]){e.target.style.borderColor=C.border; e.target.style.boxShadow='none'; e.target.style.background='#FAFBFF'}}}
+                    onFocus={e=>{if(!passErr[f.key]){e.target.style.borderColor=C.blue; e.target.style.boxShadow=`0 0 0 3px ${C.blue}1A`; e.target.style.background=C.inputBg}}}
+                    onBlur={e=>{if(!passErr[f.key]){e.target.style.borderColor=C.border; e.target.style.boxShadow='none'; e.target.style.background=C.inputBg}}}
                   />
                   {passErr[f.key] && <div style={{ fontSize:12, color: C.red, marginTop:5, fontFamily:'Plus Jakarta Sans,sans-serif' }}>{passErr[f.key]}</div>}
                 </div>
@@ -2907,12 +2912,12 @@ function Field({ label, type='text', value, onChange, placeholder, hint, inputMo
           width:'100%', padding:'11px 14px', borderRadius:10,
           border: error ? '1.5px solid #DC2626' : `1.5px solid ${C.border}`,
           fontSize:13.5, outline:'none',
-          background: error ? '#FEF2F2' : '#FAFBFF', color:C.text,
+          background: error ? C.redBg : C.inputBg, color:C.text,
           boxShadow: error ? '0 0 0 3px rgba(220,38,38,0.10)' : 'none',
           transition:'border-color .18s, box-shadow .18s'
         }}
-        onFocus={e=>{if(!error){e.target.style.borderColor=C.blue; e.target.style.boxShadow=`0 0 0 3px ${C.blue}1A`; e.target.style.background='#fff'}}}
-        onBlur={e=>{if(!error){e.target.style.borderColor=C.border; e.target.style.boxShadow='none'; e.target.style.background='#FAFBFF'}}}
+        onFocus={e=>{if(!error){e.target.style.borderColor=C.blue; e.target.style.boxShadow=`0 0 0 3px ${C.blue}1A`}}}
+        onBlur={e=>{if(!error){e.target.style.borderColor=C.border; e.target.style.boxShadow='none'; e.target.style.background=C.inputBg}}}
       />
       {error && <div style={{fontSize:11.5, color:'#DC2626', marginTop:4, fontWeight:500, fontFamily:'Plus Jakarta Sans,sans-serif'}}>⚠ Wajib diisi</div>}
       {hint && !error && <div style={{fontSize:12, color:C.muted, marginTop:5, lineHeight:1.5}}>{hint}</div>}
@@ -2946,16 +2951,16 @@ function Register({ setScreen, t }) {
     setTimeout(() => { setLoading(false); setScreen('verify-email'); }, 1200);
   };
   const ErrMsg = ({ msg }) => msg ? <div style={{fontSize:11.5, color:'#DC2626', marginTop:4, fontWeight:500, fontFamily:'Plus Jakarta Sans,sans-serif'}}>⚠ {msg}</div> : null;
-  const errStyle = hasErr => hasErr ? { border:'1.5px solid #DC2626', background:'#FEF2F2', boxShadow:'0 0 0 3px rgba(220,38,38,0.10)' } : {};
+  const errStyle = hasErr => hasErr ? { border:'1.5px solid #DC2626', background:C.redBg, boxShadow:'0 0 0 3px rgba(220,38,38,0.10)' } : {};
   return (
     <AuthCard title={tFn('regTitle')} subtitle={tFn('regSub')}>
       <Field label={tFn('regNama')} value={form.name} onChange={set('name')} placeholder={tFn('regNamaP')} error={errors.name}/>
       <div style={{marginBottom:18}}>
         <label style={{display:'block', fontSize:13, fontWeight:600, color: errors.email ? '#DC2626' : C.text, marginBottom:7, fontFamily:'Plus Jakarta Sans,sans-serif'}}>{tFn('regEmail')}</label>
         <input type="email" value={form.email} onChange={e=>set('email')(e.target.value)} placeholder={tFn('regEmailP')}
-          style={{width:'100%', padding:'11px 14px', borderRadius:10, fontSize:13.5, outline:'none', color:C.text, transition:'border-color .18s, box-shadow .18s', ...errStyle(errors.email), border: errors.email ? '1.5px solid #DC2626' : `1.5px solid ${C.border}`, background: errors.email ? '#FEF2F2' : '#FAFBFF'}}
-          onFocus={e=>{if(!errors.email){e.target.style.borderColor=C.blue; e.target.style.boxShadow=`0 0 0 3px ${C.blue}1A`; e.target.style.background='#fff'}}}
-          onBlur={e=>{if(!errors.email){e.target.style.borderColor=C.border; e.target.style.boxShadow='none'; e.target.style.background='#FAFBFF'}}}
+          style={{width:'100%', padding:'11px 14px', borderRadius:10, fontSize:13.5, outline:'none', color:C.text, transition:'border-color .18s, box-shadow .18s', ...errStyle(errors.email), border: errors.email ? '1.5px solid #DC2626' : `1.5px solid ${C.border}`, background: errors.email ? C.redBg : C.inputBg}}
+          onFocus={e=>{if(!errors.email){e.target.style.borderColor=C.blue; e.target.style.boxShadow=`0 0 0 3px ${C.blue}1A`; e.target.style.background=C.inputBg}}}
+          onBlur={e=>{if(!errors.email){e.target.style.borderColor=C.border; e.target.style.boxShadow='none'; e.target.style.background=C.inputBg}}}
         />
         <ErrMsg msg={errors.email}/>
       </div>
@@ -2963,18 +2968,18 @@ function Register({ setScreen, t }) {
       <div style={{marginBottom:18}}>
         <label style={{display:'block', fontSize:13, fontWeight:600, color: errors.password ? '#DC2626' : C.text, marginBottom:7, fontFamily:'Plus Jakarta Sans,sans-serif'}}>{tFn('regPass')}</label>
         <input type="password" value={form.password} onChange={e=>set('password')(e.target.value)} placeholder={tFn('regPassP')}
-          style={{width:'100%', padding:'11px 14px', borderRadius:10, fontSize:13.5, outline:'none', color:C.text, transition:'border-color .18s, box-shadow .18s', border: errors.password ? '1.5px solid #DC2626' : `1.5px solid ${C.border}`, background: errors.password ? '#FEF2F2' : '#FAFBFF'}}
-          onFocus={e=>{if(!errors.password){e.target.style.borderColor=C.blue; e.target.style.boxShadow=`0 0 0 3px ${C.blue}1A`; e.target.style.background='#fff'}}}
-          onBlur={e=>{if(!errors.password){e.target.style.borderColor=C.border; e.target.style.boxShadow='none'; e.target.style.background='#FAFBFF'}}}
+          style={{width:'100%', padding:'11px 14px', borderRadius:10, fontSize:13.5, outline:'none', color:C.text, transition:'border-color .18s, box-shadow .18s', border: errors.password ? '1.5px solid #DC2626' : `1.5px solid ${C.border}`, background: errors.password ? C.redBg : C.inputBg}}
+          onFocus={e=>{if(!errors.password){e.target.style.borderColor=C.blue; e.target.style.boxShadow=`0 0 0 3px ${C.blue}1A`; e.target.style.background=C.inputBg}}}
+          onBlur={e=>{if(!errors.password){e.target.style.borderColor=C.border; e.target.style.boxShadow='none'; e.target.style.background=C.inputBg}}}
         />
         <ErrMsg msg={errors.password}/>
       </div>
       <div style={{marginBottom:18}}>
         <label style={{display:'block', fontSize:13, fontWeight:600, color: errors.confirm ? '#DC2626' : C.text, marginBottom:7, fontFamily:'Plus Jakarta Sans,sans-serif'}}>{tFn('regConfirm')}</label>
         <input type="password" value={form.confirm} onChange={e=>set('confirm')(e.target.value)} placeholder={tFn('regConfirmP')}
-          style={{width:'100%', padding:'11px 14px', borderRadius:10, fontSize:13.5, outline:'none', color:C.text, transition:'border-color .18s, box-shadow .18s', border: errors.confirm ? '1.5px solid #DC2626' : `1.5px solid ${C.border}`, background: errors.confirm ? '#FEF2F2' : '#FAFBFF'}}
-          onFocus={e=>{if(!errors.confirm){e.target.style.borderColor=C.blue; e.target.style.boxShadow=`0 0 0 3px ${C.blue}1A`; e.target.style.background='#fff'}}}
-          onBlur={e=>{if(!errors.confirm){e.target.style.borderColor=C.border; e.target.style.boxShadow='none'; e.target.style.background='#FAFBFF'}}}
+          style={{width:'100%', padding:'11px 14px', borderRadius:10, fontSize:13.5, outline:'none', color:C.text, transition:'border-color .18s, box-shadow .18s', border: errors.confirm ? '1.5px solid #DC2626' : `1.5px solid ${C.border}`, background: errors.confirm ? C.redBg : C.inputBg}}
+          onFocus={e=>{if(!errors.confirm){e.target.style.borderColor=C.blue; e.target.style.boxShadow=`0 0 0 3px ${C.blue}1A`; e.target.style.background=C.inputBg}}}
+          onBlur={e=>{if(!errors.confirm){e.target.style.borderColor=C.border; e.target.style.boxShadow='none'; e.target.style.background=C.inputBg}}}
         />
         <ErrMsg msg={errors.confirm}/>
       </div>
@@ -3072,7 +3077,7 @@ function VerifyEmail({ setScreen, t }) {
                 fontSize:22, fontWeight:700, letterSpacing:0,
                 borderRadius:12,
                 border: codeError ? '2px solid #DC2626' : d ? `2px solid ${C.blue}` : `1.5px solid ${C.border}`,
-                background: codeError ? '#FEF2F2' : d ? `${C.blue}0D` : '#FAFBFF',
+                background: codeError ? C.redBg : d ? `${C.blue}0D` : C.inputBg,
                 color: codeError ? '#DC2626' : C.navy,
                 outline:'none',
                 boxShadow: codeError ? '0 0 0 3px rgba(220,38,38,0.10)' : d ? `0 0 0 3px ${C.blue}1A` : 'none',
@@ -3084,14 +3089,14 @@ function VerifyEmail({ setScreen, t }) {
                 if (!codeError) {
                   e.target.style.borderColor = C.blue;
                   e.target.style.boxShadow = `0 0 0 3px ${C.blue}1A`;
-                  e.target.style.background = '#fff';
+                  e.target.style.background = C.inputBg;
                 }
               }}
               onBlur={e => {
                 if (!codeError && !d) {
                   e.target.style.borderColor = C.border;
                   e.target.style.boxShadow = 'none';
-                  e.target.style.background = '#FAFBFF';
+                  e.target.style.background = C.inputBg;
                 }
               }}
             />
@@ -3181,18 +3186,18 @@ function Login({ setScreen, setUser, t }) {
       <div style={{marginBottom:18}}>
         <label style={{display:'block', fontSize:13, fontWeight:600, color: errors.email ? '#DC2626' : C.text, marginBottom:7, fontFamily:'Plus Jakarta Sans,sans-serif'}}>{tFn('regEmail')}</label>
         <input type="email" value={email} onChange={e=>{setEmail(e.target.value); clearErr('email');}} placeholder={tFn('loginEmailP')}
-          style={{width:'100%', padding:'11px 14px', borderRadius:10, fontSize:13.5, outline:'none', color:C.text, transition:'border-color .18s, box-shadow .18s', border: errors.email ? '1.5px solid #DC2626' : `1.5px solid ${C.border}`, background: errors.email ? '#FEF2F2' : '#FAFBFF'}}
-          onFocus={e=>{if(!errors.email){e.target.style.borderColor=C.blue; e.target.style.boxShadow=`0 0 0 3px ${C.blue}1A`; e.target.style.background='#fff'}}}
-          onBlur={e=>{if(!errors.email){e.target.style.borderColor=C.border; e.target.style.boxShadow='none'; e.target.style.background='#FAFBFF'}}}
+          style={{width:'100%', padding:'11px 14px', borderRadius:10, fontSize:13.5, outline:'none', color:C.text, transition:'border-color .18s, box-shadow .18s', border: errors.email ? '1.5px solid #DC2626' : `1.5px solid ${C.border}`, background: errors.email ? C.redBg : C.inputBg}}
+          onFocus={e=>{if(!errors.email){e.target.style.borderColor=C.blue; e.target.style.boxShadow=`0 0 0 3px ${C.blue}1A`; e.target.style.background=C.inputBg}}}
+          onBlur={e=>{if(!errors.email){e.target.style.borderColor=C.border; e.target.style.boxShadow='none'; e.target.style.background=C.inputBg}}}
         />
         <ErrMsg msg={errors.email}/>
       </div>
       <div style={{marginBottom:18}}>
         <label style={{display:'block', fontSize:13, fontWeight:600, color: errors.pass ? '#DC2626' : C.text, marginBottom:7, fontFamily:'Plus Jakarta Sans,sans-serif'}}>{tFn('regPass')}</label>
         <input type="password" value={pass} onChange={e=>{setPass(e.target.value); clearErr('pass');}} placeholder={tFn('loginPassP')}
-          style={{width:'100%', padding:'11px 14px', borderRadius:10, fontSize:13.5, outline:'none', color:C.text, transition:'border-color .18s, box-shadow .18s', border: errors.pass ? '1.5px solid #DC2626' : `1.5px solid ${C.border}`, background: errors.pass ? '#FEF2F2' : '#FAFBFF'}}
-          onFocus={e=>{if(!errors.pass){e.target.style.borderColor=C.blue; e.target.style.boxShadow=`0 0 0 3px ${C.blue}1A`; e.target.style.background='#fff'}}}
-          onBlur={e=>{if(!errors.pass){e.target.style.borderColor=C.border; e.target.style.boxShadow='none'; e.target.style.background='#FAFBFF'}}}
+          style={{width:'100%', padding:'11px 14px', borderRadius:10, fontSize:13.5, outline:'none', color:C.text, transition:'border-color .18s, box-shadow .18s', border: errors.pass ? '1.5px solid #DC2626' : `1.5px solid ${C.border}`, background: errors.pass ? C.redBg : C.inputBg}}
+          onFocus={e=>{if(!errors.pass){e.target.style.borderColor=C.blue; e.target.style.boxShadow=`0 0 0 3px ${C.blue}1A`; e.target.style.background=C.inputBg}}}
+          onBlur={e=>{if(!errors.pass){e.target.style.borderColor=C.border; e.target.style.boxShadow='none'; e.target.style.background=C.inputBg}}}
         />
         <ErrMsg msg={errors.pass}/>
       </div>
@@ -3661,7 +3666,7 @@ function Dashboard({ setScreen, appStatus, setAppStatus, t }) {
           {['DRAFT','SUBMITTED','VERIFIED','ACCEPTED','REJECTED'].map(s => (
             <button key={s} onClick={() => { setAppStatus(s); setRefreshPopup(null); setShowCongrats(false); }} style={{
               padding:'5px 12px', fontSize:11, borderRadius:5, cursor:'pointer',
-              background: appStatus===s ? C.navy : C.white,
+              background: appStatus===s ? C.navyBg : C.white,
               color: appStatus===s ? '#fff' : C.text,
               border: `1px solid ${C.border}`
             }}>{s}</button>
@@ -3673,6 +3678,25 @@ function Dashboard({ setScreen, appStatus, setAppStatus, t }) {
 }
 
 // ─── PPDB FORM ─────────────────────────────────────────────────────
+function TextareaField2({ label, value, onChange, placeholder, error }) {
+  return (
+    <div style={{marginBottom:18}}>
+      <label style={{display:'block', fontSize:13, fontWeight:600, color: error ? '#DC2626' : C.text, marginBottom:7, fontFamily:'Plus Jakarta Sans,sans-serif'}}>{label}</label>
+      <textarea value={value} onChange={e=>onChange(e.target.value)} rows={4} placeholder={placeholder}
+        style={{width:'100%', padding:'11px 14px', borderRadius:10,
+          border: error ? '1.5px solid #DC2626' : `1.5px solid ${C.border}`,
+          fontSize:13, resize:'vertical', outline:'none',
+          background: error ? C.redBg : C.inputBg,
+          boxShadow: error ? '0 0 0 3px rgba(220,38,38,0.10)' : 'none',
+          color:C.text, fontFamily:'inherit', transition:'border-color .18s, box-shadow .18s'}}
+        onFocus={e=>{if(!error){e.target.style.borderColor=C.blue; e.target.style.boxShadow=`0 0 0 3px ${C.blue}1A`; e.target.style.background=C.inputBg}}}
+        onBlur={e=>{if(!error){e.target.style.borderColor=C.border; e.target.style.boxShadow='none'; e.target.style.background=C.inputBg}}}
+      />
+      {error && <div style={{fontSize:11.5, color:'#DC2626', marginTop:4, fontWeight:500, fontFamily:'Plus Jakarta Sans,sans-serif'}}>⚠ Wajib diisi</div>}
+    </div>
+  );
+}
+
 function PPDBForm({ setScreen, setAppStatus, t }) {
   const tFn = t || tG;
   const [step, setStep] = useState(0);
@@ -3708,7 +3732,7 @@ function PPDBForm({ setScreen, setAppStatus, t }) {
         width:'100%', padding:'11px 14px', borderRadius:10,
         border: error ? '1.5px solid #DC2626' : `1.5px solid ${C.border}`,
         fontSize:13, outline:'none',
-        background: error ? '#FEF2F2' : '#FAFBFF',
+        background: error ? C.redBg : C.inputBg,
         color: value ? C.text : C.subtle,
         boxShadow: error ? '0 0 0 3px rgba(220,38,38,0.10)' : 'none',
         transition:'border-color .18s', fontFamily:'inherit', cursor:'pointer'
@@ -3722,23 +3746,6 @@ function PPDBForm({ setScreen, setAppStatus, t }) {
       {error && <div style={{fontSize:11.5, color:'#DC2626', marginTop:4, fontWeight:500, fontFamily:'Plus Jakarta Sans,sans-serif'}}>⚠ Wajib diisi</div>}
     </div>
   );
-  const TextareaField2 = ({ label, value, onChange, placeholder, error }) => (
-    <div style={{marginBottom:18}}>
-      <label style={{display:'block', fontSize:13, fontWeight:600, color: error ? '#DC2626' : C.text, marginBottom:7, fontFamily:'Plus Jakarta Sans,sans-serif'}}>{label}</label>
-      <textarea value={value} onChange={e=>onChange(e.target.value)} rows={4} placeholder={placeholder}
-        style={{width:'100%', padding:'11px 14px', borderRadius:10,
-          border: error ? '1.5px solid #DC2626' : `1.5px solid ${C.border}`,
-          fontSize:13, resize:'vertical', outline:'none',
-          background: error ? '#FEF2F2' : '#FAFBFF',
-          boxShadow: error ? '0 0 0 3px rgba(220,38,38,0.10)' : 'none',
-          color:C.text, fontFamily:'inherit', transition:'border-color .18s, box-shadow .18s'}}
-        onFocus={e=>{if(!error){e.target.style.borderColor=C.blue; e.target.style.boxShadow=`0 0 0 3px ${C.blue}1A`; e.target.style.background='#fff'}}}
-        onBlur={e=>{if(!error){e.target.style.borderColor=C.border; e.target.style.boxShadow='none'; e.target.style.background='#FAFBFF'}}}
-      />
-      {error && <div style={{fontSize:11.5, color:'#DC2626', marginTop:4, fontWeight:500, fontFamily:'Plus Jakarta Sans,sans-serif'}}>⚠ Wajib diisi</div>}
-    </div>
-  );
-
   const steps = [tFn('formStep1'), tFn('formStep2'), tFn('formStep3')];
 
   const renderStep = () => {
@@ -3753,7 +3760,7 @@ function PPDBForm({ setScreen, setAppStatus, t }) {
           <select value={form.jenisKelamin} onChange={e=>set('jenisKelamin')(e.target.value)} style={{
             width:'100%', padding:'10px 12px', borderRadius:7,
             border: errors.jenisKelamin ? '1.5px solid #DC2626' : `1px solid ${C.borderDark}`,
-            fontSize:13, background: errors.jenisKelamin ? '#FEF2F2' : ''
+            fontSize:13, background: errors.jenisKelamin ? C.redBg : C.inputBg, color:C.text
           }}>
             <option value="">{tFn('formGenderOpt1')}</option>
             <option>{tFn('formGenderOpt2')}</option>
@@ -3766,7 +3773,7 @@ function PPDBForm({ setScreen, setAppStatus, t }) {
           <select value={form.agama} onChange={e=>set('agama')(e.target.value)} style={{
             width:'100%', padding:'10px 12px', borderRadius:7,
             border: errors.agama ? '1.5px solid #DC2626' : `1px solid ${C.borderDark}`,
-            fontSize:13, background: errors.agama ? '#FEF2F2' : ''
+            fontSize:13, background: errors.agama ? C.redBg : C.inputBg, color:C.text
           }}>
             <option value="">{tFn('formAgamaOpt')}</option>
             <option>Islam</option><option>Kristen</option><option>Katolik</option>
@@ -3780,7 +3787,7 @@ function PPDBForm({ setScreen, setAppStatus, t }) {
             placeholder={tFn('formAlamatP')}
             style={{width:'100%', padding:'10px 12px', borderRadius:7,
               border: errors.alamat ? '1.5px solid #DC2626' : `1px solid ${C.borderDark}`,
-              fontSize:13, resize:'vertical', background: errors.alamat ? '#FEF2F2' : ''}}/>
+              fontSize:13, resize:'vertical', background: errors.alamat ? C.redBg : C.inputBg, color:C.text}}/>
           {errors.alamat && <div style={{fontSize:11.5, color:'#DC2626', marginTop:4, fontWeight:500, fontFamily:'Plus Jakarta Sans,sans-serif'}}>⚠ Wajib diisi</div>}
         </div>
       </div>
@@ -3880,7 +3887,7 @@ function PPDBForm({ setScreen, setAppStatus, t }) {
         {Object.values(errors).some(Boolean) && (
           <div style={{
             display:'flex', alignItems:'center', gap:10,
-            background:'#FEF2F2', border:'1.5px solid #FECACA', borderRadius:10,
+            background:C.redBg, border:`1.5px solid ${C.red}55`, borderRadius:10,
             padding:'11px 16px', marginBottom:20
           }}>
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#DC2626" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
@@ -3978,7 +3985,7 @@ function Upload({ setScreen, t }) {
               padding: isMobile?'16px 18px':'20px 28px',
               borderBottom: i<docs.length-1 ? `1px solid ${C.border}` : 'none',
               display:'flex', alignItems:'center', gap:16,
-              background: uploaded[d.key] ? '#ECFDF5' : 'transparent',
+              background: uploaded[d.key] ? C.greenBg : 'transparent',
               transition:'background .2s'
             }}>
               {/* Icon */}
@@ -3998,9 +4005,9 @@ function Upload({ setScreen, t }) {
               {/* Info */}
               <div style={{flex:1, minWidth:0}}>
                 <div style={{display:'flex', alignItems:'center', gap:8, flexWrap:'wrap', marginBottom:3}}>
-                  <span style={{fontSize:13.5, fontWeight:700, color: uploaded[d.key] ? '#065F46' : C.text, fontFamily:'Plus Jakarta Sans,sans-serif'}}>{d.label}</span>
+                  <span style={{fontSize:13.5, fontWeight:700, color: uploaded[d.key] ? C.green : C.text, fontFamily:'Plus Jakarta Sans,sans-serif'}}>{d.label}</span>
                   {d.req && !uploaded[d.key] && <span style={{fontSize:10, background:C.redBg, color:C.red, padding:'2px 7px', borderRadius:100, fontWeight:700, letterSpacing:'0.04em'}}>{tFn('uploadRequired')}</span>}
-                  {uploaded[d.key] && <span style={{fontSize:10, background:'#D1FAE5', color:'#065F46', padding:'2px 7px', borderRadius:100, fontWeight:700, letterSpacing:'0.04em', display:'flex', alignItems:'center', gap:3}}>
+                  {uploaded[d.key] && <span style={{fontSize:10, background:C.greenBg, color:C.green, padding:'2px 7px', borderRadius:100, fontWeight:700, letterSpacing:'0.04em', display:'flex', alignItems:'center', gap:3}}>
                     <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
                     {tFn('uploadDone')}
                   </span>}
@@ -4087,7 +4094,7 @@ function SubmitConfirm({ setScreen, setAppStatus, t }) {
             <polyline points="20 6 9 17 4 12"/>
           </svg>
         </div>
-        <div style={{display:'inline-flex', alignItems:'center', gap:6, background:'#ECFDF5', border:'1px solid #6EE7B7', borderRadius:100, padding:'4px 14px', fontSize:11, fontWeight:700, color:'#059669', letterSpacing:'0.06em', textTransform:'uppercase', marginBottom:16}}>
+        <div style={{display:'inline-flex', alignItems:'center', gap:6, background:C.greenBg, border:`1px solid ${C.green}55`, borderRadius:100, padding:'4px 14px', fontSize:11, fontWeight:700, color:C.green, letterSpacing:'0.06em', textTransform:'uppercase', marginBottom:16}}>
           <span style={{width:6,height:6,borderRadius:'50%',background:'#10B981',flexShrink:0}}/>
           Berhasil Dikirim
         </div>
@@ -4156,7 +4163,7 @@ function SubmitConfirm({ setScreen, setAppStatus, t }) {
 
         {/* Warning */}
         <div style={{
-          background:'#FFFBEB', border:'1.5px solid #FCD34D', borderRadius:14, padding:'16px 20px',
+          background:C.warningBg, border:`1.5px solid ${C.warningBorder}`, borderRadius:14, padding:'16px 20px',
           marginBottom:28, display:'flex', gap:12, alignItems:'flex-start'
         }}>
           <div style={{width:36,height:36,borderRadius:10,background:'#F59E0B',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>
@@ -4165,8 +4172,8 @@ function SubmitConfirm({ setScreen, setAppStatus, t }) {
             </svg>
           </div>
           <div>
-            <div style={{fontWeight:700, fontSize:13.5, color:'#92400E', marginBottom:4, fontFamily:'Plus Jakarta Sans,sans-serif'}}>Perhatian Penting</div>
-            <div style={{fontSize:12.5, color:'#A16207', lineHeight:1.6}}>Setelah submit, data tidak dapat diubah. Pastikan semua informasi sudah benar sebelum melanjutkan.</div>
+            <div style={{fontWeight:700, fontSize:13.5, color:C.warningText, marginBottom:4, fontFamily:'Plus Jakarta Sans,sans-serif'}}>Perhatian Penting</div>
+            <div style={{fontSize:12.5, color:C.warningSubtext, lineHeight:1.6}}>Setelah submit, data tidak dapat diubah. Pastikan semua informasi sudah benar sebelum melanjutkan.</div>
           </div>
         </div>
 
@@ -4255,11 +4262,11 @@ function Result({ setScreen, appStatus, t }) {
         {/* Details card */}
         {accepted && (
           <div style={{background:C.white, borderRadius:20, border:`1px solid ${C.green}33`, overflow:'hidden', marginBottom:24, boxShadow:'0 4px 20px rgba(16,185,129,0.10)'}}>
-            <div style={{padding:'16px 24px', background:'#ECFDF5', borderBottom:`1px solid ${C.green}22`, display:'flex', alignItems:'center', gap:10}}>
+            <div style={{padding:'16px 24px', background:C.greenBg, borderBottom:`1px solid ${C.green}22`, display:'flex', alignItems:'center', gap:10}}>
               <div style={{width:34,height:34,borderRadius:10,background:'linear-gradient(135deg,#059669,#10B981)',display:'flex',alignItems:'center',justifyContent:'center'}}>
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
               </div>
-              <span style={{fontWeight:700, fontSize:14.5, color:'#065F46', fontFamily:'Plus Jakarta Sans,sans-serif'}}>{tFn('resultDetailTitle')}</span>
+              <span style={{fontWeight:700, fontSize:14.5, color:C.green, fontFamily:'Plus Jakarta Sans,sans-serif'}}>{tFn('resultDetailTitle')}</span>
             </div>
             <div style={{padding:'4px 0'}}>
               {[
@@ -4306,7 +4313,7 @@ function AdminDashboard({ setScreen, t }) {
   const [periodeDraft, setPeriodeDraft] = useState({...periode});
 
   const stats = [
-    { label:tFn('adminStat1'), value:247, color:C.navy,   icon:'users',  trend:'+12' },
+    { label:tFn('adminStat1'), value:247, color:C.blue,   icon:'users',  trend:'+12' },
     { label:tFn('adminStat2'), value:38,  color:C.orange, icon:'bell',   trend:'+3'  },
     { label:tFn('adminStat3'), value:120, color:C.green,  icon:'verify', trend:'+8'  },
     { label:tFn('adminStat4'), value:39,  color:C.red,    icon:'submit', trend:'+1'  },
@@ -4497,7 +4504,7 @@ function AdminDashboard({ setScreen, t }) {
           </div>
 
           {/* Kelola Periode */}
-          <div style={{background:C.navy, borderRadius:14, padding:'20px 22px', color:'#fff', boxShadow:'0 4px 16px rgba(12,31,74,0.22)'}}>
+          <div style={{background:C.navyBg, borderRadius:14, padding:'20px 22px', color:'#fff', boxShadow:'0 4px 16px rgba(12,31,74,0.22)'}}>
             <div style={{display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:14}}>
               <div style={{fontSize:13, fontWeight:700, fontFamily:'Plus Jakarta Sans,sans-serif'}}>{tFn('adminPeriodeTitle')}</div>
               <button onClick={() => { setEditPeriode(e => !e); setPeriodeDraft({...periode}); }} style={{
@@ -4614,7 +4621,7 @@ function AdminList({ setScreen, t }) {
           <h1 style={{fontSize:22, color:C.navy, marginTop:4}}>{tFn('adminListTitle')}</h1>
         </div>
         <button style={{
-          background:C.navy, border:'none', color:'#fff',
+          background:C.navyBg, border:'none', color:'#fff',
           padding:'10px 18px', borderRadius:7, fontSize:13, fontWeight:500
         }}>{tFn('adminExport')}</button>
       </div>
@@ -4627,9 +4634,9 @@ function AdminList({ setScreen, t }) {
           {['ALL','SUBMITTED','VERIFIED','ACCEPTED','REJECTED','DRAFT'].map(s => (
             <button key={s} onClick={() => setFilter(s)} style={{
               padding:'6px 12px', fontSize:11, borderRadius:5, cursor:'pointer', fontWeight:500,
-              background: filter===s ? C.navy : C.bg,
+              background: filter===s ? C.navyBg : C.bg,
               color: filter===s ? '#fff' : C.muted,
-              border:`1px solid ${filter===s ? C.navy : C.border}`
+              border:`1px solid ${filter===s ? C.navyBg : C.border}`
             }}>{s === 'ALL' ? tFn('adminFilterAll') : s}</button>
           ))}
         </div>
@@ -4651,7 +4658,7 @@ function AdminList({ setScreen, t }) {
                 <td style={{padding:'12px 16px', color:C.muted}}>{i+1}</td>
                 <td style={{padding:'12px 16px'}}>
                   <div style={{display:'flex', alignItems:'center', gap:10}}>
-                    <div style={{width:30, height:30, borderRadius:'50%', background:C.navy, color:'#fff', display:'flex', alignItems:'center', justifyContent:'center', fontSize:12, fontWeight:700}}>{a.name[0]}</div>
+                    <div style={{width:30, height:30, borderRadius:'50%', background:C.navyBg, color:'#fff', display:'flex', alignItems:'center', justifyContent:'center', fontSize:12, fontWeight:700}}>{a.name[0]}</div>
                     <div>
                       <div style={{fontWeight:500, color:C.text}}>{a.name}</div>
                       <div style={{fontSize:11, color:C.muted}}>PPDB-2026-00{a.id}</div>
@@ -4739,7 +4746,7 @@ function AdminList({ setScreen, t }) {
                 padding:'10px 20px', borderRadius:7, fontSize:13, fontWeight:500
               }}>{tFn('adminModalRejectBtn')}</button>
               <button onClick={() => doVerify(verifyModal.id,'verify')} style={{
-                background:C.navy, border:'none', color:'#fff',
+                background:C.navyBg, border:'none', color:'#fff',
                 padding:'10px 20px', borderRadius:7, fontSize:13, fontWeight:600
               }}>{tFn('adminModalVerifyBtn')}</button>
             </div>
@@ -4771,31 +4778,51 @@ function App() {
 
   // Override design tokens for dark mode — images are never touched
   if (darkMode) {
-    C.bg        = '#0D1117';
-    C.white     = '#161B22';
-    C.text      = '#E2E8F0';
-    C.muted     = '#94A3B8';
-    C.subtle    = '#64748B';
-    C.border    = '#21262D';
-    C.borderDark= '#30363D';
-    C.grayBg    = '#1C2128';
-    C.blueLight = '#0D1F3C';
-    C.greenBg   = '#0D2620';
-    C.redBg     = '#2D1515';
-    C.orangeBg  = '#2D1F06';
+    C.bg           = '#0D1117';
+    C.white        = '#161B22';
+    C.navy         = '#E2E8F0';
+    C.navyBg       = '#1E40AF';
+    C.text         = '#E2E8F0';
+    C.muted        = '#94A3B8';
+    C.subtle       = '#94A3B8';
+    C.border       = '#21262D';
+    C.borderDark   = '#30363D';
+    C.gray         = '#94A3B8';
+    C.grayBg       = '#1C2128';
+    C.tealLight    = '#0C2D48';
+    C.blueLight    = '#0D1F3C';
+    C.greenBg      = '#0D2620';
+    C.redBg        = '#2D1515';
+    C.orangeBg     = '#2D1F06';
+    C.warningBg    = '#2D1F06';
+    C.warningBorder= '#92400E';
+    C.warningText  = '#FCD34D';
+    C.warningSubtext='#D97706';
+    C.inputBg      = '#1C2128';
+    C.inputBgDisabled='#161B22';
   } else {
-    C.bg        = '#F0F4FF';
-    C.white     = '#FFFFFF';
-    C.text      = '#0F172A';
-    C.muted     = '#475569';
-    C.subtle    = '#94A3B8';
-    C.border    = '#CBD5E1';
-    C.borderDark= '#94A3B8';
-    C.grayBg    = '#F1F5F9';
-    C.blueLight = '#EFF6FF';
-    C.greenBg   = '#ECFDF5';
-    C.redBg     = '#FEF2F2';
-    C.orangeBg  = '#FFFBEB';
+    C.bg           = '#F0F4FF';
+    C.white        = '#FFFFFF';
+    C.navy         = '#0C1F4A';
+    C.navyBg       = '#0C1F4A';
+    C.text         = '#0F172A';
+    C.muted        = '#475569';
+    C.subtle       = '#94A3B8';
+    C.border       = '#CBD5E1';
+    C.borderDark   = '#94A3B8';
+    C.gray         = '#64748B';
+    C.grayBg       = '#F1F5F9';
+    C.tealLight    = '#E0F2FE';
+    C.blueLight    = '#EFF6FF';
+    C.greenBg      = '#ECFDF5';
+    C.redBg        = '#FEF2F2';
+    C.orangeBg     = '#FFFBEB';
+    C.warningBg    = '#FFFBEB';
+    C.warningBorder= '#FCD34D';
+    C.warningText  = '#92400E';
+    C.warningSubtext='#A16207';
+    C.inputBg      = '#FFFFFF';
+    C.inputBgDisabled='#F8FAFF';
   }
 
   const t = tG;
