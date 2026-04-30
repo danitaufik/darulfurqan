@@ -983,7 +983,7 @@ function Landing({ setScreen, lang, t }) {
   const [countdown, setCountdown] = React.useState({d:0,h:0,m:0,s:0});
   const pad = n => String(n).padStart(2,'0');
   React.useEffect(() => {
-    const DEADLINE = new Date('2026-06-30T23:59:59');
+    const DEADLINE = new Date('2026-05-15T23:59:59');
     const calc = () => {
       const diff = DEADLINE - Date.now();
       if (diff <= 0) { setCountdown({d:0,h:0,m:0,s:0}); return; }
