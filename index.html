@@ -120,10 +120,19 @@ const TR = {
     berita:'Berita', kegiatan:'Kegiatan', kontak:'Kontak',
     masuk:'Masuk', daftar:'Daftar Sekarang',
     // Hero
-    heroTag:'PPDB 2026 / 2027 — Pendaftaran Dibuka',
+    heroTag:'PPDB 2026/2027 — Gelombang 1 Dibuka',
     heroTitle:'PPDB Yayasan\nDarul Furqan\nPariaman',
-    heroSub:'Membentuk generasi berilmu, berakhlak, dan berprestasi melalui pendidikan Islam terpadu sejak 1981.',
-    heroCta1:'Daftar Sekarang →', heroCta2:'Info PPDB',
+    heroSub:'Pesantren modern berstandar nasional di Pariaman. Kurikulum Merdeka + Tahfidz Al-Quran. Mendidik generasi unggul berakhlak sejak 1981.',
+    heroCta1:'Daftar Sekarang', heroCta2:'Info PPDB',
+    heroUrgencyQuota:'Sisa Kuota: 47 dari 120 Tempat',
+    heroUrgencyDeadline:'Gelombang 1 Ditutup 15 Mei 2026',
+    heroCtaSub1:'Proses hanya 5 menit',
+    heroCtaSub2:'Tanpa tes masuk',
+    heroTrust1:'Gratis Pendaftaran',
+    heroTrust2:'Tanpa Tes Masuk',
+    heroTrust3:'Asrama Modern',
+    heroCountdownLabel:'Sisa Waktu Pendaftaran Gelombang 1',
+    heroCountdownD:'Hari', heroCountdownH:'Jam', heroCountdownM:'Menit', heroCountdownS:'Detik',
     // Stats
     statAlumni:'Alumni', statLulus:'Kelulusan', statTahun:'Tahun',
     // Profil
@@ -400,10 +409,19 @@ const TR = {
     berita:'News', kegiatan:'Activities', kontak:'Contact',
     masuk:'Login', daftar:'Register Now',
     // Hero
-    heroTag:'PPDB 2026 / 2027 — Registration Open',
-    heroTitle:'New Student Admission\nDarul Furqan\nFoundation Pariaman',
-    heroSub:'Building a generation of knowledge, character, and achievement through integrated Islamic education since 1981.',
-    heroCta1:'Register Now →', heroCta2:'PPDB Info',
+    heroTag:'PPDB 2026/2027 — Wave 1 Enrollment Open',
+    heroTitle:'PPDB Foundation\nDarul Furqan\nPariaman',
+    heroSub:'A modern pesantren in Pariaman. National Curriculum + Quran memorization. Nurturing excellence and Islamic character since 1981.',
+    heroCta1:'Register Now', heroCta2:'Admission Info',
+    heroUrgencyQuota:'Available: 47 of 120 Spots',
+    heroUrgencyDeadline:'Wave 1 Closes May 15, 2026',
+    heroCtaSub1:'Takes only 5 minutes',
+    heroCtaSub2:'No entrance exam',
+    heroTrust1:'Free Registration',
+    heroTrust2:'No Entrance Exam',
+    heroTrust3:'Modern Dormitory',
+    heroCountdownLabel:'Time Left for Wave 1 Registration',
+    heroCountdownD:'Days', heroCountdownH:'Hours', heroCountdownM:'Mins', heroCountdownS:'Secs',
     // Stats
     statAlumni:'Alumni', statLulus:'Graduation Rate', statTahun:'Years',
     // Profil
@@ -962,6 +980,19 @@ function Landing({ setScreen, lang, t }) {
   const [hoveredNews, setHoveredNews] = React.useState(null);
   const [hoveredGallery, setHoveredGallery] = React.useState(null);
   const isMobile = useWindowWidth() <= 768;
+  const [countdown, setCountdown] = React.useState({d:0,h:0,m:0,s:0});
+  const pad = n => String(n).padStart(2,'0');
+  React.useEffect(() => {
+    const DEADLINE = new Date('2026-06-30T23:59:59');
+    const calc = () => {
+      const diff = DEADLINE - Date.now();
+      if (diff <= 0) { setCountdown({d:0,h:0,m:0,s:0}); return; }
+      setCountdown({ d:Math.floor(diff/86400000), h:Math.floor((diff%86400000)/3600000), m:Math.floor((diff%3600000)/60000), s:Math.floor((diff%60000)/1000) });
+    };
+    calc();
+    const id = setInterval(calc, 1000);
+    return () => clearInterval(id);
+  }, []);
 
   const news = [
     { title:tFn('n1t'), date:tFn('n1d'), cat:tFn('n1c'), catColor:C.blue, img:'./assets/news-ppdb.png' },
@@ -1026,82 +1057,126 @@ function Landing({ setScreen, lang, t }) {
     <div style={{overflowX:'hidden'}}>
 
       {/* ══ 1. HERO ══ */}
-      <div style={{position:'relative', minHeight: isMobile ? 560 : 680, display:'flex', alignItems:'center', overflow:'hidden'}}>
+      <div style={{position:'relative', minHeight: isMobile ? 640 : 760, display:'flex', alignItems:'center', overflow:'hidden'}}>
         {/* Background layers */}
         <div style={{position:'absolute', inset:0, backgroundImage:"url('./assets/hero-school.png')", backgroundSize:'cover', backgroundPosition:'center 35%'}}/>
-        <div style={{position:'absolute', inset:0, background:'linear-gradient(135deg, rgba(7,15,36,0.97) 0%, rgba(12,31,74,0.92) 45%, rgba(26,58,122,0.75) 80%, rgba(14,165,233,0.35) 100%)'}}/>
-        {/* Decorative mesh dots */}
+        <div style={{position:'absolute', inset:0, background:'linear-gradient(135deg, rgba(7,15,36,0.97) 0%, rgba(12,31,74,0.93) 45%, rgba(26,58,122,0.78) 80%, rgba(14,165,233,0.28) 100%)'}}/>
         <div style={{position:'absolute', inset:0, opacity:0.12, backgroundImage:'radial-gradient(circle, rgba(255,255,255,0.8) 1px, transparent 1px)', backgroundSize:'28px 28px'}}/>
-        {/* Glowing orbs */}
-        <div style={{position:'absolute', top:'-15%', right:'8%', width:320, height:320, borderRadius:'50%', background:'radial-gradient(circle, rgba(37,99,235,0.35) 0%, transparent 70%)', pointerEvents:'none'}}/>
-        <div style={{position:'absolute', bottom:'-10%', right:'20%', width:200, height:200, borderRadius:'50%', background:'radial-gradient(circle, rgba(14,165,233,0.25) 0%, transparent 70%)', pointerEvents:'none'}}/>
+        {/* Blue glow orb */}
+        <div style={{position:'absolute', top:'-10%', right:'5%', width:380, height:380, borderRadius:'50%', background:'radial-gradient(circle, rgba(37,99,235,0.22) 0%, transparent 68%)', pointerEvents:'none'}}/>
+        <div style={{position:'absolute', bottom:'-10%', right:'22%', width:220, height:220, borderRadius:'50%', background:'radial-gradient(circle, rgba(14,165,233,0.22) 0%, transparent 70%)', pointerEvents:'none'}}/>
 
-        <div style={{position:'relative', maxWidth:1200, margin:'0 auto', padding: isMobile ? '56px 20px 48px' : '72px 60px', width:'100%'}}>
-          <div style={{maxWidth: isMobile ? '100%' : 620}}>
+        <div style={{position:'relative', maxWidth:1200, margin:'0 auto', padding: isMobile ? '64px 20px 52px' : '80px 60px', width:'100%'}}>
+          <div style={{maxWidth: isMobile ? '100%' : 660}}>
+
             {/* Live badge */}
-            <div style={{
-              display:'inline-flex', alignItems:'center', gap:8,
-              background:'rgba(37,99,235,0.2)', border:'1px solid rgba(37,99,235,0.45)',
-              borderRadius:100, padding:'5px 14px 5px 8px', marginBottom:22
-            }}>
+            <div style={{display:'inline-flex', alignItems:'center', gap:8, background:'rgba(37,99,235,0.2)', border:'1px solid rgba(37,99,235,0.45)', borderRadius:100, padding:'5px 14px 5px 8px', marginBottom:20}}>
               <span className="pulse-dot" style={{width:7,height:7,borderRadius:'50%',background:'#60A5FA',boxShadow:'0 0 6px #60A5FA',flexShrink:0}}/>
               <span style={{fontSize:11, color:'#93C5FD', fontWeight:700, letterSpacing:'0.08em', textTransform:'uppercase'}}>{tFn('heroTag')}</span>
             </div>
-            <h1 style={{
-              fontFamily:'Plus Jakarta Sans, sans-serif', fontSize: isMobile ? 36 : 58, fontWeight:800,
-              color:'#fff', lineHeight:1.12, marginBottom:18, letterSpacing:'-0.02em'
-            }}>
+
+            {/* ── HEADLINE ── */}
+            <h1 style={{fontFamily:'Plus Jakarta Sans, sans-serif', fontSize: isMobile ? 30 : 50, fontWeight:800, color:'#fff', lineHeight:1.13, letterSpacing:'-0.025em', marginBottom:0}}>
               {tFn('heroTitle').split('\n').map((l,i) => (
                 <React.Fragment key={i}>
-                  {i===1 ? <span style={{background:'linear-gradient(90deg,#60A5FA,#38BDF8)',WebkitBackgroundClip:'text',WebkitTextFillColor:'transparent'}}>{l}</span> : l}
+                  {i===0 && <span>{l}</span>}
+                  {i===1 && <span style={{background:'linear-gradient(90deg,#60A5FA,#38BDF8)',WebkitBackgroundClip:'text',WebkitTextFillColor:'transparent'}}>{l}</span>}
+                  {i===2 && <span style={{fontSize: isMobile ? 18 : 30, color:'rgba(255,255,255,0.55)', fontStyle:'italic', fontWeight:600, display:'block', marginTop:6}}>{l}</span>}
                   {i<2&&<br/>}
                 </React.Fragment>
               ))}
             </h1>
-            <p style={{
-              fontSize: isMobile ? 14 : 16, color:'rgba(255,255,255,0.7)', lineHeight:1.8,
-              marginBottom:32, maxWidth: isMobile ? '100%' : 500, fontWeight:400
-            }}>{tFn('heroSub')}</p>
-            <div style={{display:'flex', gap:12, flexWrap:'wrap', marginBottom:36}}>
-              <button onClick={() => setScreen('register')} style={{
-                background:'linear-gradient(135deg,#2563EB,#0EA5E9)', border:'none', color:'#fff',
-                padding: isMobile ? '13px 26px' : '15px 36px', borderRadius:12,
-                fontSize: isMobile ? 14 : 15, fontWeight:700,
-                boxShadow:'0 6px 24px rgba(37,99,235,0.55)', flex: isMobile ? 1 : 'none',
-                fontFamily:'Plus Jakarta Sans,sans-serif', letterSpacing:'-0.01em'
-              }}
-                onMouseEnter={e=>e.currentTarget.style.boxShadow='0 8px 32px rgba(37,99,235,0.7)'}
-                onMouseLeave={e=>e.currentTarget.style.boxShadow='0 6px 24px rgba(37,99,235,0.55)'}
-              >{tFn('heroCta1')}</button>
-              <button onClick={() => setScreen('ppdb-info')} style={{
-                background:'rgba(255,255,255,0.08)', border:'1px solid rgba(255,255,255,0.25)',
-                backdropFilter:'blur(8px)',
-                color:'rgba(255,255,255,0.9)', padding: isMobile ? '13px 20px' : '15px 32px', borderRadius:12,
-                fontSize: isMobile ? 14 : 15, fontWeight:600, flex: isMobile ? 1 : 'none',
-                fontFamily:'Plus Jakarta Sans,sans-serif', cursor:'pointer'
-              }}
-                onMouseEnter={e=>e.currentTarget.style.background='rgba(255,255,255,0.15)'}
-                onMouseLeave={e=>e.currentTarget.style.background='rgba(255,255,255,0.08)'}
-              >{tFn('heroCta2')}</button>
-            </div>
-            {/* Stats row */}
-            <div style={{display:'flex', gap: isMobile ? 10 : 14}}>
-              {[
-                { n:'1.200+', label:tFn('statAlumni') },
-                { n:'98%', label:tFn('statLulus') },
-                { n:'45+', label:tFn('statTahun') },
-              ].map((s,i) => (
-                <div key={i} style={{
-                  background:'rgba(255,255,255,0.08)', backdropFilter:'blur(12px)',
-                  border:'1px solid rgba(255,255,255,0.14)',
-                  borderRadius:14, padding: isMobile ? '12px 14px' : '16px 22px',
-                  textAlign:'center', flex: isMobile ? 1 : 'none', minWidth: isMobile ? 0 : 96
-                }}>
-                  <div style={{fontSize: isMobile ? 20 : 24, fontWeight:800, color:'#fff', fontFamily:'Plus Jakarta Sans,sans-serif', letterSpacing:'-0.03em'}}>{s.n}</div>
-                  <div style={{fontSize:10, color:'rgba(255,255,255,0.6)', marginTop:3, fontWeight:500}}>{s.label}</div>
+
+            {/* ── SUBHEADLINE ── */}
+            <p style={{fontSize: isMobile ? 13.5 : 15.5, color:'rgba(255,255,255,0.72)', lineHeight:1.78, marginBottom:22, maxWidth: isMobile ? '100%' : 530, fontWeight:400, marginTop:16}}>
+              {tFn('heroSub')}
+            </p>
+
+            {/* ── URGENCY BAR ── */}
+            <div style={{
+              background:'linear-gradient(135deg,rgba(37,99,235,0.18),rgba(7,15,36,0.65))',
+              backdropFilter:'blur(14px)',
+              border:'1px solid rgba(37,99,235,0.45)',
+              borderRadius:16, padding: isMobile ? '14px 16px' : '14px 22px',
+              marginBottom:18, display:'flex', flexDirection: isMobile ? 'column' : 'row', alignItems: isMobile ? 'flex-start' : 'center'
+            }}>
+              {/* Quota side */}
+              <div style={{flex:1}}>
+                <div style={{display:'flex', alignItems:'center', gap:7, marginBottom:7}}>
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#60A5FA" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M12 2c1.5 4 5 6 5 10a5 5 0 01-10 0c0-4 3.5-6 5-10z"/><path d="M12 12v4"/>
+                  </svg>
+                  <span style={{fontSize:13, fontWeight:800, color:'#BAE6FD', letterSpacing:'0.01em'}}>{tFn('heroUrgencyQuota')}</span>
                 </div>
-              ))}
+                <div style={{background:'rgba(255,255,255,0.13)', borderRadius:100, height:6, overflow:'hidden', maxWidth: isMobile ? '100%' : 260}}>
+                  <div style={{width:'61%', height:'100%', background:'linear-gradient(90deg,#2563EB,#0EA5E9)', borderRadius:100}}/>
+                </div>
+                <div style={{fontSize:10, color:'rgba(255,255,255,0.42)', marginTop:5, fontWeight:500}}>73 dari 120 tempat sudah terisi</div>
+              </div>
+              {/* Divider */}
+              {!isMobile && <div style={{width:1, background:'rgba(255,255,255,0.14)', height:42, margin:'0 22px', flexShrink:0}}/>}
+              {/* Deadline side */}
+              <div style={{paddingTop: isMobile ? 12 : 0}}>
+                <div style={{display:'flex', alignItems:'center', gap:7, marginBottom:4}}>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#93C5FD" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+                  </svg>
+                  <span style={{fontSize:13, fontWeight:800, color:'#93C5FD'}}>{tFn('heroUrgencyDeadline')}</span>
+                </div>
+                <div style={{fontSize:10, color:'rgba(255,255,255,0.42)', fontWeight:500}}>Segera daftarkan putra/putri Anda</div>
+              </div>
             </div>
+
+            {/* ── COUNTDOWN TIMER ── */}
+            <div style={{marginBottom:26}}>
+              <div style={{fontSize:10, color:'rgba(255,255,255,0.4)', fontWeight:700, textTransform:'uppercase', letterSpacing:'0.12em', marginBottom:9}}>{tFn('heroCountdownLabel')}</div>
+              <div style={{display:'flex', gap: isMobile ? 7 : 10}}>
+                {[[pad(countdown.d),tFn('heroCountdownD')],[pad(countdown.h),tFn('heroCountdownH')],[pad(countdown.m),tFn('heroCountdownM')],[pad(countdown.s),tFn('heroCountdownS')]].map(([val,label],i) => (
+                  <div key={i} style={{
+                    textAlign:'center', minWidth: isMobile ? 56 : 66,
+                    background:'rgba(0,0,0,0.48)', backdropFilter:'blur(8px)',
+                    border:'1px solid rgba(255,255,255,0.11)',
+                    borderRadius:12, padding: isMobile ? '10px 8px' : '12px 14px'
+                  }}>
+                    <div style={{fontSize: isMobile ? 24 : 30, fontWeight:800, color:'#fff', fontFamily:'Plus Jakarta Sans, sans-serif', letterSpacing:'-0.02em', lineHeight:1}}>{val}</div>
+                    <div style={{fontSize:9, color:'rgba(255,255,255,0.42)', marginTop:4, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.10em'}}>{label}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* ── CTA SECTION ── */}
+            <div style={{marginBottom:16}}>
+              <div style={{display:'flex', gap:12, flexWrap:'wrap', marginBottom:11, alignItems:'center'}}>
+                {/* PRIMARY CTA — Blue, dominant */}
+                <button onClick={() => setScreen('register')} style={{
+                  background:'linear-gradient(135deg,#2563EB 0%,#0EA5E9 100%)',
+                  border:'2px solid rgba(255,255,255,0.15)',
+                  color:'#fff',
+                  padding: isMobile ? '17px 28px' : '19px 48px',
+                  borderRadius:14, fontSize: isMobile ? 15 : 17, fontWeight:800,
+                  boxShadow:'0 8px 30px rgba(37,99,235,0.55)',
+                  flex: isMobile ? 1 : 'none',
+                  fontFamily:'Plus Jakarta Sans,sans-serif', letterSpacing:'-0.01em',
+                  cursor:'pointer', transition:'all .22s ease'
+                }}
+                  onMouseEnter={e=>{e.currentTarget.style.transform='translateY(-3px)';e.currentTarget.style.boxShadow='0 14px 40px rgba(37,99,235,0.72)'}}
+                  onMouseLeave={e=>{e.currentTarget.style.transform='none';e.currentTarget.style.boxShadow='0 8px 30px rgba(37,99,235,0.55)'}}
+                >{tFn('heroCta1')}</button>
+                {/* SECONDARY CTA — ghost */}
+                <button onClick={() => setScreen('ppdb-info')} style={{
+                  background:'rgba(255,255,255,0.07)', border:'1px solid rgba(255,255,255,0.22)',
+                  backdropFilter:'blur(8px)', color:'rgba(255,255,255,0.88)',
+                  padding: isMobile ? '17px 20px' : '19px 32px', borderRadius:14,
+                  fontSize: isMobile ? 14 : 15, fontWeight:600, flex: isMobile ? 1 : 'none',
+                  fontFamily:'Plus Jakarta Sans,sans-serif', cursor:'pointer', transition:'background .2s'
+                }}
+                  onMouseEnter={e=>e.currentTarget.style.background='rgba(255,255,255,0.14)'}
+                  onMouseLeave={e=>e.currentTarget.style.background='rgba(255,255,255,0.07)'}
+                >{tFn('heroCta2')}</button>
+              </div>
+            </div>
+
           </div>
         </div>
       </div>
